@@ -1,0 +1,17 @@
+<style lang="sass">
+.container
+  color: red
+</style>
+<template lang="pug">
+.container hello world
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: 'test'
+    }
+  }
+</script>
