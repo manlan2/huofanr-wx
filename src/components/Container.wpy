@@ -1,0 +1,25 @@
+<style lang="sass">
+.container_component
+  width: 100%
+  height: auto
+</style>
+<template lang="pug">
+view.container_component(style="padding: {{topBottom}}px {{leftRight}}px;")
+  slot
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class Container extends wepy.component {
+  props = {
+    leftRight: {
+      type: String,
+      default: 10,
+    },
+    topBottom: {
+      type: String,
+      default: 0,
+    },
+  }
+}
+</script>
