@@ -1,20 +1,4 @@
-<style lang="sass">
-@import "static/sass/minui"
-
-.container
-  width: 100%
-  min-height: 100vh
-  display: flex
-  flex-direction: column
-  align-items: center
-  justify-content: space-between
-  box-sizing: border-box
-  background: #f4f4f4
-  font-family: "PingFang SC","Helvetica Neue",Helvetica,"Hiragino Sans GB","Microsoft YaHei"
-
-view,text
-  box-sizing: border-box
-</style>
+<style lang="sass" src="static/sass/index.sass"></style>
 
 <script>
 import wepy from 'wepy'
