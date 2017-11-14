@@ -1,5 +1,6 @@
 @import "./minui"
 @import "./variable"
+@import "./icon-font"
 
 .container
   width: 100%
@@ -13,10 +14,10 @@ view,text
   box-sizing: border-box
 
 .bg_white
-  background: #fff
+  background: #fff !important
 
 .color
-  color: $color
+  color: $color !important
 
 .flex
   display: flex
@@ -24,8 +25,58 @@ view,text
   flex: 1
 
 .tr
-  text-align: right
+  text-align: right !important
 .tc
-  text-align: center
+  text-align: center !important
 .tl
-  text-align: left
+  text-align: left !important
+
+.fz20
+  font-size: 20rpx !important
+
+.fz22
+  font-size: 22rpx !important
+
+.fz24
+  font-size: 24rpx !important
+
+.fz28
+  font-size: 28rpx !important
+
+.fz32
+  font-size: 32rpx !important
+
+.fz36
+  font-size: 36rpx !important
+
+@for $i from 1 through 6
+  .ml#{$i}0
+    margin-left: 10rpx * $i
+
+@for $i from 1 through 6
+  .mt#{$i}0
+    margin-top: 10rpx * $i
+
+@for $i from 1 through 6
+  .mr#{$i}0
+    margin-right: 10rpx * $i
+
+@for $i from 1 through 6
+  .mb#{$i}0
+    margin-bottom: 10rpx * $i
+
+@for $i from 1 through 6
+  .pl#{$i}0
+    padding-left: 10rpx * $i
+
+@for $i from 1 through 6
+  .pt#{$i}0
+    padding-top: 10rpx * $i
+
+@for $i from 1 through 6
+  .pr#{$i}0
+    padding-right: 10rpx * $i
+
+@for $i from 1 through 6
+  .pb#{$i}0
+    padding-bottom: 10rpx * $i
