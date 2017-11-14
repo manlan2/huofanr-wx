@@ -10,6 +10,10 @@
   justify-content: space-between
   box-sizing: border-box
   background: #f4f4f4
+  font-family: "PingFang SC","Helvetica Neue",Helvetica,"Hiragino Sans GB","Microsoft YaHei"
+
+view,text
+  box-sizing: border-box
 </style>
 
 <script>
