@@ -35,8 +35,24 @@
   background: #fff
   font-size: 20rpx
 
-  text
-    margin-left: 8rpx
+  .i
+    margin-right: 10rpx
+    font-size: 22rpx
+
+.banner_container
+  margin-top: 15px
+  width: 100%
+  height: 300rpx
+
+  >.timeout_box
+    padding: 10px
+    width: 258rpx
+    height: 300rpx
+    background: #f2e7da
+    font-size: 28rpx
+
+  >.banner
+    height: 300rpx
 
 </style>
 <template lang="pug">
@@ -53,14 +69,29 @@ view.container
 
   view.lable_list.color
     view.item.flex1.tc
-      wxc-icon.search_icon(type="yes")
+      text.i &#xe639;
       text 30天无忧退换货
     view.item.flex1.tc
-      wxc-icon.search_icon(type="yes")
+      text.i &#xe639;
       text 全场消费满99包邮
     view.item.flex1.tc
-      wxc-icon.search_icon(type="yes")
+      text.i &#xe639;
       text 假一罚十质量保证
+
+  view.flex.banner_container
+    view.timeout_box
+      text.mr10.i.fz28 &#xe60f;
+      text 限时购
+      view.mt40.mb20.fz24 下一场15:00开始
+      wxc-countdown(
+        countdown="{{countdown}}"
+        format="{{format}}"
+        num-style="{{numStyle}}"
+        symbol-style="{{symbolStyle}}"
+        bind:endcount="endcount"
+      )
+
+    image.banner.flex1(src="http://placehold.it/400x220")
 </template>
 
 <script>
@@ -76,11 +107,16 @@ export default class Index extends wepy.page {
       'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
       'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
     ],
+    countdown: 10000,
+    format: 'hh:mm:ss',
+    numStyle: 'width: 48rpx; font-size: 28rpx; color: #fff; background: #000; text-align: center; border-radius: 8rpx; padding: 5rpx 0;',
+    symbolStyle: 'font-size: 28rpx; color: #000; padding: 0 12rpx;',
   }
 
   config = {
     usingComponents: {
-      'wxc-icon': '/minui/@minui/wxc-icon/_dist/index'
+      'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
+      'wxc-countdown': '/minui/@minui/wxc-countdown/_dist/index',
     },
   }
 
@@ -96,6 +132,10 @@ export default class Index extends wepy.page {
     searchInputFocus() {
       this.isFocus = true
     },
+
+    endcount() {
+      console.log(1212)
+    }
   }
 }
 </script>
