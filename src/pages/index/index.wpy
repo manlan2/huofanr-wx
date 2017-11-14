@@ -1,20 +1,101 @@
 <style lang="sass">
-.search_icon
-  color: red
+.search_box
+  display: flex
+  width: 100%
+  height: 72rpx
+  line-height: 72rpx
+  background: #fff
+  border-radius: 6px
+
+  >.search_icon
+    width: 70rpx
+    text-align: right
+    color: #999
+
+  >.search_ipt
+    flex: 1
+    margin-top: 6rpx
+    height: 60rpx
+    font-size: 28rpx
+    padding-left: 10px
+
+.swiper_container
+  width: 100%
+  height: 400rpx
+
+  .slide_image
+    width: 100%
+    height: 400rpx
+
+.lable_list
+  display: flex
+  width: 100%
+  height: 70rpx
+  line-height: 70rpx
+  background: #fff
+  font-size: 20rpx
+
+  text
+    margin-left: 8rpx
+
 </style>
 <template lang="pug">
 view.container
-  wxc-icon.search_icon(type="search'" size="50")
+  Container(topBottom="10")
+    view.search_box
+      wxc-icon.search_icon(type="search" size="28" bindtap="searchInputFocus")
+      input.search_ipt(@input="bindKeyword" placeholder="搜索商品" placeholder-style="color: #999" focus="{{isFocus}}")
+
+  swiper.swiper_container(indicator-dots interval="{{3000}}")
+    block(wx:for="{{imgUrls}}")
+      swiper-item
+        image.slide_image(src="{{item}}")
+
+  view.lable_list.color
+    view.item.flex1.tc
+      wxc-icon.search_icon(type="yes")
+      text 30天无忧退换货
+    view.item.flex1.tc
+      wxc-icon.search_icon(type="yes")
+      text 全场消费满99包邮
+    view.item.flex1.tc
+      wxc-icon.search_icon(type="yes")
+      text 假一罚十质量保证
 </template>
 
 <script>
-  import wepy from 'wepy'
+import wepy from 'wepy'
+import Container from '../../components/Container'
 
-  export default class Index extends wepy.page {
-    config = {
-      usingComponents: {
-        'wxc-icon': '/minui/@minui/wxc-icon/_dist/index'
-      },
-    }
+export default class Index extends wepy.page {
+  data = {
+    keyword: '',
+    isFocus: false,
+    imgUrls: [
+      'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
+      'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
+      'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
+    ],
   }
+
+  config = {
+    usingComponents: {
+      'wxc-icon': '/minui/@minui/wxc-icon/_dist/index'
+    },
+  }
+
+  components = {
+    Container,
+  }
+
+  methods = {
+    bindKeyword(e) {
+      this.keyword = e.detail.value.trim()
+    },
+
+    searchInputFocus() {
+      this.isFocus = true
+    },
+  }
+}
 </script>
