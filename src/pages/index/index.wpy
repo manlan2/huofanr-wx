@@ -1,9 +1,9 @@
 <style lang="sass">
-.container
+view.container
   color: red
 </style>
 <template lang="pug">
-.container hello world
+.container dwd
 </template>
 
 <script>
