@@ -1,13 +1,20 @@
 <style lang="sass">
-.container
+.search_icon
+  color: red
 </style>
 <template lang="pug">
 view.container
+  wxc-icon.search_icon(type="search'" size="50")
 </template>
 
 <script>
   import wepy from 'wepy'
 
   export default class Index extends wepy.page {
+    config = {
+      usingComponents: {
+        'wxc-icon': '/minui/@minui/wxc-icon/_dist/index'
+      },
+    }
   }
 </script>

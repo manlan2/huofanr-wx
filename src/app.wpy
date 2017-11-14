@@ -1,4 +1,6 @@
 <style lang="sass">
+@import "static/sass/minui"
+
 .container
   width: 100%
   min-height: 100vh
@@ -13,7 +15,7 @@
 <script>
 import wepy from 'wepy'
 import 'wepy-async-function'
-import Promise from 'promise-polyfill'
+import 'promise-polyfill'
 
 export default class extends wepy.app {
   config = {
