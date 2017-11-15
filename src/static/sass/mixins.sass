@@ -1,0 +1,34 @@
+%ellipsis
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+  -o-text-overflow: ellipsis
+  word-break:break-all
+  word-wrap: normal
+
+=multiLine-ellipsis($line: 2, $lineHeight: 40rpx)
+  line-height: $lineHeight
+  overflow: hidden
+  height: $lineHeight * $line
+  display: -webkit-box
+  display: box
+  text-overflow: ellipsis
+  -webkit-line-clamp: $line
+  line-clamp: $line
+  -webkit-box-orient: vertical
+  box-orient: vertical
+
+%break_word
+  word-wrap: break-word
+  white-space: normal
+
+%x_scroll
+  overflow-y: hidden
+  overflow-x: scroll
+  -webkit-overflow-scrolling: touch
+  white-space: nowrap
+
+%y_scroll
+  overflow-x: hidden
+  overflow-y: scroll
+  -webkit-overflow-scrolling: touch

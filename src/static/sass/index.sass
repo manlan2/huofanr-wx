@@ -1,6 +1,7 @@
 @import "./minui"
 @import "./variable"
 @import "./icon-font"
+@import "./mixins"
 
 .container
   width: 100%
@@ -16,8 +17,28 @@ view,text
 .bg_white
   background: #fff !important
 
+.ellipsis
+  @extend %ellipsis
+
+.break_word
+  @extend %break_word
+
+.x_scroll
+  @extend %x_scroll
+
+.y_scroll
+  @extend %y_scroll
+
+
+// -- color
 .color
   color: $color !important
+.c999
+  color: #999
+.c666
+  color: #666
+.c333
+  color: #333
 
 .flex
   display: flex
@@ -49,6 +70,7 @@ view,text
 .fz36
   font-size: 36rpx !important
 
+//--- margin & padding
 @for $i from 1 through 6
   .ml#{$i}0
     margin-left: 10rpx * $i
@@ -80,3 +102,9 @@ view,text
 @for $i from 1 through 6
   .pb#{$i}0
     padding-bottom: 10rpx * $i
+
+
+//-- line-height
+@for $i from 3 through 50
+  .lh#{$i}0
+    line-height: 10rpx * $i
