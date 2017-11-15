@@ -60,10 +60,5 @@ export default class extends wepy.app {
 
   onLaunch() {
   }
-
-  async testAsync () {
-    const data = await this.sleep(3)
-    console.log(data)
-  }
 }
 </script>
