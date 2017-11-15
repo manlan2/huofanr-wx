@@ -31,9 +31,27 @@
   transition: all 500ms ease-in-out
   height: 100vh
 
-  .goods_box
+  >.goods_container
+    padding: 0 10rpx
+    width: 100%
     height: 100vh
     overflow: auto
+    font-size: 0
+
+    .goods_box
+      display: inline-block
+      margin-bottom: 10rpx
+      padding: 20rpx 14rpx
+      width: 33.3%
+      font-size: 24rpx
+      color: #999
+      text-align: center
+
+      .image
+        margin-bottom: 20rpx
+        display: block
+        width: 100%
+        height: 160rpx
 
 @for $i from 0 through 15
   .translate#{$i}
@@ -45,8 +63,50 @@ view.container
     view.menu_item(wx:for="{{categoryList}}" wx:key bindtap="onCategoryChange({{item.id}})")
       view.item(class="{{currentCatetoryId === item.id ? 'active' : ''}}") {{item.name}}
   view.box_right(class="translate{{currentCategoryIndex}}")
-    view.goods_box(wx:for="{{categoryList}}" wx:key)
-      text {{item.name}}
+    view.goods_container(wx:for="{{categoryList}}" wx:key)
+      view.goods_box
+        image.image(src="http://placehold.it/120x120")
+        view.ellipsis 手提包
+
+      view.goods_box
+        image.image(src="http://placehold.it/120x120")
+        view.ellipsis 手提包
+
+      view.goods_box
+        image.image(src="http://placehold.it/120x120")
+        view.ellipsis 手提包手提包提包手提包
+
+      view.goods_box
+        image.image(src="http://placehold.it/120x120")
+        view.ellipsis 手提包
+
+      view.goods_box
+        image.image(src="http://placehold.it/120x120")
+        view.ellipsis 手提包
+
+      view.goods_box
+        image.image(src="http://placehold.it/120x120")
+        view.ellipsis 手提包
+
+      view.goods_box
+        image.image(src="http://placehold.it/120x120")
+        view.ellipsis 手提包
+
+      view.goods_box
+        image.image(src="http://placehold.it/120x120")
+        view.ellipsis 手提包
+
+      view.goods_box
+        image.image(src="http://placehold.it/120x120")
+        view.ellipsis 手提包
+
+      view.goods_box
+        image.image(src="http://placehold.it/120x120")
+        view.ellipsis 手提包
+
+      view.goods_box
+        image.image(src="http://placehold.it/120x120")
+        view.ellipsis 手提包
 </template>
 
 <script>
