@@ -14,11 +14,11 @@ export default class Container extends wepy.component {
   props = {
     leftRight: {
       type: String,
-      default: 10,
+      default: '10',
     },
     topBottom: {
       type: String,
-      default: 0,
+      default: '0',
     },
   }
 }

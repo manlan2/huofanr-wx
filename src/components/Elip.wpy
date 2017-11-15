@@ -11,11 +11,11 @@ export default class Elip extends wepy.component {
   props = {
     line: {
       type: String,
-      default: 2,
+      default: '2',
     },
     lineHeight: {
       type: String,
-      default: 30,
+      default: '30',
     },
   }
 }
