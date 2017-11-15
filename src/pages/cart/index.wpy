@@ -1,17 +1,108 @@
 <style lang="sass">
-.container
-  color: red
+.goods_group
+  padding-bottom: 20rpx
+  width: 100%
+  height: auto
+  border-bottom: 1px #ececec solid
+  background: #fff
+
+.goods_card
+  padding: 16rpx 20rpx
+  display: flex
+  width: 100%
+  height: 240rpx
+  color: #999
+  background: #fff
+
+  >.checkbox
+    width: 60rpx
+    text-align: center
+    line-height: 200rpx
+
+  >.image
+    margin: 0 20rpx
+    width: 200rpx
+    height: 200rpx
+
+  >.info
+    display: flex
+    font-size: 28rpx
+    flex-direction: column
+    align-content: space-between
+
+    .num_box
+      height: 60rpx
+      line-height: 74rpx
 </style>
 <template lang="pug">
-.container cart
+view.container.pb40
+  view.goods_group
+    view.goods_card
+      text.checkbox.i.fz48.color_light &#xe608;
+      image.image(src="http://placehold.it/120x120")
+      .info.flex1
+        wxc-elip.flex1(line="2") 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
+        .num_box
+          wxc-price.color(value="99.00" decimal="small")
+          wxc-counter.fr(number="5" max="{{99}}" min="1" bind:changenumber="onChangeNumber")
+  view.goods_group
+    view.goods_card
+      text.checkbox.i.fz48.c999 &#xe602;
+      image.image(src="http://placehold.it/120x120")
+      .info.flex1
+        wxc-elip.flex1(line="2") 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
+        .num_box
+          wxc-price.color(value="99.00" decimal="small")
+          wxc-counter.fr(number="5" max="{{99}}" min="1" bind:changenumber="onChangeNumber")
+
+    view.goods_card
+      text.checkbox.i.fz48.c999 &#xe602;
+      image.image(src="http://placehold.it/120x120")
+      .info.flex1
+        wxc-elip.flex1(line="2") 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
+        .num_box
+          wxc-price.color(value="99.00" decimal="small")
+          wxc-counter.fr(number="5" max="{{99}}" min="1" bind:changenumber="onChangeNumber")
+  view.goods_group
+    view.goods_card
+      text.checkbox.i.fz48.c999 &#xe602;
+      image.image(src="http://placehold.it/120x120")
+      .info.flex1
+        wxc-elip.flex1(line="2") 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
+        .num_box
+          wxc-price.color(value="99.00" decimal="small")
+          wxc-counter.fr(number="5" max="{{99}}" min="1" bind:changenumber="onChangeNumber")
+
+    view.goods_card
+      text.checkbox.i.fz48.c999 &#xe602;
+      image.image(src="http://placehold.it/120x120")
+      .info.flex1
+        wxc-elip.flex1(line="2") 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
+        .num_box
+          wxc-price.color(value="99.00" decimal="small")
+          wxc-counter.fr(number="5" max="{{99}}" min="1" bind:changenumber="onChangeNumber")
 </template>
 
 <script>
-  import wepy from 'wepy'
+import wepy from 'wepy'
 
-  export default class Index extends wepy.page {
-    config = {
-      navigationBarTitleText: 'test'
-    }
+export default class Cart extends wepy.page {
+  config = {
+    navigationBarTitleText: '购物车',
+    usingComponents: {
+      'wxc-counter': '/minui/@minui/wxc-counter/_dist/index',
+      'wxc-price': '/minui/@minui/wxc-price/_dist/index',
+      'wxc-elip': '/minui/@minui/wxc-elip/_dist/index',
+    },
   }
+
+  data = {
+  }
+
+  methods = {
+    onChangeNumber(e) {
+      console.log(e.detail)
+    },
+  }
+}
 </script>
