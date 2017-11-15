@@ -1,17 +1,110 @@
 <style lang="sass">
 .container
-  color: red
+  display: flex
+  height: 100vh
+  background: #fff
+  overflow: hidden
+
+.box_left
+  width: 160rpx
+  height: 100vh
+  border-right: 1rpx solid #D8D8D8
+
+  >.menu_item
+    box-sizing: content-box
+    padding: 20rpx 0
+    height: 70rpx
+
+    .item
+      font-size: 28rpx
+      width: 100%
+      line-height: 50rpx
+      height: 50rpx
+      text-align: center
+
+    .active
+      border-left: 4rpx #ff0077 solid
+      color: #ff0077
+
+.box_right
+  flex: 1
+  transition: all 500ms ease-in-out
+  height: 100vh
+
+  .goods_box
+    height: 100vh
+    overflow: auto
+
+@for $i from 0 through 15
+  .translate#{$i}
+    transform: translate(0, -$i * 100vh)
 </style>
 <template lang="pug">
-.container category
+view.container
+  view.box_left.y_scroll
+    view.menu_item(wx:for="{{categoryList}}" wx:key bindtap="onCategoryChange({{item.id}})")
+      view.item(class="{{currentCatetoryId === item.id ? 'active' : ''}}") {{item.name}}
+  view.box_right(class="translate{{currentCategoryIndex}}")
+    view.goods_box(wx:for="{{categoryList}}" wx:key)
+      text {{item.name}}
 </template>
 
 <script>
-  import wepy from 'wepy'
+import wepy from 'wepy'
 
-  export default class Index extends wepy.page {
-    config = {
-      navigationBarTitleText: 'test'
-    }
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: '分类'
   }
+
+  data = {
+    currentCatetoryId: 0,
+    categoryList: [
+      {
+        name: '牛奶',
+        id: 0,
+      },
+      {
+        name: '咖啡',
+        id: 1,
+      },
+      {
+        name: '化妆品',
+        id: 2,
+      },
+      {
+        name: '家具生活',
+        id: 3,
+      },
+      {
+        name: '家电大空调',
+        id: 4,
+      },
+      {
+        name: '牛奶咖啡',
+        id: 5,
+      },
+      {
+        name: '🐂🥛☕️',
+        id: 6,
+      },
+      {
+        name: '🍎🍌🍊🍓',
+        id: 7,
+      },
+    ]
+  }
+
+  computed = {
+    currentCategoryIndex() {
+      return this.categoryList.findIndex(category => category.id === this.currentCatetoryId)
+    },
+  }
+
+  methods = {
+    onCategoryChange(category_id) {
+      this.currentCatetoryId = category_id
+    },
+  }
+}
 </script>
