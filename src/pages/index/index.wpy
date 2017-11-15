@@ -54,6 +54,30 @@
   >.banner
     height: 300rpx
 
+.goods_list
+  padding: 14rpx
+  width: 100%
+  height: auto
+  background: #fff
+  font-size: 0
+
+  >.goods_card
+    margin-bottom: 10rpx
+    padding: 6rpx
+    width: 50%
+    height: 240px
+    display: inline-block
+
+    .name
+      padding: 0 10rpx
+      line-height: 48rpx
+      background: #f1ece2
+      color: #9e8962
+
+    .image
+      width: 100%
+      height: 330rpx
+
 </style>
 <template lang="pug">
 view.container
@@ -92,11 +116,44 @@ view.container
       )
 
     image.banner.flex1(src="http://placehold.it/400x220")
+
+  view.goods_list
+    view.title.tc.mb20.pt10.fz28 猜你喜欢
+    view.goods_card
+      image.image(src="http://placehold.it/200x120")
+      view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶，旺仔牛奶
+      view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
+      view.price.fz24.color ￥99
+
+    view.goods_card
+      image.image(src="http://placehold.it/200x120")
+      view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶
+      view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试
+      view.price.fz24.color ￥99
+
+    view.goods_card
+      image.image(src="http://placehold.it/200x120")
+      view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶，旺仔牛奶
+      view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
+      view.price.fz24.color ￥99
+
+    view.goods_card
+      image.image(src="http://placehold.it/200x120")
+      view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶
+      view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试
+      view.price.fz24.color ￥99
+
+    view.goods_card
+      image.image(src="http://placehold.it/200x120")
+      view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶
+      view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试
+      view.price.fz24.color ￥99
 </template>
 
 <script>
 import wepy from 'wepy'
 import Container from '../../components/Container'
+import Elip from '../../components/Elip'
 
 export default class Index extends wepy.page {
   data = {
@@ -122,6 +179,7 @@ export default class Index extends wepy.page {
 
   components = {
     Container,
+    Elip,
   }
 
   methods = {
