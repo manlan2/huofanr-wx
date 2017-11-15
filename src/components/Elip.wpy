@@ -1,0 +1,22 @@
+<template lang="pug">
+view(
+  style="line-height: {{lineHeight}}rpx; overflow: hidden; height: {{lineHeight * line}}rpx; display: -webkit-box;display: box; text-overflow: ellipsis; -webkit-line-clamp: {{line}}; line-clamp: {{line}}; -webkit-box-orient: vertical; box-orient: vertical;"
+)
+  slot
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class Elip extends wepy.component {
+  props = {
+    line: {
+      type: String,
+      default: 2,
+    },
+    lineHeight: {
+      type: String,
+      default: 30,
+    },
+  }
+}
+</script>
