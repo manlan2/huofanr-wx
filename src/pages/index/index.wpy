@@ -123,37 +123,37 @@ view.container
       image.image(src="http://placehold.it/200x120")
       view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶，旺仔牛奶
       view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
-      view.price.fz24.color ￥99
+      wxc-price.fz24.color(value="99.00" decimal="small")
 
     view.goods_card
       image.image(src="http://placehold.it/200x120")
       view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶
       view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试
-      view.price.fz24.color ￥99
+      wxc-price.fz24.color(value="99.00" decimal="small")
 
     view.goods_card
       image.image(src="http://placehold.it/200x120")
       view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶，旺仔牛奶
       view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
-      view.price.fz24.color ￥99
+      wxc-price.fz24.color(value="99.00" decimal="small")
 
     view.goods_card
       image.image(src="http://placehold.it/200x120")
       view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶
       view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试
-      view.price.fz24.color ￥99
+      wxc-price.fz24.color(value="99.00" decimal="small")
 
     view.goods_card
       image.image(src="http://placehold.it/200x120")
       view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶
       view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试
-      view.price.fz24.color ￥99
+      wxc-price.fz24.color(value="99.00" decimal="small")
+
 </template>
 
 <script>
 import wepy from 'wepy'
 import Container from '../../components/Container'
-import Elip from '../../components/Elip'
 
 export default class Index extends wepy.page {
   data = {
@@ -174,17 +174,17 @@ export default class Index extends wepy.page {
     usingComponents: {
       'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
       'wxc-countdown': '/minui/@minui/wxc-countdown/_dist/index',
+      'wxc-price': '/minui/@minui/wxc-price/_dist/index',
     },
   }
 
   components = {
     Container,
-    Elip,
   }
 
   methods = {
     bindKeyword(e) {
-      this.keyword = e.detail.value.trim()
+      // this.keyword = e.detail.value.trim()
     },
 
     searchInputFocus() {
