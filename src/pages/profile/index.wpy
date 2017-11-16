@@ -1,17 +1,105 @@
 <style lang="sass">
-.container
-  color: red
+.header
+  padding-top: 50rpx
+  width: 100%
+  height: 400rpx
+  background: #ff0077
+  color: #fff
+  text-align: center
+  font-size: 28rpx
+
+  >.face
+    margin-bottom: 20rpx
+    width: 200rpx
+    height: 200rpx
+    border-radius: 50%
+
+.nav
+  display: flex
+  margin-bottom: 20rpx
+  padding: 20rpx 0
+  width: 100%
+  height: 120rpx
+  background: #fff
+  text-align: center
+  line-height: 40rpx
+
+  >.item
+    flex: 1
+
+  >.order
+    width: 240rpx
+    border-left: 1px #ececec solid
+
+    .i
+      font-size: 44rpx
+
+  .i
+    display: block
+    font-size: 46rpx
+
+  .label
+    font-size: 24rpx
+
+.cell_box
+  padding: 0 20rpx
+  display: flex
+  width: 100%
+  height: 100rpx
+  line-height: 100rpx
+  border-bottom: 1px #ececec solid
+  background: #fff
+  font-size: 28rpx
+
+  >.icon
+    width: 80rpx
+    color: #bfbfbf
+    text-align: right
+
 </style>
 <template lang="pug">
-.container profile
+view.container
+  view.header
+    image.face(src="http://placehold.it/200x200")
+    view.name 牛奶咖啡在哪
+
+  view.nav
+    view.item
+      text.i &#xe613;
+      text.label 待付款
+
+    view.item
+      text.i.fz40 &#xe603;
+      text.label 待发货
+
+    view.item
+      text.i &#xe66c;
+      text.label 待收货
+
+    view.order
+      text.i.color &#xe618;
+      text.label 我的订单
+
+  view.cell_box
+    view.flex1 我的优惠券
+    wxc-icon.icon(type="arrow-right" size="28" bindtap="searchInputFocus")
+  view.cell_box
+    view.flex1 我的优惠券
+    wxc-icon.icon(type="arrow-right" size="28" bindtap="searchInputFocus")
+  view.cell_box
+    view.flex1 我的收货地址
+    wxc-icon.icon(type="arrow-right" size="28" bindtap="searchInputFocus")
 </template>
 
 <script>
-  import wepy from 'wepy'
+import wepy from 'wepy'
 
-  export default class Index extends wepy.page {
-    config = {
-      navigationBarTitleText: 'test'
-    }
+export default class Profile extends wepy.page {
+  config = {
+    navigationBarTitleText: '个人中心',
+    usingComponents: {
+      'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
+    },
   }
+}
 </script>
