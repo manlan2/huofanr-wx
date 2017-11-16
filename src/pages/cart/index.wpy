@@ -1,4 +1,7 @@
 <style lang="sass">
+.container
+  margin-bottom: 80rpx
+
 .goods_group
   padding-bottom: 20rpx
   width: 100%
@@ -33,12 +36,36 @@
     .num_box
       height: 60rpx
       line-height: 74rpx
+
+.footer
+  position: fixed
+  bottom: 0
+  left: 0
+  z-index: 10
+  display: flex
+  width: 100%
+  height: 80rpx
+  line-height: 80rpx
+  background: #fff
+  border-top: 1rpx #ececec solid
+  font-size: 28rpx
+
+  .checkbox
+    padding: 0 20rpx
+
+  >.btn
+    margin-left: 10px
+    width: 180rpx
+    text-align: center
+    background: #ddd
+    color: #fff
+
 </style>
 <template lang="pug">
 view.container.pb40
   view.goods_group
     view.goods_card
-      text.checkbox.i.fz48.color_light &#xe608;
+      text.checkbox.i.fz40.color_light &#xe608;
       image.image(src="http://placehold.it/120x120")
       .info.flex1
         wxc-elip.flex1(line="2") 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
@@ -47,7 +74,7 @@ view.container.pb40
           wxc-counter.fr(number="5" max="{{99}}" min="1" bind:changenumber="onChangeNumber")
   view.goods_group
     view.goods_card
-      text.checkbox.i.fz48.c999 &#xe602;
+      text.checkbox.i.fz40.c999 &#xe602;
       image.image(src="http://placehold.it/120x120")
       .info.flex1
         wxc-elip.flex1(line="2") 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
@@ -56,7 +83,7 @@ view.container.pb40
           wxc-counter.fr(number="5" max="{{99}}" min="1" bind:changenumber="onChangeNumber")
 
     view.goods_card
-      text.checkbox.i.fz48.c999 &#xe602;
+      text.checkbox.i.fz40.c999 &#xe602;
       image.image(src="http://placehold.it/120x120")
       .info.flex1
         wxc-elip.flex1(line="2") 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
@@ -65,7 +92,7 @@ view.container.pb40
           wxc-counter.fr(number="5" max="{{99}}" min="1" bind:changenumber="onChangeNumber")
   view.goods_group
     view.goods_card
-      text.checkbox.i.fz48.c999 &#xe602;
+      text.checkbox.i.fz40.c999 &#xe602;
       image.image(src="http://placehold.it/120x120")
       .info.flex1
         wxc-elip.flex1(line="2") 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
@@ -74,13 +101,22 @@ view.container.pb40
           wxc-counter.fr(number="5" max="{{99}}" min="1" bind:changenumber="onChangeNumber")
 
     view.goods_card
-      text.checkbox.i.fz48.c999 &#xe602;
+      text.checkbox.i.fz40.c999 &#xe602;
       image.image(src="http://placehold.it/120x120")
       .info.flex1
         wxc-elip.flex1(line="2") 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
         .num_box
           wxc-price.color(value="99.00" decimal="small")
           wxc-counter.fr(number="5" max="{{99}}" min="1" bind:changenumber="onChangeNumber")
+
+  view.footer
+    .checkbox_box.flex1
+      text.checkbox.i.fz40.c999 &#xe602;
+      text 全选
+    .felx2
+      wxc-price.color.tr(value="99.00" decimal="small")
+      text.fz20 （包邮）
+    view.btn 去结算
 </template>
 
 <script>
