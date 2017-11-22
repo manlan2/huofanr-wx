@@ -1,0 +1,238 @@
+<style lang="sass">
+.search_container
+  background: #fff
+  border-bottom: 1px #ececec solid
+
+.search_box
+  display: flex
+  width: 100%
+  height: 72rpx
+  line-height: 72rpx
+  background: #f4f4f4
+  border-radius: 6px
+
+  >.search_icon
+    width: 70rpx
+    text-align: right
+    color: #999
+
+  >.search_ipt
+    flex: 1
+    margin-top: 6rpx
+    height: 60rpx
+    font-size: 28rpx
+    padding-left: 10px
+
+.order_card
+  margin-top: 20rpx
+  padding: 20rpx
+  padding-top: 0
+  width: 100%
+  background: #fff
+
+.header
+  height: 60rpx
+  line-height: 60rpx
+  font-size: 24rpx
+  color: #999
+
+.goods_info_box
+  padding-top: 10px
+  display: flex
+  border-top: 1px #ececec solid
+
+  >.goods_image
+    width: 100rpx
+    height: 100rpx
+    margin-right: 20rpx
+
+  >.info
+    flex: 1
+
+.order_info
+  margin-top: 10prx
+  height: 100rpx
+
+  >.info
+    width: 100%
+    height: 38rpx
+
+  >.btn_list
+    margin-top: 10rpx
+    width: 100%
+    height: 50rpx
+
+    .button
+      width: 150rpx
+      height: 50rpx
+      line-height: 50rpx
+      color: #999
+      text-align: center
+      font-size: 22rpx
+      border: 1px #ececec solid
+
+    .primary
+      background: #ff0077
+      color: #fff
+      border: none
+</style>
+<template>
+  <view class="container">
+    <Container topBottom="10" class="search_container">
+      <view class="search_box">
+        <wxc-icon type="search" size="28" @tap="searchInputFocus" class="search_icon"></wxc-icon>
+        <input type="text" class="search_ipt" @input="bindKeyword" placeholder="商品名称 | 订单号" placeholder-style="color: #999" focus="{{isFocus}}" />
+      </view>
+    </Container>
+    <Tab :tabData.sync="tabs" :tabValue.sync="currentTab"></Tab>
+
+    <view class="order_card">
+      <view class="header">
+        <text>订单编号：881888381838838</text>
+        <text class="fr">等待买家付款</text>
+      </view>
+
+      <view class="goods_info_box">
+        <image class="goods_image" src="http://placehold.it/50x50"></image>
+        <view class="info">
+          <wxc-elip class="fz24" line="2">测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字</wxc-elip>
+          <view class="c999 fz22">
+            蓝色
+            <text class="fr">2017-12-12</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="order_info">
+        <view class="info fz24 mt10">
+          <view class="fr">
+            共 1 件 应付总额：
+            <wxc-price class="color" value="99.00"></wxc-price>
+          </view>
+        </view>
+        <view class="btn_list">
+          <view class="fr button">取消订单</view>
+          <view class="primary fr button mr20">立即付款</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="order_card">
+      <view class="header">
+        <text>订单编号：881888381838838</text>
+        <text class="fr">等待买家付款</text>
+      </view>
+
+      <view class="goods_info_box">
+        <image class="goods_image" src="http://placehold.it/50x50"></image>
+        <view class="info">
+          <wxc-elip class="fz24" line="2">测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字</wxc-elip>
+          <view class="c999 fz22">
+            蓝色
+            <text class="fr">2017-12-12</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="order_info">
+        <view class="info fz24 mt10">
+          <view class="fr">
+            共 1 件 应付总额：
+            <wxc-price class="color" value="99.00"></wxc-price>
+          </view>
+        </view>
+        <view class="btn_list">
+          <view class="fr button">取消订单</view>
+          <view class="primary fr button mr20">立即付款</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="order_card">
+      <view class="header">
+        <text>订单编号：881888381838838</text>
+        <text class="fr">等待买家付款</text>
+      </view>
+
+      <view class="goods_info_box">
+        <image class="goods_image" src="http://placehold.it/50x50"></image>
+        <view class="info">
+          <wxc-elip class="fz24" line="2">测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字</wxc-elip>
+          <view class="c999 fz22">
+            蓝色
+            <text class="fr">2017-12-12</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="order_info">
+        <view class="info fz24 mt10">
+          <view class="fr">
+            共 1 件 应付总额：
+            <wxc-price class="color" value="99.00"></wxc-price>
+          </view>
+        </view>
+        <view class="btn_list">
+          <view class="fr button">取消订单</view>
+          <view class="primary fr button mr20">立即付款</view>
+        </view>
+      </view>
+    </view>
+
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import Tab from '../../components/Tab'
+import Container from '../../components/Container'
+
+export default class Profile extends wepy.page {
+  config = {
+    navigationBarTitleText: '我的订单',
+    usingComponents: {
+      'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
+      'wxc-price': '/minui/@minui/wxc-price/_dist/index',
+      'wxc-elip': '/minui/@minui/wxc-elip/_dist/index',
+    },
+  }
+
+  components = {
+    Tab,
+    Container,
+  }
+
+  data = {
+    isFocus: false,
+    currentTab: 0,
+    tabs: [
+      {
+        label: '全部',
+        value: 0,
+      },
+      {
+        label: '待付款',
+        value: 1,
+      },
+      {
+        label: '待发货',
+        value: 2,
+      },
+      {
+        label: '待收货',
+        value: 3,
+      },
+    ]
+  }
+
+  methods = {
+    bindKeyword(e) {
+      // this.keyword = e.detail.value.trim()
+    },
+
+    searchInputFocus() {
+      this.isFocus = true
+    },
+  }
+}
+</script>
