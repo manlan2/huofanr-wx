@@ -1,0 +1,181 @@
+<style lang="sass">
+.coupon_card
+  margin-top: 30rpx
+  width: 100%
+  background: #fff4f1
+
+.header
+  height: 70rpx
+  padding: 0 20rpx
+  line-height: 70rpx
+  color: #fff
+  font-size: 26rpx
+  background: #fc522d
+
+.content
+  display: flex
+  height: 260rpx
+
+.info
+  width: calc(100% - 260rpx)
+
+  >.item
+    margin: 20rpx 10rpx 20rpx 20rpx
+    height: 40rpx
+    display: flex
+    line-height: 40rpx
+    font-size: 24rpx
+
+    .label
+      width: 120rpx
+
+    .active
+      margin-right: 20rpx
+      width: 100rpx
+      text-align: center
+      background: #ff0077
+      color: #fff
+
+    .text
+      flex: 1
+
+.price_box
+  padding: 0 10rpx
+  width: 260rpx
+  line-height: 260rpx
+
+  >.price
+    display: inline-block
+    vertical-align: middle
+    width: 100%
+    height: 110rpx
+    line-height: 110rpx
+    text-align: center
+    background: #ff0077
+    color: #fff
+    font-size: 54rpx
+
+.coupon_card_used
+  @extend .coupon_card
+  background: #eee
+
+  .header
+    background: #888
+    color: #fff
+
+  .info .active
+    background: #888
+
+  .price_box .price
+    background: #888
+
+
+</style>
+<template>
+<view class="container">
+  <Tab :tabData.sync="tabs" :tabValue.sync="currentTab"></Tab>
+  <view class="coupon_card">
+    <view class="header ellipsis">
+      <text>双十一大促销，全场商品满1000减50</text>
+    </view>
+    <view class="content">
+      <view class="info">
+        <view class="item">
+          <view class="label active">满减券</view>
+          <view class="ellipsis text">测试文字测试文字测试文字测试文字测试文字</view>
+        </view>
+        <view class="item">
+          <view class="label">使用范围：</view>
+          <view class="ellipsis text">测试文字测试文字测试文字测试文字测试文字</view>
+        </view>
+        <view class="item">
+          <view class="label">领取时间：</view>
+          <view class="ellipsis text">测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字</view>
+        </view>
+        <view class="item">
+          <view class="label">使用平台：</view>
+          <view class="ellipsis text">测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字</view>
+        </view>
+      </view>
+      <view class="price_box">
+        <view class="price">
+          <wxc-price value="99.00"></wxc-price>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="coupon_card_used">
+    <view class="header ellipsis">
+      <text>双十一大促销，全场商品满1000减50</text>
+      <text class="fr fz22">已过期</text>
+    </view>
+    <view class="content">
+      <view class="info">
+        <view class="item">
+          <view class="label active">满减券</view>
+          <view class="ellipsis text">测试文字测试文字测试文字测试文字测试文字</view>
+        </view>
+        <view class="item">
+          <view class="label">使用范围：</view>
+          <view class="ellipsis text">测试文字测试文字测试文字测试文字测试文字</view>
+        </view>
+        <view class="item">
+          <view class="label">领取时间：</view>
+          <view class="ellipsis text">测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字</view>
+        </view>
+        <view class="item">
+          <view class="label">使用平台：</view>
+          <view class="ellipsis text">测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字</view>
+        </view>
+      </view>
+      <view class="price_box">
+        <view class="price">
+          <wxc-price value="99.00"></wxc-price>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import Tab from '../../components/Tab'
+
+export default class Profile extends wepy.page {
+  config = {
+    navigationBarTitleText: '优惠券',
+    usingComponents: {
+      'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
+      'wxc-price': '/minui/@minui/wxc-price/_dist/index',
+    },
+  }
+
+  components = {
+    Tab,
+  }
+
+  data = {
+    isFocus: false,
+    currentTab: 0,
+    tabs: [
+      {
+        label: '可使用',
+        value: 0,
+      },
+      {
+        label: '已使用',
+        value: 1,
+      },
+      {
+        label: '已过期',
+        value: 2,
+      },
+    ]
+  }
+
+  methods = {
+  }
+}
+</script>
