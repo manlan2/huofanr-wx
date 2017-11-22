@@ -60,7 +60,7 @@
 <template lang="pug">
 view.container
   view.box_left.y_scroll
-    view.menu_item(wx:for="{{categoryList}}" wx:key bindtap="onCategoryChange({{item.id}})")
+    view.menu_item(wx:for="{{categoryList}}" wx:key @tap="onCategoryChange({{item.id}})")
       view.item(class="{{currentCatetoryId === item.id ? 'active' : ''}}") {{item.name}}
   view.box_right(class="translate{{currentCategoryIndex}}")
     view.goods_container(wx:for="{{categoryList}}" wx:key)

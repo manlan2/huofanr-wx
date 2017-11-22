@@ -83,7 +83,7 @@
 view.container
   Container(topBottom="10")
     view.search_box
-      wxc-icon.search_icon(type="search" size="28" bindtap="searchInputFocus")
+      wxc-icon.search_icon(type="search" size="28" @tap="searchInputFocus")
       input.search_ipt(@input="bindKeyword" placeholder="搜索商品" placeholder-style="color: #999" focus="{{isFocus}}")
 
   swiper.swiper_container(indicator-dots interval="{{3000}}")
@@ -171,6 +171,7 @@ export default class Index extends wepy.page {
   }
 
   config = {
+    navigationBarTitleText: '活范儿',
     usingComponents: {
       'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
       'wxc-countdown': '/minui/@minui/wxc-countdown/_dist/index',
