@@ -62,26 +62,13 @@
     width: 100%
     height: 50rpx
 
-    .button
-      width: 150rpx
-      height: 50rpx
-      line-height: 50rpx
-      color: #999
-      text-align: center
-      font-size: 22rpx
-      border: 1px #ececec solid
-
-    .primary
-      background: #ff0077
-      color: #fff
-      border: none
 </style>
 <template>
   <view class="container">
     <Container topBottom="10" class="search_container">
       <view class="search_box">
         <wxc-icon type="search" size="28" @tap="searchInputFocus" class="search_icon"></wxc-icon>
-        <input type="text" class="search_ipt" @input="bindKeyword" placeholder="商品名称 | 订单号" placeholder-style="color: #999" focus="{{isFocus}}" />
+        <input type="text" class="search_ipt" @input="bindKeyword" placeholder="商品名称 | 订单号" placeholder-style="color: #999" focus="{{isFocus}}" />>
       </view>
     </Container>
     <Tab :tabData.sync="tabs" :tabValue.sync="currentTab"></Tab>
@@ -111,70 +98,8 @@
           </view>
         </view>
         <view class="btn_list">
-          <view class="fr button">取消订单</view>
-          <view class="primary fr button mr20">立即付款</view>
-        </view>
-      </view>
-    </view>
-
-    <view class="order_card">
-      <view class="header">
-        <text>订单编号：881888381838838</text>
-        <text class="fr">等待买家付款</text>
-      </view>
-
-      <view class="goods_info_box">
-        <image class="goods_image" src="http://placehold.it/50x50"></image>
-        <view class="info">
-          <wxc-elip class="fz24" line="2">测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字</wxc-elip>
-          <view class="c999 fz22">
-            蓝色
-            <text class="fr">2017-12-12</text>
-          </view>
-        </view>
-      </view>
-
-      <view class="order_info">
-        <view class="info fz24 mt10">
-          <view class="fr">
-            共 1 件 应付总额：
-            <wxc-price class="color" value="99.00"></wxc-price>
-          </view>
-        </view>
-        <view class="btn_list">
-          <view class="fr button">取消订单</view>
-          <view class="primary fr button mr20">立即付款</view>
-        </view>
-      </view>
-    </view>
-
-    <view class="order_card">
-      <view class="header">
-        <text>订单编号：881888381838838</text>
-        <text class="fr">等待买家付款</text>
-      </view>
-
-      <view class="goods_info_box">
-        <image class="goods_image" src="http://placehold.it/50x50"></image>
-        <view class="info">
-          <wxc-elip class="fz24" line="2">测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字</wxc-elip>
-          <view class="c999 fz22">
-            蓝色
-            <text class="fr">2017-12-12</text>
-          </view>
-        </view>
-      </view>
-
-      <view class="order_info">
-        <view class="info fz24 mt10">
-          <view class="fr">
-            共 1 件 应付总额：
-            <wxc-price class="color" value="99.00"></wxc-price>
-          </view>
-        </view>
-        <view class="btn_list">
-          <view class="fr button">取消订单</view>
-          <view class="primary fr button mr20">立即付款</view>
+          <button class="fr zan-btn zan-btn--small">取消订单</button>
+          <button class="fr mr20 zan-btn zan-btn--small zan-btn--danger">立即付款</button>
         </view>
       </view>
     </view>
