@@ -173,6 +173,10 @@
     <button class="flex1 zan-btn zan-btn--large zan-btn--danger_light">加入购物车</button>
     <button class="flex1 zan-btn zan-btn--large zan-btn--danger">立即购买</button>
   </view>
+
+  <view class="tip">
+    <WxParse :parserContent.sync="content" />
+  </view>
 </view>
 </template>
 
@@ -180,6 +184,7 @@
 import wepy from 'wepy'
 import Dialog from '../../components/Dialog'
 import Cell from '../../components/Cell'
+import WxParse from '../../components/WxParse'
 
 export default class Goods extends wepy.page {
   components = {
@@ -187,6 +192,7 @@ export default class Goods extends wepy.page {
     Cell,
     CellActivity: Cell,
     CellCategory: Cell,
+    WxParse,
   }
 
   config = {
@@ -202,6 +208,16 @@ export default class Goods extends wepy.page {
   }
 
   data = {
+    content: '<text style="color: red;">新232321</text>',
+  }
+
+  onLoad() {
+    this.content = '<text style="color: blue;">测试数据</text>'
+    this.$apply()
+    // 调用通知接口通知组件更新数据
+    // BUG 需要调用两次才能真正的 invoke
+    this.$invoke('WxParse', 'htmlParserNotice')
+    this.$invoke('WxParse', 'htmlParserNotice')
   }
 
   methods = {
