@@ -31,31 +31,12 @@
     width: 240rpx
     border-left: 1px #ececec solid
 
-    .i
-      font-size: 44rpx
-
   .i
     display: block
-    font-size: 46rpx
+    font-size: 44rpx
 
   .label
     font-size: 24rpx
-
-.cell_box
-  padding: 0 20rpx
-  display: flex
-  width: 100%
-  height: 100rpx
-  line-height: 100rpx
-  border-bottom: 1px #ececec solid
-  background: #fff
-  font-size: 28rpx
-
-  >.icon
-    width: 80rpx
-    color: #bfbfbf
-    text-align: right
-
 </style>
 <template lang="pug">
 view.container
@@ -69,37 +50,33 @@ view.container
       text.label 待付款
 
     view.item
-      text.i.fz40 &#xe603;
+      text.i &#xe604;
       text.label 待发货
 
     view.item
-      text.i &#xe66c;
+      text.i &#xe62c;
       text.label 待收货
 
     view.order
       text.i.color &#xe618;
       text.label 我的订单
 
-  view.cell_box
-    view.flex1 我的优惠券
-    wxc-icon.icon(type="arrow-right" size="28" bindtap="searchInputFocus")
-  view.cell_box
-    view.flex1 我的优惠券
-    wxc-icon.icon(type="arrow-right" size="28" bindtap="searchInputFocus")
-  view.cell_box
-    view.flex1 我的收货地址
-    wxc-icon.icon(type="arrow-right" size="28" bindtap="searchInputFocus")
+  Cell(url='/pages/order/index') 我的优惠券
+  Cell(url='/pages/order/index') 我的实名认证
+  Cell(url='/pages/order/index') 我的收货地址
 </template>
 
 <script>
 import wepy from 'wepy'
+import Cell from '../../components/Cell'
 
 export default class Profile extends wepy.page {
+  components = {
+    Cell,
+  }
+
   config = {
     navigationBarTitleText: '个人中心',
-    usingComponents: {
-      'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
-    },
   }
 }
 </script>
