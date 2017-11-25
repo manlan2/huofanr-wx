@@ -1,0 +1,171 @@
+<style lang="sass">
+.goods_list
+  margin-top: 20rpx
+  padding: 20rpx
+  padding-top: 0
+  width: 100%
+  background: #fff
+
+.goods_info_box
+  margin-top: 30rpx
+  display: flex
+
+  >.goods_image
+    width: 100rpx
+    height: 100rpx
+    margin-right: 20rpx
+
+  >.info
+    flex: 1
+
+.cell_box
+  padding: 0 20rpx
+  display: flex
+  line-height: 100rpx
+  border-bottom: 1px #ececec solid
+  background: #fff
+  font-size: 28rpx
+
+  >.icon
+    display: block
+    width: 80rpx
+    color: #999
+    font-size: 32rpx
+    text-align: right
+    font-weight: bold
+
+.info_list
+  margin-top: 10px
+  padding: 0 20rpx
+  width: 100%
+  font-size: 28rpx
+
+  >.info
+    line-height: 50rpx
+
+.btn_area
+  margin-top: 20rpx
+  margin-bottom: 20rpx
+  padding: 0 20rpx
+  width: 100%
+</style>
+
+<template>
+<view class="container">
+  <view class="goods_list">
+    <view class="goods_info_box">
+      <image class="goods_image" src="http://placehold.it/50x50"></image>
+      <view class="info">
+        <wxc-elip class="fz24" line="2">测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字</wxc-elip>
+        <view class="c999 fz22">蓝色 x 2</view>
+      </view>
+    </view>
+
+    <view class="goods_info_box">
+      <image class="goods_image" src="http://placehold.it/50x50"></image>
+      <view class="info">
+        <wxc-elip class="fz24" line="2">测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字</wxc-elip>
+        <view class="c999 fz22">蓝色 x 2</view>
+      </view>
+    </view>
+
+    <view class="goods_info_box">
+      <image class="goods_image" src="http://placehold.it/50x50"></image>
+      <view class="info">
+        <wxc-elip class="fz24" line="2">测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字</wxc-elip>
+        <view class="c999 fz22">蓝色 x 2</view>
+      </view>
+    </view>
+
+    <view class="fz28 tr">
+      应付：
+      <wxc-price class="color" value="99.00"></wxc-price>
+    </view>
+  </view>
+
+  <view class="bg_white mt30">
+    <navigator class="cell_box" open-type="navigate" url="/pages/profile/coupon">
+      <view class="flex1 ellipsis">
+        优惠券
+        <text class="c999 ml20">满1000减99</text>
+      </view>
+      <text class="i icon">&#xe600;</text>
+    </navigator>
+
+    <view class="cell_box">
+      <view class="flex1 ellipsis">
+        积分
+        <text class="color ml20">使用59积分抵扣 100 块</text>
+      </view>
+      <switch checked bindchange="switchChange" color="#ff0077" />
+    </view>
+
+    <navigator class="cell_box" open-type="navigate" url="/pages/profile/address">
+      <view class="flex1 ellipsis">
+        收货地址
+        <text class="c999 ml20">测试文测试文字测试文字测试文字测试文字测试文字测试文字字测试文字</text>
+      </view>
+      <text class="i icon">&#xe600;</text>
+    </navigator>
+
+    <view class="info_list">
+      <view class="info">
+        商品应付总计：
+        <wxc-price class="orange fr" value="99.00"></wxc-price>
+      </view>
+
+      <view class="info">
+        运费:
+        <wxc-price class="orange fr" value="99.00"></wxc-price>
+      </view>
+
+      <view class="info">
+        税费:
+        <wxc-price class="orange fr" value="99.00"></wxc-price>
+      </view>
+
+      <view class="info">
+        优惠券:
+        <wxc-price class="orange fr" value="99.00"></wxc-price>
+      </view>
+
+      <view class="info">
+        积分抵扣:
+        <wxc-price class="orange fr" value="99.00"></wxc-price>
+      </view>
+
+      <view class="info">
+        应付金额:
+        <wxc-price class="color fr" value="99.00"></wxc-price>
+      </view>
+    </view>
+  </view>
+
+  <view class="btn_area">
+    <button class="mt40 zan-btn zan-btn--primary">微信支付</button>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Pay extends wepy.page {
+  config = {
+    navigationBarTitleText: '确认订单',
+    usingComponents: {
+      'wxc-price': '/minui/@minui/wxc-price/_dist/index',
+      'wxc-elip': '/minui/@minui/wxc-elip/_dist/index',
+    },
+  }
+
+  data = {
+  }
+
+  methods = {
+    switchChange(e) {
+      console.log(e.dateil.value)
+    }
+  }
+}
+</script>
