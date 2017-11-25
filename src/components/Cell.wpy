@@ -37,8 +37,8 @@ export default class CellNavigate extends wepy.component {
   methods = {
     handleClick() {
       if (this.url) {
-        if (this.openType === 'navigate') wx.navigateTo({url: this.url})
-        if (this.openType === 'redirectTo') wx.redirectTo({url: this.url})
+        if (this.openType === 'navigate') wepy.navigateTo({url: this.url})
+        if (this.openType === 'redirectTo') wepy.redirectTo({url: this.url})
       } else {
         this.$emit('cellClick')
       }

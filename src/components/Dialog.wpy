@@ -49,7 +49,7 @@ export default class zanDialog extends wepy.component {
         timingFunction: 'ease'
       })
       this.animation = animation
-      wx.createSelectorQuery()
+      wepy.createSelectorQuery()
         .select('.zan-dialog__container')
         .boundingClientRect((rect) => {
           this.showDialog
