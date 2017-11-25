@@ -65,7 +65,7 @@
 view.container.pb40
   view.goods_group
     view.goods_card
-      text.checkbox.i.fz40.color_light &#xe608;
+      text.checkbox.i.i-checked
       image.image(src="http://placehold.it/120x120")
       .info.flex1
         wxc-elip.flex1(line="2") 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
@@ -74,7 +74,7 @@ view.container.pb40
           wxc-counter.fr(number="5" max="{{99}}" min="1" bind:changenumber="onChangeNumber")
   view.goods_group
     view.goods_card
-      text.checkbox.i.fz40.c999 &#xe602;
+      text.checkbox.i.i-circle
       image.image(src="http://placehold.it/120x120")
       .info.flex1
         wxc-elip.flex1(line="2") 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
@@ -83,7 +83,7 @@ view.container.pb40
           wxc-counter.fr(number="5" max="{{99}}" min="1" bind:changenumber="onChangeNumber")
 
     view.goods_card
-      text.checkbox.i.fz40.c999 &#xe602;
+      text.checkbox.i.i-circle
       image.image(src="http://placehold.it/120x120")
       .info.flex1
         wxc-elip.flex1(line="2") 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
@@ -92,7 +92,7 @@ view.container.pb40
           wxc-counter.fr(number="5" max="{{99}}" min="1" bind:changenumber="onChangeNumber")
   view.goods_group
     view.goods_card
-      text.checkbox.i.fz40.c999 &#xe602;
+      text.checkbox.i.i-circle
       image.image(src="http://placehold.it/120x120")
       .info.flex1
         wxc-elip.flex1(line="2") 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
@@ -101,7 +101,7 @@ view.container.pb40
           wxc-counter.fr(number="5" max="{{99}}" min="1" bind:changenumber="onChangeNumber")
 
     view.goods_card
-      text.checkbox.i.fz40.c999 &#xe602;
+      text.checkbox.i.i-circle
       image.image(src="http://placehold.it/120x120")
       .info.flex1
         wxc-elip.flex1(line="2") 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
@@ -111,7 +111,7 @@ view.container.pb40
 
   view.footer
     .checkbox_box.flex1
-      text.checkbox.i.fz40.c999 &#xe602;
+      text.checkbox.i.i-circle
       text 全选
     .felx2
       wxc-price.color.tr(value="99.00" decimal="small")
