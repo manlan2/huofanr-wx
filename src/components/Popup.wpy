@@ -34,9 +34,7 @@
 
 <template>
 <view class="zan-popup zan-popup--{{direction}} {{ showPopup ? 'zan-popup--show' : ''}}">
-  <view style="padding: 15px;">
-    <slot></slot>
-  </view>
+  <slot></slot>
 </view>
 </template>
 
