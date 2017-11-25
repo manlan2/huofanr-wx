@@ -41,7 +41,10 @@ module.exports = {
   plugins: {
   },
   appConfig: {
-    noPromiseAPI: ['createSelectorQuery']
+    noPromiseAPI: ['createSelectorQuery'],
+    promisifyAPI: {
+      // 'chooseAddress': true,
+    }
   }
 }
 
