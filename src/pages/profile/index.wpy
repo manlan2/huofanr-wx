@@ -61,9 +61,9 @@ view.container
       text.i.color &#xe618;
       text.label 我的订单
 
-  Cell(url='/pages/order/index') 我的优惠券
-  Cell(url='/pages/order/index') 我的实名认证
-  Cell(url='/pages/order/index') 我的收货地址
+  Cell(url='/pages/profile/coupon') 我的优惠券
+  Cell(url='/pages/profile/auth') 我的实名认证
+  Cell(url='/pages/profile/address') 我的收货地址
 </template>
 
 <script>

@@ -11,10 +11,12 @@ export default class extends wepy.app {
       'pages/index/index',
       'pages/category/index',
       'pages/profile/index',
+      'pages/profile/address',
+      'pages/profile/coupon',
+      'pages/profile/auth',
       'pages/cart/index',
       'pages/order/index',
       'pages/goods/index',
-      'pages/coupon/index',
     ],
     window: {
       backgroundTextStyle: 'light',
