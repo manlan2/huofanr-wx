@@ -1,0 +1,195 @@
+<style lang="sass">
+.tab_box
+  width: 100%
+  display: flex
+  height: 80rpx
+  line-height: 34rpx
+  background: #fff
+
+  >.tab
+    flex: 1
+    margin: 0 20rpx
+    font-size: 24rpx
+    text-align: center
+
+  >.active
+    color: #ff0077
+    border-bottom: 2px #ff0077 solid
+
+.goods_list
+  padding: 20rpx 10rpx
+  width: 100%
+  font-size: 0
+
+.goods_card
+  margin: 10rpx
+  width: calc(50% - 20rpx)
+  display: inline-block
+  border: 1px #ddd solid
+
+  >.image
+    margin-bottom: 5px
+    padding: 20rpx
+    width: 100%
+    height: 360rpx
+    background: #fff
+
+    image
+      width: 100%
+      height: 320rpx
+
+.goods_info
+  padding: 20rpx
+  padding-top: 0
+
+  >.price
+    margin-bottom: -10rpx
+    height: 40rpx
+    line-height: 40rpx
+
+  >.subtitle
+    margin-bottom: 10rpx
+    height: 38rpx
+    line-height: 38rpx
+
+  .progress
+    position: relative
+    width: 40%
+    border: 1rpx #ff0077 solid
+
+    .limit_num
+      position: absolute
+      right: -85%
+      top: -10rpx
+      font-size: 18rpx
+
+.footer
+  display: flex
+  height: 64rpx
+  line-height: 64rpx
+  border: 1px #ff0077 solid
+  text-align: center
+
+  >.left
+    width: 70%
+    background: #ff0077
+    color: #fff
+
+  >.right
+    width: 30%
+    color: #ff0077
+    font-size: 22rpx
+</style>
+
+<template lang="pug">
+view.container
+  view.tab_box
+    view(wx:for="{{tabData}}" wx:key @tap="tabChange({{item.value}})" class="{{currentTab === item.value ? 'tab active' : 'tab'}}")
+      view {{item.label}}
+      view {{item.time}}
+
+  view.goods_list
+    view.goods_card
+      view.image
+        image(src="http://placehold.it/200x120")
+      view.goods_info
+        view.ellipsis.fz24.c333 测试文字测试文字测试文字测试文字测试文字测试文字
+        view.ellipsis.fz20.color.subtitle 测试文字
+        view.progress
+          wxc-progress(percent="40" background-color="transparent" active-color="#ff0077" radius="0" stroke-width="8")
+          view.limit_num.color 剩余 23 件
+
+      view.footer
+        view.left
+          text.price.fz28.mr10 ￥99
+          text.fz20.text_delete 原价￥200
+        view.right 立即抢购
+
+    view.goods_card
+      view.image
+        image(src="http://placehold.it/200x120")
+      view.goods_info
+        view.ellipsis.fz24.c333 测试文字测试文字测试文字测试文字测试文字测试文字
+        view.ellipsis.fz20.color.subtitle 测试文字
+        view.progress
+          wxc-progress(percent="40" background-color="transparent" active-color="#ff0077" radius="0" stroke-width="8")
+          view.limit_num.color 剩余 23 件
+
+      view.footer
+        view.left
+          text.price.fz28.mr10 ￥99
+          text.fz20.text_delete 原价￥200
+        view.right 立即抢购
+
+    view.goods_card
+      view.image
+        image(src="http://placehold.it/200x120")
+      view.goods_info
+        view.ellipsis.fz24.c333 测试文字测试文字测试文字测试文字测试文字测试文字
+        view.ellipsis.fz20.color.subtitle 测试文字
+        view.progress
+          wxc-progress(percent="40" background-color="transparent" active-color="#ff0077" radius="0" stroke-width="8")
+          view.limit_num.color 剩余 23 件
+
+      view.footer
+        view.left
+          text.price.fz28.mr10 ￥99
+          text.fz20.text_delete 原价￥200
+        view.right 立即抢购
+</template>
+
+<script>
+import wepy from 'wepy'
+import Tab from '../../components/Tab'
+
+export default class Pay extends wepy.page {
+  config = {
+    navigationBarTitleText: '限时购',
+    usingComponents: {
+      'wxc-price': '/minui/@minui/wxc-price/_dist/index',
+      'wxc-progress': '/minui/@minui/wxc-progress/_dist/index',
+    },
+  }
+
+  components = {
+    Tab,
+  }
+
+  data = {
+    currentTab: 0,
+    tabData: [
+      {
+        label: '已开始',
+        time: '10:00',
+        value: 0,
+      },
+      {
+        label: '已开抢',
+        time: '15:00',
+        value: 1,
+      },
+      {
+        label: '抢购中',
+        time: '20:00',
+        value: 2,
+      },
+      {
+        label: '即将开始',
+        time: '明15:00',
+        value: 3,
+      },
+      {
+        label: '即将开始',
+        time: '明15:00',
+        value: 4,
+      },
+    ]
+  }
+
+  methods = {
+    tabChange(value) {
+      this.currentTab = value
+    }
+  }
+}
+</script>
