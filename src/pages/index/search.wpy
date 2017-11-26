@@ -1,0 +1,145 @@
+<style lang="sass">
+.search_container
+  display: flex
+  line-height: 72rpx
+
+.search_box
+  display: flex
+  width: 100%
+  height: 72rpx
+  line-height: 72rpx
+  background: #fff
+  border-radius: 6px
+
+  >.search_ipt
+    flex: 1
+    margin-top: 6rpx
+    height: 60rpx
+    font-size: 28rpx
+    padding-left: 10px
+
+  >.search_icon
+    width: 60rpx
+    text-left: center
+    color: #999
+
+.order_list
+  padding-left: 20rpx
+  height: 80rpx
+  display: flex
+  line-height: 80rpx
+  background: #fff
+  border-top: 1px #ececec solid
+  border-bottom: 1px #ececec solid
+
+  >.item
+    text-align: center
+    width: 120rpx
+    font-size: 28rpx
+
+    .icon
+      vertical-align: middle
+      width: 30rpx
+      height: 30rpx
+
+.goods_list
+  padding: 20rpx 10rpx
+  width: 100%
+  background: #fff
+  font-size: 0
+
+.goods_card
+  margin: 10rpx
+  padding: 20rpx
+  width: calc(50% - 20rpx)
+  display: inline-block
+  border: 1px #ececec solid
+
+  >.image
+    margin-bottom: 5px
+    width: 100%
+    height: 320rpx
+
+  >.price
+    margin-bottom: -10rpx
+    height: 40rpx
+    line-height: 40rpx
+
+  >.subtitle
+    height: 38rpx
+    line-height: 38rpx
+</style>
+
+<template lang="pug">
+view.container
+  Container.search_container(topBottom="10")
+    view.search_box.flex1
+      input.search_ipt(
+        @input="bindKeyword"
+        placeholder="搜索商品"
+        placeholder-style="color: #999"
+        focus value="{{keyword}}"
+        confirm-type="search"
+        @confirm="handleSearch"
+      )
+      wxc-icon.search_icon(wx:if="{{keyword}}" type="close" size="26" @tap="clearKeyword")
+
+    view.fz28.ml20(wx:if="{{keyword}}" @tap="handleSearch") 搜索
+    navigator.fz28.ml20(wx:else open-type="navigateBack" delta="1") 取消
+
+  view.order_list
+    view.item
+      text 综合
+    view.item
+      text 销量
+      image.icon(src="/static/imgs/icon_order_top.png")
+    view.item
+      text 价格
+      image.icon(src="/static/imgs/icon_order_down.png")
+
+  view.goods_list
+    view.goods_card
+      image.image(src="http://placehold.it/200x120")
+      view.ellipsis.fz24.c333 测试文字测试文字测试文字测试文字测试文字测试文字
+      view.ellipsis.fz20.color_light.subtitle 测试文字
+      view.price
+        wxc-price.color.fz32(value="99.00")
+        text.fr.fz20.c999 99.9%好评
+
+</template>
+
+<script>
+import wepy from 'wepy'
+import Container from '../../components/Container'
+
+export default class Search extends wepy.page {
+  config = {
+    navigationBarTitleText: '搜索',
+    usingComponents: {
+      'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
+      'wxc-price': '/minui/@minui/wxc-price/_dist/index',
+    },
+  }
+
+  components = {
+    Container,
+  }
+
+  data = {
+    keyword: ''
+  }
+
+  methods = {
+    bindKeyword(e) {
+      this.keyword = e.detail.value.trim()
+    },
+
+    clearKeyword() {
+      this.keyword = ''
+    },
+
+    handleSearch() {
+    },
+  }
+}
+</script>
