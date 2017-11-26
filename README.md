@@ -1,13 +1,12 @@
 # 活范儿小程序
 
-## start
+## Start
 ```bash
 npm install wepy-cli -g
 cd myproject
 npm install
 wepy build --watch
 ```
-[wepy](https://wepyjs.github.io/wepy/#/)
 
 ## 重要提醒
 1. 使用微信开发者工具-->添加项目，项目目录请选择 `myproject/dist` 目录。
@@ -16,6 +15,11 @@ wepy build --watch
 4. 微信开发者工具-->项目-->关闭代码压缩上传。
 [wepy 文档](https://wepyjs.github.io/wepy/) 文档
 [wepy wiki](https://github.com/wepyjs/wepy/wiki)
+
+## Build
+```bash
+npm run build
+```
 
 ## 第三方 UI 库
 [minui](https://github.com/meili/minui)
