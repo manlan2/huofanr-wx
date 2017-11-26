@@ -19,6 +19,7 @@
     "@minui/wxc-label": "^1.0.2",
     "@minui/wxc-loading": "^1.0.2",
     "@minui/wxc-price": "^1.0.2",
+    "@minui/wxc-progress": "^1.0.2",
     "promise-polyfill": "^6.0.2",
     "wepy": "^1.6.0",
     "wepy-async-function": "^1.4.4"
