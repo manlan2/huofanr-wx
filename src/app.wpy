@@ -4,6 +4,10 @@
 import wepy from 'wepy'
 import 'wepy-async-function'
 import 'promise-polyfill'
+import CONFIG from './static/js/config'
+import Token from './static/js/token'
+
+const token = new Token()
 
 export default class extends wepy.app {
   config = {
@@ -65,9 +69,85 @@ export default class extends wepy.app {
     super()
     this.use('requestfix')
     this.use('promisify')
+    this.requestParams = {}
+
+    // 为了防止无限循环，记录 401 次数
+    this.noPermissionTimes = 0
+
+    this.intercept('request', {
+      config(params) {
+        if (params.url.indexOf('https://') < 0) {
+          params.url = CONFIG.baseUrl + params.url
+        }
+
+        const token = wepy.getStorageSync('token')
+        if (token) params.header = {token}
+
+        // 当 url 为 'users/login' 时，不储存 params，否则会把上一次请求的 params 覆盖掉
+        if (params.url.indexOf('cmd/login') < 0) {
+          // 储存当前的 params ，如果 http 401，再次拿这个 params 重新请求 API
+          this.requestParams = params
+        }
+        return params
+      },
+      async success(res) {
+        const statusCode = res.statusCode.toString()
+        if (statusCode === '401') this.noPermissionTimes++
+        const codeStartChar = statusCode.charAt(0)
+        if (codeStartChar === '2') {
+          return res.data.data
+        } else if (statusCode === '401') {
+          // 未授权重试机制，当检测为 401 时，获取新的 token，然后重新发起对应的请求
+          // 为了防止无限循环，只重新发起一次请求
+          if (this.noPermissionTimes > 1) {
+            this.noPermissionTimes = 0
+          } else {
+            return this._refetchHttp()
+          }
+        } else {
+          this._processError('网络错误，请重试')
+        }
+      },
+      fail(error) {
+        // TODO 提示错误信息
+        this._processError(error)
+        return error
+      },
+    })
   }
 
-  onLaunch() {
+  async _refetchHttp() {
+    // 重新获取 token
+    const res = await token.getTokenFromServer()
+    if (!res) {
+      // TODO 重新获取 token 失败了怎么办？
+      this._processError('重新获取 token 失败')
+      return null
+    }
+    const {
+      url,
+      data,
+      method,
+    } = this.requestParams
+    const params = {
+      url,
+      data,
+      method,
+    }
+    // 拿着上一次的 params 重新请求 API
+    return wepy.request(params)
+  }
+
+  _processError(err) {
+    console.log(err)
+  }
+
+  async onLaunch() {
+    // token.verify()
+    const params = {
+      url: 'page/profile',
+    }
+    await wepy.request(params)
   }
 }
 </script>
