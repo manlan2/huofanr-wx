@@ -45,25 +45,25 @@ view.container
     view.name 牛奶咖啡在哪
 
   view.nav
-    view.item
+    navigator.item(url="/pages/order/index" open-type="navigate")
       text.i &#xe613;
       text.label 待付款
 
-    view.item
+    navigator.item(url="/pages/order/index" open-type="navigate")
       text.i &#xe604;
       text.label 待发货
 
-    view.item
+    navigator.item(url="/pages/order/index" open-type="navigate")
       text.i &#xe62c;
       text.label 待收货
 
-    view.order
+    navigator.order(url="/pages/order/index" open-type="navigate")
       text.i.color &#xe618;
       text.label 我的订单
 
-  Cell(url='/pages/profile/coupon') 我的优惠券
-  Cell(url='/pages/profile/auth') 我的实名认证
-  Cell(url='/pages/profile/address') 我的收货地址
+  CellA(url='/pages/profile/coupon') 我的优惠券
+  CellB(url='/pages/profile/auth') 我的实名认证
+  CellC(url='/pages/profile/address') 我的收货地址
 </template>
 
 <script>
@@ -72,7 +72,9 @@ import Cell from '../../components/Cell'
 
 export default class Profile extends wepy.page {
   components = {
-    Cell,
+    CellA: Cell,
+    CellB: Cell,
+    CellC: Cell,
   }
 
   config = {

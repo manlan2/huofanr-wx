@@ -119,31 +119,31 @@ view.container
 
   view.goods_list
     view.title.tc.mb20.pt10.fz28 猜你喜欢
-    view.goods_card
+    navigator.goods_card(url="/pages/goods/index" open-type="navigate")
       image.image(src="http://placehold.it/200x120")
       view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶，旺仔牛奶
       view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
       wxc-price.fz24.color(value="99.00" decimal="small")
 
-    view.goods_card
+    navigator.goods_card(url="/pages/goods/index" open-type="navigate")
       image.image(src="http://placehold.it/200x120")
       view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶
       view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试
       wxc-price.fz24.color(value="99.00" decimal="small")
 
-    view.goods_card
+    navigator.goods_card(url="/pages/goods/index" open-type="navigate")
       image.image(src="http://placehold.it/200x120")
       view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶，旺仔牛奶
       view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
       wxc-price.fz24.color(value="99.00" decimal="small")
 
-    view.goods_card
+    navigator.goods_card(url="/pages/goods/index" open-type="navigate")
       image.image(src="http://placehold.it/200x120")
       view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶
       view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试
       wxc-price.fz24.color(value="99.00" decimal="small")
 
-    view.goods_card
+    navigator.goods_card(url="/pages/goods/index" open-type="navigate")
       image.image(src="http://placehold.it/200x120")
       view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶
       view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试

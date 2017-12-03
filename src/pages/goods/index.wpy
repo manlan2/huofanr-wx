@@ -171,7 +171,7 @@
       <wxc-badge class="cart_badge">9</wxc-badge>
     </view>
     <button class="flex1 zan-btn zan-btn--large zan-btn--danger_light">加入购物车</button>
-    <button class="flex1 zan-btn zan-btn--large zan-btn--danger">立即购买</button>
+    <button class="flex1 zan-btn zan-btn--large zan-btn--danger" @tap="buyNow">立即购买</button>
   </view>
 
   <view class="tip">
@@ -235,6 +235,10 @@ export default class Goods extends wepy.page {
 
     saveCategory() {
       this.$invoke('Dialog', 'toggleDialog')
+    },
+
+    buyNow() {
+      this.$navigate('/pages/cart/pay')
     },
   }
 }
