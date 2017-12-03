@@ -114,7 +114,7 @@
     </view>
   </view>
 
-  <CellActivity class="cell_box" @cellClick.user="link2activity">
+  <CellActivity class="cell_box" @cellClick.user="linkactivity">
     <wxc-label class="mr20">活动</wxc-label>
     新春活动促销，满 100元 减 5元
   </CellActivity>
@@ -229,7 +229,7 @@ export default class Goods extends wepy.page {
       console.log(e.detail)
     },
 
-    link2activity() {
+    linkactivity() {
       console.log(2)
     },
 
