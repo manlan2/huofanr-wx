@@ -58,8 +58,7 @@ export default class WxParseHTML extends wepy.component {
   }
 
   wxParseImgLoad(image) {
-    let imgInfo = image.detail
-    console.log(imgInfo)
+    // let imgInfo = image.detail
   }
 
   htmlParse() {
