@@ -20,6 +20,7 @@ export default class extends wepy.app {
       'pages/profile/address',
       'pages/profile/coupon',
       'pages/profile/auth',
+      'pages/profile/uploadIDCard',
       'pages/cart/index',
       'pages/cart/pay',
       'pages/cart/pay-success',
@@ -124,18 +125,8 @@ export default class extends wepy.app {
       this._processError('重新获取 token 失败')
       return null
     }
-    const {
-      url,
-      data,
-      method,
-    } = this.requestParams
-    const params = {
-      url,
-      data,
-      method,
-    }
     // 拿着上一次的 params 重新请求 API
-    return wepy.request(params)
+    return wepy.request(this.requestParams)
   }
 
   _processError(err) {
