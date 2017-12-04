@@ -30,6 +30,7 @@
   margin-top: 30rpx
   padding: 0 20rpx
   width: 100%
+
 </style>
 
 <template>
@@ -64,31 +65,12 @@
     </view>
   </view>
 
-  <button class="mt40 zan-btn zan-btn--large zan-btn--danger" @tap="togglePopup">添加实名信息</button>
-
-  <Popup direction="right">
-    <view class="zan-form">
-      <view class="zan-cell zan-form__item">
-        <text class="zan-form__title">姓名</text>
-        <input class="zan-form__input zan-cell__bd" placeholder="请输入姓名" />
-      </view>
-      <view class="zan-cell zan-form__item zan-cell--last-child">
-        <text class="zan-form__title">身份证号</text>
-        <input class="zan-form__input zan-cell__bd" type="number" maxlength="20" placeholder="请输入身份证号" />
-      </view>
-    </view>
-
-    <view class="btn_area">
-      <button class="mt40 zan-btn zan-btn--large zan-btn--danger" @tap="togglePopup">确认添加</button>
-      <button class="mt30 zan-btn zan-btn--large" style="border:1rpx solid #e5e5e5;" @tap="togglePopup">取消</button>
-    </view>
-  </Popup>
+  <button class="mt40 zan-btn zan-btn--large zan-btn--danger" @tap="addIDCard">添加实名信息</button>
 </view>
 </template>
 
 <script>
 import wepy from 'wepy'
-import Popup from '../../components/Popup'
 
 export default class Auth extends wepy.page {
   config = {
@@ -98,13 +80,9 @@ export default class Auth extends wepy.page {
     },
   }
 
-  components = {
-    Popup,
-  }
-
   methods = {
-    togglePopup() {
-      this.$invoke('Popup', 'togglePopup')
+    addIDCard() {
+      this.$navigate('/pages/profile/uploadIdCard')
     },
 
     deleteAuth() {
