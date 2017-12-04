@@ -144,10 +144,6 @@ export default class extends wepy.app {
 
   async onLaunch() {
     // token.verify()
-    const params = {
-      url: 'page/profile',
-    }
-    await wepy.request(params)
   }
 }
 </script>
