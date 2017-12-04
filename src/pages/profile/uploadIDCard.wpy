@@ -98,6 +98,8 @@
   <view class="btn_area">
     <button class="mt20 zan-btn zan-btn--large zan-btn--danger" @tap="submit">确认添加</button>
   </view>
+
+  <wxc-toast class="toast" icon="no">{{toastMsg}}</wxc-toast>
 </view>
 </template>
 
@@ -110,12 +112,21 @@ export default class UploadIDCard extends wepy.page {
     navigationBarTitleText: '上传身份证',
     usingComponents: {
       'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
+      'wxc-toast': '/minui/@minui/wxc-toast/_dist/index',
     },
   }
 
   data = {
     img1: '',
     img2: '',
+    toastMsg: '',
+  }
+
+  _toggleToast(toastMsg) {
+    this.toastMsg = toastMsg
+    this.$apply()
+    const $toast = this.$wxpage.selectComponent('.toast')
+    $toast && $toast.show()
   }
 
   methods = {
@@ -126,6 +137,7 @@ export default class UploadIDCard extends wepy.page {
     },
 
     async submit() {
+      this._toggleToast('请输入身份证号')
       // TODO 判断图片，身份证号，真实姓名是否存在
       const token = await wepy.request({url: 'common/get_qiniu_token', data: {token: 'BdHm2c_lc1Xt420V_GatDmTODl1qfHKp'}}).catch(error => console.log('获取七牛 token 失败的原因：' + error))
       const id_card_img1_Promise = this._uploadImg({
