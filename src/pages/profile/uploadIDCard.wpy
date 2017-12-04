@@ -126,11 +126,12 @@ export default class UploadIDCard extends wepy.page {
     },
 
     async submit() {
-      const tokenRes = await wepy.request({url: 'common/get_qiniu_token'})
+      // TODO 判断图片，身份证号，真实姓名是否存在
+      const token = await wepy.request({url: 'common/get_qiniu_token', data: {token: 'BdHm2c_lc1Xt420V_GatDmTODl1qfHKp'}}).catch(error => console.log('获取七牛 token 失败的原因：' + error))
       const id_card_img1_Promise = this._uploadImg({
         filePath: this.img1,
         formData: {
-          token: tokenRes.data,
+          token,
           key: this._randomString()
         },
       })
@@ -138,7 +139,7 @@ export default class UploadIDCard extends wepy.page {
       const id_card_img2_Promise = this._uploadImg({
         filePath: this.img2,
         formData: {
-          token: tokenRes.data,
+          token,
           key: this._randomString()
         },
       })
@@ -146,6 +147,7 @@ export default class UploadIDCard extends wepy.page {
       const [id_card_img1, id_card_img2] = await Promise.all([id_card_img1_Promise, id_card_img2_Promise])
 
       // id_card_img1 和 id_card_img2 都拿到之后，请求保存身份证接口
+      if (!id_card_img1 || !id_card_img2) return this.$toast('上传图片失败，请重试')
       try {
         await wepy.request({
           url: 'member/save_auth',
@@ -156,25 +158,29 @@ export default class UploadIDCard extends wepy.page {
             id_card_img2,
           },
         })
-        this.$tast('上传身份证成功')
+        // this.$tast('上传身份证成功')
       } catch (error) {
-        this.$toast('上传身份证失败')
+        // this.$toast('上传身份证失败')
       }
     },
+  }
 
-    async _uploadImg(filePath, formData) {
-      const res = await wepy.uploadFile({
-        url: API.qinniuUrl,
-        filePath,
-        name: 'file',
-        formData,
-      }).catch(error => console.error(error))
-      return API.STATICDOMAIN + res.key
-    },
+  _randomString() {
+    return new Date().getTime() + Math.random().toString(36).substr(2)
+  }
 
-    _randomString() {
-      return new Date().getTime() + Math.random().toString(36).substr(2)
-    },
+  async _uploadImg({filePath, formData}) {
+    const res = await wepy.uploadFile({
+      url: API.qinniuUrl,
+      filePath,
+      name: 'file',
+      formData,
+    }).catch(error => console.error(error))
+    console.log(res)
+    if (res.statusCode === 200) {
+      return API.STATICDOMAIN + res.data.key
+    }
+    return ''
   }
 }
 </script>
