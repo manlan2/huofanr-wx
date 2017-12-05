@@ -106,10 +106,9 @@
 
     <wxc-dialog
       class="wxc-dialog"
-      title="标题"
-      content="解决办法"
-      confirm-text="主操作"
-      cancel-text="取消"
+      title="确认取消订单？"
+      confirm-text="取消订单"
+      cancel-text="放弃"
       bindconfirm="onConfirm"
       bindcancel="onCancel"
     >
@@ -121,6 +120,7 @@
 import wepy from 'wepy'
 import Tab from '../../components/Tab'
 import Container from '../../components/Container'
+import WxcDialogMixin from '../../mixins/dialog'
 
 export default class Profile extends wepy.page {
   config = {
@@ -137,6 +137,8 @@ export default class Profile extends wepy.page {
     Tab,
     Container,
   }
+
+  mixins = [WxcDialogMixin]
 
   data = {
     isFocus: false,
@@ -170,22 +172,8 @@ export default class Profile extends wepy.page {
       this.isFocus = true
     },
 
-    showDialog() {
-      let dialogComponent = this.$wxpage.selectComponent('.wxc-dialog')
-      dialogComponent && dialogComponent.show()
-    },
-
-    hideDialog() {
-      let dialogComponent = this.$wxpage.selectComponent('.wxc-dialog')
-      dialogComponent && dialogComponent.hide()
-    },
-
     onConfirm() {
-      this.methods.hideDialog()
-    },
-
-    onCancel() {
-      this.methods.hideDialog()
+      // todo
     },
   }
 }
