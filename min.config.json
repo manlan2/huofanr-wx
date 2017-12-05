@@ -1,5 +1,19 @@
 {
   "npm": {
     "dest": "src/minui"
+  },
+  "compilers": {
+    "babel": {
+      "sourceMaps": "inline",
+      "presets": [
+        "env"
+      ],
+      "plugins": [
+        "syntax-export-extensminions",
+        "transform-class-properties",
+        "transform-decorators-legacy",
+        "transform-export-extensions"
+      ]
+    }
   }
 }
