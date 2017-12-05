@@ -47,6 +47,10 @@
         <wxc-icon type="delete" size="28"></wxc-icon>
         删除
       </view>
+      <view class="fr mr30" @tap="editAuth">
+        <wxc-icon type="edit" size="28"></wxc-icon>
+        修改
+      </view>
     </view>
   </view>
 
@@ -61,6 +65,10 @@
       <view class="fr" @tap="deleteAuth">
         <wxc-icon type="delete" size="28"></wxc-icon>
         删除
+      </view>
+      <view class="fr mr30" @tap="editAuth">
+        <wxc-icon type="edit" size="28"></wxc-icon>
+        修改
       </view>
     </view>
   </view>
@@ -82,10 +90,18 @@ export default class Auth extends wepy.page {
 
   methods = {
     addIDCard() {
-      this.$navigate('/pages/profile/uploadIdCard')
+      this.$navigate('/pages/profile/uploadIDCard')
     },
 
     deleteAuth() {
+    },
+
+    editAuth() {
+      this.$preload({
+        name: 123,
+        url: '1212',
+      })
+      this.$navigate('/pages/profile/uploadIDCard')
     },
   }
 }

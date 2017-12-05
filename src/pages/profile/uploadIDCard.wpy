@@ -122,6 +122,10 @@ export default class UploadIDCard extends wepy.page {
     toastMsg: '',
   }
 
+  onLoad (params, data) {
+    console.log(data.preload)
+  }
+
   _toggleToast(toastMsg) {
     this.toastMsg = toastMsg
     this.$apply()
