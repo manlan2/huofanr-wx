@@ -1,0 +1,21 @@
+<style lang="sass">
+</style>
+
+<template>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Pay extends wepy.page {
+  config = {
+    navigationBarTitleText: '支付成功',
+  }
+
+  data = {
+  }
+
+  methods = {
+  }
+}
+</script>

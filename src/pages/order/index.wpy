@@ -98,12 +98,22 @@
           </view>
         </view>
         <view class="btn_list">
-          <button class="fr zan-btn zan-btn--small">取消订单</button>
+          <button class="fr zan-btn zan-btn--small" @tap="showDialog">取消订单</button>
           <button class="fr mr20 zan-btn zan-btn--small zan-btn--danger">立即付款</button>
         </view>
       </view>
     </view>
 
+    <wxc-dialog
+      class="wxc-dialog"
+      title="标题"
+      content="解决办法"
+      confirm-text="主操作"
+      cancel-text="取消"
+      bindconfirm="onConfirm"
+      bindcancel="onCancel"
+    >
+    </wxc-dialog>
   </view>
 </template>
 
@@ -119,6 +129,7 @@ export default class Profile extends wepy.page {
       'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
       'wxc-price': '/minui/@minui/wxc-price/_dist/index',
       'wxc-elip': '/minui/@minui/wxc-elip/_dist/index',
+      'wxc-dialog': '/minui/@minui/wxc-dialog/_dist/index',
     },
   }
 
@@ -157,6 +168,24 @@ export default class Profile extends wepy.page {
 
     searchInputFocus() {
       this.isFocus = true
+    },
+
+    showDialog() {
+      let dialogComponent = this.$wxpage.selectComponent('.wxc-dialog')
+      dialogComponent && dialogComponent.show()
+    },
+
+    hideDialog() {
+      let dialogComponent = this.$wxpage.selectComponent('.wxc-dialog')
+      dialogComponent && dialogComponent.hide()
+    },
+
+    onConfirm() {
+      this.methods.hideDialog()
+    },
+
+    onCancel() {
+      this.methods.hideDialog()
     },
   }
 }
