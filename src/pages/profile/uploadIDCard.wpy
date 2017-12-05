@@ -80,11 +80,11 @@
   <view class="zan-form mt20">
     <view class="zan-cell zan-form__item">
       <text class="zan-form__title">真实姓名</text>
-      <input class="zan-form__input zan-cell__bd" placeholder="请输入真实姓名" />
+      <input class="zan-form__input zan-cell__bd" @input="bindRealName" placeholder="请输入真实姓名" />
     </view>
     <view class="zan-cell zan-form__item zan-cell--last-child">
       <text class="zan-form__title">身份证号</text>
-      <input class="zan-form__input zan-cell__bd" type="number" maxlength="20" placeholder="请输入身份证号" />
+      <input class="zan-form__input zan-cell__bd" @input="bindIdCard" type="number" maxlength="20" placeholder="请输入身份证号" />
     </view>
   </view>
 
@@ -119,6 +119,8 @@ export default class UploadIDCard extends wepy.page {
   data = {
     img1: '',
     img2: '',
+    real_name: '',
+    id_card: '',
     toastMsg: '',
   }
 
@@ -133,7 +135,23 @@ export default class UploadIDCard extends wepy.page {
     $toast && $toast.show()
   }
 
+  _validate() {
+    if (!this.img1) return '请上传身份证正面照片'
+    if (!this.img2) return '请上传身份证反面照片'
+    if (!this.real_name) return '请输入真实姓名'
+    if (!this.id_card) return '请输入身份证号'
+    else return ''
+  }
+
   methods = {
+    bindRealName(e) {
+      this.real_name = e.detail.value.trim()
+    },
+
+    bindIdCard(e) {
+      this.id_card = e.detail.value.trim()
+    },
+
     async chooseImg(type) {
       const res = await wepy.chooseImage({count: 1})
       this[type] = res.tempFilePaths[0]
@@ -141,8 +159,8 @@ export default class UploadIDCard extends wepy.page {
     },
 
     async submit() {
-      this._toggleToast('请输入身份证号')
-      // TODO 判断图片，身份证号，真实姓名是否存在
+      if (this._validate()) return this._toggleToast(this._validate())
+
       const token = await wepy.request({url: 'common/get_qiniu_token', data: {token: 'BdHm2c_lc1Xt420V_GatDmTODl1qfHKp'}}).catch(error => console.log('获取七牛 token 失败的原因：' + error))
       const id_card_img1_Promise = this._uploadImg({
         filePath: this.img1,
@@ -174,9 +192,9 @@ export default class UploadIDCard extends wepy.page {
             id_card_img2,
           },
         })
-        // this.$tast('上传身份证成功')
+        this._toggleToast('上传身份证成功')
       } catch (error) {
-        // this.$toast('上传身份证失败')
+        this._toggleToast('上传身份证失败')
       }
     },
   }
