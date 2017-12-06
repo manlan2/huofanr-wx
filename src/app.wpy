@@ -77,6 +77,7 @@ export default class extends wepy.app {
 
     this.intercept('request', {
       config(params) {
+        if (typeof params === 'string') params = {url: params}
         if (params.url.indexOf('https://') < 0) {
           params.url = CONFIG.baseUrl + params.url
         }
@@ -96,7 +97,9 @@ export default class extends wepy.app {
         if (statusCode === '401') this.noPermissionTimes++
         const codeStartChar = statusCode.charAt(0)
         if (codeStartChar === '2') {
-          return res.data.data
+          if (res.data.code === 200) return res.data.data
+          wepy.showToast()
+          return this._processError(res.data.msg)
         } else if (statusCode === '401') {
           // 未授权重试机制，当检测为 401 时，获取新的 token，然后重新发起对应的请求
           // 为了防止无限循环，只重新发起一次请求
@@ -130,7 +133,11 @@ export default class extends wepy.app {
   }
 
   _processError(err) {
-    console.log(err)
+    wepy.showToast({
+      title: err,
+      image: '/static/imgs/error-icon.png',
+    })
+    return Promise.reject(err || '网络错误，请重试')
   }
 
   async onLaunch() {
