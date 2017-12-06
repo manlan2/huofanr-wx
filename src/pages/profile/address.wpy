@@ -25,32 +25,19 @@
 
 <template>
 <view class="container">
-  <view class="card_box">
+  <view class="card_box" wx:for="{{addressList}}" wx:key>
     <view class="header">
-      <text>张三</text>
-      <test class="fr">180****1212</test>
+      <text>{{item.receiver_name}}</text>
+      <test class="fr">{{item.receiver_mobile_show}}</test>
     </view>
-    <text class="address ellipsis fz24 c999">测试数据测试数据测试数据测试数据测试数据测试数据</text>
+    <text class="address ellipsis fz24 c999">{{item.receiver_address}}</text>
     <view class="footer">
-      <text class="i i-checked mr10"></text>
+      <text
+        class="i mr10 {{item.is_default ? 'i-checked' : 'i-circle'}}"
+        @tap="changeDefault({{item.is_default ? '' : item.member_address_id}})">
+      </text>
       <text>默认地址</text>
-      <view class="fr" @tap="deleteAddress">
-        <wxc-icon type="delete" size="28"></wxc-icon>
-        删除
-      </view>
-    </view>
-  </view>
-
-  <view class="card_box">
-    <view class="header">
-      <text>张三</text>
-      <test class="fr">180****1212</test>
-    </view>
-    <text class="address ellipsis fz24 c999">测试数据测试数据测试数据测试数据测试数据测试数据</text>
-    <view class="footer">
-      <text class="i i-circle mr10"></text>
-      <text>默认地址</text>
-      <view class="fr" @tap="deleteAddress">
+      <view class="fr" @tap="deleteAddress({{item.member_address_id}})">
         <wxc-icon type="delete" size="28"></wxc-icon>
         删除
       </view>
@@ -72,6 +59,19 @@ export default class Address extends wepy.page {
     },
   }
 
+  data = {
+    addressList: [],
+  }
+
+  onLoad() {
+    this._fetchAddressList()
+  }
+
+  async _fetchAddressList() {
+    this.addressList = await wepy.request('member/address_list')
+    this.$apply()
+  }
+
   methods = {
     async addAddress() {
       const res = await wepy.chooseAddress()
@@ -80,7 +80,42 @@ export default class Address extends wepy.page {
       }
     },
 
-    deleteAddress() {
+    async changeDefault(member_address_id) {
+      if (!member_address_id) return
+      wepy.request({
+        url: 'member/set_address_default',
+        method: 'POST',
+        data: {
+          member_address_id,
+        },
+      }).then(_ => {
+        this.addressList = this.addressList.map(item => {
+          if (item.member_address_id === member_address_id) {
+            return {
+              ...item,
+              is_default: 1,
+            }
+          }
+          return {
+            ...item,
+            is_default: 0,
+          }
+        })
+        this.$apply()
+      })
+    },
+
+    async deleteAddress(member_address_id) {
+      wepy.request({
+        url: 'member/address_delete',
+        method: 'POST',
+        data: {
+          member_address_id,
+        },
+      }).then(_ => {
+        this.addressList = this.addressList.filter(item => item.member_address_id !== member_address_id)
+        this.$apply()
+      })
     },
   }
 }
