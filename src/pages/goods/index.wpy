@@ -182,9 +182,9 @@
 
 <script>
 import wepy from 'wepy'
-import Dialog from '../../components/Dialog'
-import Cell from '../../components/Cell'
-import WxParse from '../../components/WxParse'
+import Dialog from '@/Dialog'
+import Cell from '@/Cell'
+import WxParse from '@/WxParse'
 
 export default class Goods extends wepy.page {
   components = {

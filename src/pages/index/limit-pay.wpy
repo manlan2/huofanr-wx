@@ -140,7 +140,7 @@ view.container
 
 <script>
 import wepy from 'wepy'
-import Tab from '../../components/Tab'
+import Tab from '@/Tab'
 
 export default class Pay extends wepy.page {
   config = {

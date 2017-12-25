@@ -1,6 +1,6 @@
 ## Popup 组件
 ```javascript
-import Popup from '../../components/Popup'
+import Popup from '@/Popup'
 
 components = {
   Popup,

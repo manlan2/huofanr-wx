@@ -111,7 +111,7 @@
 
 <script>
 import wepy from 'wepy'
-import Tab from '../../components/Tab'
+import Tab from '@/Tab'
 
 export default class Profile extends wepy.page {
   config = {

@@ -68,7 +68,7 @@ view.container
 
 <script>
 import wepy from 'wepy'
-import Cell from '../../components/Cell'
+import Cell from '@/Cell'
 
 export default class Profile extends wepy.page {
   components = {
