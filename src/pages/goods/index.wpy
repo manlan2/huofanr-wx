@@ -17,8 +17,8 @@
   color: #333
 
 .price_box
-  width: 100%
   padding: 0 20rpx
+  width: 100%
   height: 80rpx
   line-height: 80rpx
   background: #fff
@@ -27,7 +27,18 @@
   >.small_price
     margin-left: 30rpx
     display: inline-block
+    vertical-align: middle
     font-size: 24rpx
+
+  .price
+    margin-top: 5rpx
+    vertical-align: middle
+
+  .workout_price
+    margin-top: 8rpx
+    display: inline-block
+    vertical-align: middle
+
 
 .cell_box
   height: 80rpx
@@ -37,9 +48,10 @@
 .cell_box.icon_none .icon
   display: none
 
-.dialog_content
+.popup_content
   width: 100%
   height: auto
+  background: #fff
   font-size: 28rpx
 
   >.header
@@ -98,97 +110,67 @@
     right: 10rpx
 </style>
 
-<template>
-<view class="container">
-  <image src="http://placehold.it/500x300" class="header_img"></image>
-  <wxc-elip class="goods_name" line="2">
-    测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
-  </wxc-elip>
+<template lang="pug">
+view.container
+  image.header_img(src='{{goods.head_img}}')
+  wxc-elip.goods_name(line='2')
+    text 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
+  view.price_box
+    wxc-price.fz40.color.price(value='99.00', decimal='small')
+    view.small_price
+      text 参考价
+      wxc-price.workout_price(value='99.00')
+  CellActivity.cell_box(@click.user='linkactivity')
+    wxc-label.mr20 活动
+    text 新春活动促销，满 100元 减 5元
+  Cell.cell_box.icon_none
+    wxc-label.mr20(type-color='#138b6b') 税费
+    text 新春活动促销，满 100元 减 5元
+  Cell.cell_box.icon_none
+    wxc-label.mr20(type-color='#fdbe2d') 服务
+    text 新春活动促销，满 100元 减 5元
+  Cell.cell_box.icon_none
+    wxc-label.mr20(type-color='#016b8a') 说明
+    text 新春活动促销，满 100元 减 5元
+  CellCategory.cell_box(@click.user='toggleCategoryDialog')
+    text 选择分类
+  wxc-popup.J_Popup(animation-mode="bottom" align="bottom")
+    view.popup_content
+      view.header
+        image.image(src='http://placehold.it/120x120')
+      view.pl20.pr20
+        view.label 颜色
+        view.category_list
+          view.item.active 红色
+          view.item 蓝色
+          view.item 黄色
+        view.label 型号
+        view.category_list
+          view.item 大号
+          view.item 中号
+          view.item 小号
+        view.label 数量
+        wxc-counter.dib.mr10(number='5', max='{{99}}', min='1', bind:changenumber='onChangeNumber')
+        text.fz20.c999 库存充足
+      button.mt60.zan-btn.zan-btn--large.zan-btn--danger(@tap='saveCategory') 确定
+  view.footer
+    view.cart_box
+      wxc-icon.cart_icon(size='50', type='cart')
+      wxc-badge.cart_badge 9
+    button.flex1.zan-btn.zan-btn--large.zan-btn--danger_light 加入购物车
+    button.flex1.zan-btn.zan-btn--large.zan-btn--danger(@tap='buyNow') 立即购买
+  view.tip
+    WxParse(:parserContent.sync='content')
 
-
-  <view class="price_box">
-    <wxc-price class="fz40 color" value="99.00" decimal="small"></wxc-price>
-    <view class="small_price">
-      参考价
-      <wxc-price value="99.00"></wxc-price>
-    </view>
-  </view>
-
-  <CellActivity class="cell_box" @cellClick.user="linkactivity">
-    <wxc-label class="mr20">活动</wxc-label>
-    新春活动促销，满 100元 减 5元
-  </CellActivity>
-
-  <Cell class="cell_box icon_none">
-    <wxc-label class="mr20" type-color="#138b6b">税费</wxc-label>
-    新春活动促销，满 100元 减 5元
-  </Cell>
-
-  <Cell class="cell_box icon_none">
-    <wxc-label class="mr20" type-color="#fdbe2d">服务</wxc-label>
-    新春活动促销，满 100元 减 5元
-  </Cell>
-
-  <Cell class="cell_box icon_none">
-    <wxc-label class="mr20" type-color="#016b8a">说明</wxc-label>
-    新春活动促销，满 100元 减 5元
-  </Cell>
-
-  <CellCategory class="cell_box" @cellClick.user="toggleCategoryDialog">
-    选择分类
-  </CellCategory>
-  <Dialog>
-    <view class="dialog_content">
-      <view class="header">
-        <image class="image" src="http://placehold.it/120x120"></image>
-      </view>
-      <view class="pl20 pr20">
-        <view class="label">颜色</view>
-          <view class="category_list">
-            <view class="item active">红色</view>
-            <view class="item">蓝色</view>
-            <view class="item">黄色</view>
-          </view>
-
-          <view class="label">型号</view>
-          <view class="category_list">
-            <view class="item">大号</view>
-            <view class="item">中号</view>
-            <view class="item">小号</view>
-          </view>
-
-          <view class="label">数量</view>
-          <wxc-counter class="dib mr10" number="5" max="{{99}}" min="1" bind:changenumber="onChangeNumber"></wxc-counter>
-          <text class="fz20 c999">库存充足</text>
-      </view>
-      <button class="mt60 zan-btn zan-btn--large zan-btn--danger" @tap="saveCategory">确定</button>
-    </view>
-  </Dialog>
-
-  <view class="footer">
-    <view class="cart_box">
-      <wxc-icon size="50" type="cart" class="cart_icon"></wxc-icon>
-      <wxc-badge class="cart_badge">9</wxc-badge>
-    </view>
-    <button class="flex1 zan-btn zan-btn--large zan-btn--danger_light">加入购物车</button>
-    <button class="flex1 zan-btn zan-btn--large zan-btn--danger" @tap="buyNow">立即购买</button>
-  </view>
-
-  <view class="tip">
-    <WxParse :parserContent.sync="content" />
-  </view>
-</view>
 </template>
 
 <script>
 import wepy from 'wepy'
-import Dialog from '@/Dialog'
 import Cell from '@/Cell'
 import WxParse from '@/WxParse'
 
 export default class Goods extends wepy.page {
   components = {
-    Dialog,
     Cell,
     CellActivity: Cell,
     CellCategory: Cell,
@@ -204,14 +186,20 @@ export default class Goods extends wepy.page {
       'wxc-counter': '/minui/@minui/wxc-counter/_dist/index',
       'wxc-badge': '/minui/@minui/wxc-badge/_dist/index',
       'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
+      'wxc-popup': '/minui/@minui/wxc-popup/_dist/index',
     },
   }
 
   data = {
+    goods_id: '',
+    goods: {},
     content: '<text style="color: red;">新232321</text>',
   }
 
-  onLoad() {
+  onLoad({goods_id}) {
+    this.goods_id = goods_id
+    this.fetchGoodsDetail(goods_id)
+
     this.content = '<text style="color: blue;">测试数据</text>'
     this.$apply()
     // 调用通知接口通知组件更新数据
@@ -220,9 +208,19 @@ export default class Goods extends wepy.page {
     this.$invoke('WxParse', 'htmlParserNotice')
   }
 
+  async fetchGoodsDetail(goods_id) {
+    this.goods = await wepy.request('goods/info?goods_id=' + goods_id)
+    this.$apply()
+  }
+
+  toggleCategoryDialog() {
+    console.log(323)
+  }
+
   methods = {
     toggleCategoryDialog() {
-      this.$invoke('Dialog', 'toggleDialog')
+      const $popup = this.$wxpage.selectComponent('.J_Popup')
+      $popup && $popup.show()
     },
 
     onChangeNumber(e) {
@@ -234,7 +232,8 @@ export default class Goods extends wepy.page {
     },
 
     saveCategory() {
-      this.$invoke('Dialog', 'toggleDialog')
+      const $popup = this.$wxpage.selectComponent('.J_Popup')
+      $popup && $popup.hide()
     },
 
     buyNow() {
