@@ -1,0 +1,118 @@
+<style>
+.loading_cell,
+.nothing {
+  display: flex;
+  justify-content: center;
+  padding: 5px 0;
+  font-size: 24rpx;
+  align-items: center;
+  color: #999;
+}
+
+.line {
+  margin: 0 10rpx;
+  height: 1rpx;
+  width: 80rpx;
+  background: #999;
+  opacity: .5;
+}
+
+@keyframes lds-rolling {
+  0% {
+    -webkit-transform: translate(-50%, -50%) rotate(0deg);
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    -webkit-transform: translate(-50%, -50%) rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+@-webkit-keyframes lds-rolling {
+  0% {
+    -webkit-transform: translate(-50%, -50%) rotate(0deg);
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    -webkit-transform: translate(-50%, -50%) rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+.lds-rolling {
+  position: relative;
+}
+.lds-rolling view,
+.lds-rolling view:after {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border: 20px solid #1aad19;
+  border-top-color: transparent;
+  border-radius: 50%;
+}
+.lds-rolling view {
+  -webkit-animation: lds-rolling 1s linear infinite;
+  animation: lds-rolling 1s linear infinite;
+  top: 100px;
+  left: 100px;
+}
+.lds-rolling view:after {
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+.lds-rolling {
+  width: 16px !important;
+  height: 16px !important;
+  -webkit-transform: translate(-8px, -8px) scale(0.08) translate(8px, 8px);
+  transform: translate(-8px, -8px) scale(0.08) translate(8px, 8px);
+}
+</style>
+
+<template lang="pug">
+  scroll-view(
+    scroll-y
+    enable-back-to-topx
+    style="height: {{hegiht}}"
+    lower-threshold="{{scrollDistance}}"
+    bindscrolltolower="scrolltoupper"
+  )
+    slot
+    view.loading_cell(wx:if="{{scrollDisabled && !isNothing}}")
+      view.lds-rolling: view
+      view 加载中...
+    view.nothing(wx:if="{{!scrollDisabled && isNothing}}")
+      view.line
+      text 到底了
+      view.line
+</template>
+<script>
+import wepy from 'wepy'
+export default class Tabbar extends wepy.component {
+  props = {
+    hegiht: {
+      type: String,
+      default: 'calc(100vh - 50px)',
+    },
+    scrollDisabled: {
+      // 若为真，则无限滚动不会被触发
+      type: Boolean,
+      default: false,
+    },
+    scrollDistance: {
+      // 触发加载方法的滚动距离阈值（像素）
+      type: Number,
+      default: 20,
+    },
+    isNothing: {
+      // 数据加载是否完了
+      type: Boolean,
+      default: false,
+    }
+  }
+  methods = {
+    scrolltoupper() {
+      if (this.scrollDisabled) return
+      this.$emit('loadMore')
+    },
+  }
+}
+</script>

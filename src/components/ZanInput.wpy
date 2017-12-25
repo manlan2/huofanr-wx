@@ -1,0 +1,39 @@
+<template>
+  <view class="zan-cell zan-form__item">
+    <text class="zan-form__title">{{label}}</text>
+    <input
+      class="zan-form__input zan-cell__bd"
+      @input="bindInput"
+      type="{{type}}"
+      placeholder="{{placeholder}}" />
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class zanInput extends wepy.component {
+  props = {
+    type: {
+      type: String,
+      default: 'text',
+    },
+    label: {
+      type: String,
+      default: '',
+    },
+    placeholder: {
+      type: String,
+      default: '',
+    },
+    value: {
+      type: [String, Number],
+      default: '',
+      twoWay: true,
+    },
+  }
+  methods = {
+    bindInput(e) {
+      this.value = e.detail.value.trim()
+    },
+  }
+}
+</script>
