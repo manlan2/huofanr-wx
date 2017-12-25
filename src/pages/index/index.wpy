@@ -169,6 +169,7 @@ export default class Index extends wepy.page {
   async _fetchGoodsList() {
     const res = await wepy.request('goods/hot')
     this.goodsList = res.goods_list
+    this.$apply()
   }
 
   methods = {
