@@ -108,10 +108,10 @@ view.container
       text 限时购
       view.mt40.mb20.fz24 下一场15:00开始
       wxc-countdown(
-        countdown="{{countdown}}"
-        format="{{format}}"
-        num-style="{{numStyle}}"
-        symbol-style="{{symbolStyle}}"
+        countdown="{{countdown.value}}"
+        format="{{countdown.format}}"
+        num-style="{{countdown.numStyle}}"
+        symbol-style="{{countdown.symbolStyle}}"
         bind:endcount="endcount"
       )
 
@@ -119,35 +119,11 @@ view.container
 
   view.goods_list
     view.title.tc.mb20.pt10.fz28 猜你喜欢
-    navigator.goods_card(url="/pages/goods/index" open-type="navigate")
-      image.image(src="http://placehold.it/200x120")
-      view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶，旺仔牛奶
+    navigator.goods_card(wx:for="{{goodsList}}" wx:key url="{{'/pages/goods/index?goods_id=' + item.goods_id}}" open-type="navigate")
+      image.image(src="{{item.head_img}}")
+      view.name.fz24.ellipsis.mt10 {{item.goods_name}}
       view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
-      wxc-price.fz24.color(value="99.00" decimal="small")
-
-    navigator.goods_card(url="/pages/goods/index" open-type="navigate")
-      image.image(src="http://placehold.it/200x120")
-      view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶
-      view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试
-      wxc-price.fz24.color(value="99.00" decimal="small")
-
-    navigator.goods_card(url="/pages/goods/index" open-type="navigate")
-      image.image(src="http://placehold.it/200x120")
-      view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶，旺仔牛奶
-      view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
-      wxc-price.fz24.color(value="99.00" decimal="small")
-
-    navigator.goods_card(url="/pages/goods/index" open-type="navigate")
-      image.image(src="http://placehold.it/200x120")
-      view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶
-      view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试
-      wxc-price.fz24.color(value="99.00" decimal="small")
-
-    navigator.goods_card(url="/pages/goods/index" open-type="navigate")
-      image.image(src="http://placehold.it/200x120")
-      view.name.fz24.ellipsis.mt10 旺仔牛奶，旺仔牛奶，旺仔牛奶
-      view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试
-      wxc-price.fz24.color(value="99.00" decimal="small")
+      wxc-price.fz24.color(value="{{item.price / 100}}" decimal="small")
 
 </template>
 
@@ -156,20 +132,6 @@ import wepy from 'wepy'
 import Container from '@/Container'
 
 export default class Index extends wepy.page {
-  data = {
-    keyword: '',
-    isFocus: false,
-    imgUrls: [
-      'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
-      'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
-      'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
-    ],
-    countdown: 10000,
-    format: 'hh:mm:ss',
-    numStyle: 'width: 48rpx; font-size: 28rpx; color: #fff; background: #000; text-align: center; border-radius: 8rpx; padding: 5rpx 0;',
-    symbolStyle: 'font-size: 28rpx; color: #000; padding: 0 12rpx;',
-  }
-
   config = {
     navigationBarTitleText: '活范儿',
     usingComponents: {
@@ -181,6 +143,32 @@ export default class Index extends wepy.page {
 
   components = {
     Container,
+  }
+
+  data = {
+    keyword: '',
+    isFocus: false,
+    imgUrls: [
+      'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
+      'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
+      'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
+    ],
+    countdown: {
+      value: 10000,
+      format: 'hh:mm:ss',
+      numStyle: 'width: 48rpx; font-size: 28rpx; color: #fff; background: #000; text-align: center; border-radius: 8rpx; padding: 5rpx 0;',
+      symbolStyle: 'font-size: 28rpx; color: #000; padding: 0 12rpx;',
+    },
+    goodsList: [],
+  }
+
+  onLoad() {
+    this._fetchGoodsList()
+  }
+
+  async _fetchGoodsList() {
+    const res = await wepy.request('goods/hot')
+    this.goodsList = res.goods_list
   }
 
   methods = {
