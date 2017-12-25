@@ -12,7 +12,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@': path.join(__dirname, 'src'),
+      '@': path.join(__dirname, 'src/components'),
+      'js': path.join(__dirname, 'src/static/js'),
     },
     modules: ['node_modules']
   },
