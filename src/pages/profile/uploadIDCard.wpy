@@ -39,73 +39,48 @@
   color: #999
 </style>
 
-<template>
-<view class="container">
-  <view class="upload_card_box">
-    <view class="id_card_box" @tap="chooseImg('img1')">
-      <view wx:if="{{!img1}}" class="id_card">
-        <view>
-          <wxc-icon type="add" size="38"></wxc-icon>
-          <view>上传身份证正面</view>
-        </view>
-      </view>
-      <image wx:else class="card_img" src="{{img1}}"></image>
-      <view class="msg">
-        正面
-        <text class="i msg">&#xe622;</text>
-      </view>
-    </view>
-  </view>
-
-  <view class="upload_card_box">
-    <view class="id_card_box"  @tap="chooseImg('img2')">
-      <view wx:if="{{!img2}}" class="id_card">
-        <view>
-          <wxc-icon type="add" size="38"></wxc-icon>
-          <view>上传身份证反面</view>
-        </view>
-      </view>
-      <image wx:else class="card_img" src="{{img2}}"></image>
-      <view class="msg">
-        反面
-        <text class="i">&#xe623;</text>
-      </view>
-    </view>
-
-    <view class="mt20 fz20 c999">
-      温馨提示：请上传原始比例的身份证正反面，请勿裁剪涂改，保证身份信息清晰显示，否则无法通过审核。
-    </view>
-  </view>
-
-  <view class="zan-form mt20">
-    <view class="zan-cell zan-form__item">
-      <text class="zan-form__title">真实姓名</text>
-      <input class="zan-form__input zan-cell__bd" @input="bindRealName" placeholder="请输入真实姓名" />
-    </view>
-    <view class="zan-cell zan-form__item zan-cell--last-child">
-      <text class="zan-form__title">身份证号</text>
-      <input class="zan-form__input zan-cell__bd" @input="bindIdCard" type="number" maxlength="20" placeholder="请输入身份证号" />
-    </view>
-  </view>
-
-  <view class="aside fz22">
-    <text>您买下的商品来自境外，按照我国海关规定，需要你提交身份证以备海关检查。身份证信息仅用于海关请关使用。</text>
-    <view>
-      切记：<text class="c333">收件人姓名需要和身份证保持一致，</text>否则海关不会放行。
-    </view>
-  </view>
-
-  <view class="btn_area">
-    <button class="mt20 zan-btn zan-btn--large zan-btn--danger" @tap="submit">确认添加</button>
-  </view>
-
-  <wxc-toast class="toast" icon="no">{{toastMsg}}</wxc-toast>
-</view>
+<template lang="pug">
+view.container
+  view.upload_card_box
+    view.id_card_box(@tap="chooseImg('img1')")
+      view.id_card(wx:if='{{!img1}}')
+        view
+          wxc-icon(type='add', size='38')
+          view 上传身份证正面
+      image.card_img(wx:else='', src='{{img1}}')
+      view.msg
+        | 正面
+        text.i.msg &#xe622;
+  view.upload_card_box
+    view.id_card_box(@tap="chooseImg('img2')")
+      view.id_card(wx:if='{{!img2}}')
+        view
+          wxc-icon(type='add', size='38')
+          view 上传身份证反面
+      image.card_img(wx:else='', src='{{img2}}')
+      view.msg
+        | 反面
+        text.i &#xe623;
+    view.mt20.fz20.c999
+      | 温馨提示：请上传原始比例的身份证正反面，请勿裁剪涂改，保证身份信息清晰显示，否则无法通过审核。
+  view.zan-form.mt20
+    ZanInputA(label="真实姓名" placeholder="请输入真实姓名" :value="real_name")
+    ZanInputB(label="身份证号" placeholder="请输入身份证号" :value="id_card" type="number")
+  view.aside.fz22
+    text 您买下的商品来自境外，按照我国海关规定，需要你提交身份证以备海关检查。身份证信息仅用于海关请关使用。
+    view
+      | 切记：
+      text.c333 收件人姓名需要和身份证保持一致，
+      | 否则海关不会放行。
+  view.btn_area
+    button.mt20.zan-btn.zan-btn--large.zan-btn--danger(@tap='submit') 确认添加
+  wxc-toast.toast(icon='no') {{toastMsg}}
 </template>
 
 <script>
 import wepy from 'wepy'
 import API from '../../static/js/config'
+import ZanInput from '@/ZanInput'
 
 export default class UploadIDCard extends wepy.page {
   config = {
@@ -114,6 +89,11 @@ export default class UploadIDCard extends wepy.page {
       'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
       'wxc-toast': '/minui/@minui/wxc-toast/_dist/index',
     },
+  }
+
+  components = {
+    ZanInputA: ZanInput,
+    ZanInputB: ZanInput,
   }
 
   data = {
@@ -144,14 +124,6 @@ export default class UploadIDCard extends wepy.page {
   }
 
   methods = {
-    bindRealName(e) {
-      this.real_name = e.detail.value.trim()
-    },
-
-    bindIdCard(e) {
-      this.id_card = e.detail.value.trim()
-    },
-
     async chooseImg(type) {
       const res = await wepy.chooseImage({count: 1})
       this[type] = res.tempFilePaths[0]
