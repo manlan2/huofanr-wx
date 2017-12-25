@@ -40,7 +40,7 @@ export default class CellNavigate extends wepy.component {
         if (this.openType === 'navigate') wepy.navigateTo({url: this.url})
         if (this.openType === 'redirectTo') wepy.redirectTo({url: this.url})
       } else {
-        this.$emit('cellClick')
+        this.$emit('click')
       }
     }
   }
