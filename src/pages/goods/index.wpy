@@ -27,20 +27,17 @@
 
   >.small_price
     margin-left: 30rpx
-    margin-top: -10rpx
     display: inline-block
     vertical-align: middle
     font-size: 24rpx
 
   .price
-    margin-top: 5rpx
     vertical-align: middle
 
   .workout_price
-    margin-top: 8rpx
+    margin-top: -5rpx
     display: inline-block
     vertical-align: middle
-
 
 .cell_box
   height: 80rpx
@@ -60,7 +57,7 @@
     padding: 20rpx
     width: 100%
     height: 140rpx
-    border-bottom: 1px #ececec solid
+    border-bottom: 1px #ddd solid
 
     .image
       width: 100rpx
@@ -79,11 +76,15 @@
     .item
       margin-right: 20rpx
       padding: 0 30rpx
-      border: 1px #ececec solid
+      border: 1px #ddd solid
 
     .active
       color: #ff0077
       border-color: #ff0077
+
+    .disabled
+      border: 1px #eee solid
+      color: #999
 
 .footer
   position: fixed
@@ -135,7 +136,7 @@ view.container
     wxc-label.mr20(type-color='#016b8a') 说明
     text 新春活动促销，满 100元 减 5元
   CellCategory.cell_box(@click.user='toggleCategoryDialog')
-    text 选择分类
+    text {{currentSkuDesc || '数量规格选择'}}
   wxc-popup.J_Popup(animation-mode="bottom" align="bottom")
     view.popup_content(@tap.stop)
       view.header
@@ -144,22 +145,26 @@ view.container
         view.label {{goods.sku[0].sku_name}}
         view.category_list
           view.item(wx:for="{{goods.sku}}" wx:key @tap="selectSku({{index}})" class="{{index === skuIndex ? 'active' : ''}}") {{item.sku_value}}
-        view.label {{goods.sku[0].sub_sku[0].sku_name}}
-        view.category_list
-          view.item(wx:for="{{goods.sku[skuIndex].sub_sku}}" wx:key @tap="selectSubSku({{item.sku_id}})" class="{{item.sku_id === currentSkuId ? 'active' : ''}}") {{item.sku_value}}
+        view.label(wx:if="{{skuIndex > -1}}") {{goods.sku[0].sub_sku[0].sku_name}}
+        view.category_list(wx:if="{{skuIndex > -1}}")
+          view.item(
+            wx:for="{{goods.sku[skuIndex].sub_sku}}"
+            wx:key
+            @tap="selectSubSku({{item.sku_id}}, {{item.sku_count}})"
+            class="{{item.sku_id === currentSkuId ? 'active' : (item.sku_count ? '' : 'disabled')}}"
+          ) {{item.sku_value}}
         view.label 数量
         wxc-counter.dib.mr10(number='1', max='{{99}}', min='1', bind:changenumber='onChangeNumber')
-        text.fz20.c999(wx:if="{{currentSkuCount || currentSkuCount === 0}}") 库存量：{{currentSkuCount}}
-      button.mt60.zan-btn.zan-btn--large.zan-btn--danger(@tap='saveCategory') 确定
+      button.mt60.zan-btn.zan-btn--large.zan-btn--danger(@tap='saveCategory') 加入购物车
   view.footer
     view.cart_box
       wxc-icon.cart_icon(size='50', type='cart')
-      wxc-badge.cart_badge 9
-    button.flex1.zan-btn.zan-btn--large.zan-btn--danger_light 加入购物车
+      wxc-badge.cart_badge {{cartListLength}}
+    button.flex1.zan-btn.zan-btn--large.zan-btn--danger_light(@tap="addCart") 加入购物车
     button.flex1.zan-btn.zan-btn--large.zan-btn--danger(@tap='buyNow') 立即购买
   view.tip.wxParse
     WxParse(:parserContent.sync='content')
-
+  wxc-toast.toast(icon='no') {{toastMsg}}
 </template>
 
 <script>
@@ -185,6 +190,7 @@ export default class Goods extends wepy.page {
       'wxc-badge': '/minui/@minui/wxc-badge/_dist/index',
       'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
       'wxc-popup': '/minui/@minui/wxc-popup/_dist/index',
+      'wxc-toast': '/minui/@minui/wxc-toast/_dist/index',
     },
   }
 
@@ -192,27 +198,39 @@ export default class Goods extends wepy.page {
     goods_id: '',
     goods: {},
     content: '',
-    skuIndex: 0,
+    skuIndex: -1,
     currentSkuId: '',
     goods_count: 0,
+    cartListLength: 0,
+    toastMsg: '',
   }
 
   computed = {
-    currentSkuCount() {
-      if (!this.currentSkuId.toString()) return ''
-      const currentSubSku = this.goods.sku[this.skuIndex].sub_sku.find(item => item.sku_id === this.currentSkuId)
-      console.log(currentSubSku)
-      if (!currentSubSku) return ''
-      return currentSubSku.sku_count
-    }
+    currentSkuDesc() {
+      if (this.skuIndex > -1 && this.currentSkuId) {
+        const firstValue = this.goods.sku[this.skuIndex].sku_value
+        const currentSubSku = this.goods.sku[this.skuIndex].sub_sku.find(item => item.sku_id === this.currentSkuId)
+        const secondValue = currentSubSku.sku_value
+        return firstValue + '，' + secondValue
+      }
+      return ''
+    },
   }
 
   onLoad({goods_id}) {
     this.goods_id = goods_id
-    this.fetchGoodsDetail(goods_id)
+    this._fetchGoodsDetail(goods_id)
+    this._fetchCartList()
   }
 
-  async fetchGoodsDetail(goods_id) {
+  _toggleToast(toastMsg) {
+    this.toastMsg = toastMsg
+    this.$apply()
+    const $toast = this.$wxpage.selectComponent('.toast')
+    $toast && $toast.show()
+  }
+
+  async _fetchGoodsDetail(goods_id) {
     this.goods = await wepy.request('goods/info?goods_id=' + goods_id)
     this.content = this.goods.content
     this.$apply()
@@ -222,8 +240,9 @@ export default class Goods extends wepy.page {
     this.$invoke('WxParse', 'htmlParserNotice')
   }
 
-  toggleCategoryDialog() {
-    console.log(323)
+  async _fetchCartList() {
+    const res = await wepy.request('cart/list')
+    this.cartListLength = res.length
   }
 
   methods = {
@@ -241,8 +260,13 @@ export default class Goods extends wepy.page {
     },
 
     saveCategory() {
-      const $popup = this.$wxpage.selectComponent('.J_Popup')
-      $popup && $popup.hide()
+      if (this.skuIndex > -1 && this.currentSkuId) {
+        const $popup = this.$wxpage.selectComponent('.J_Popup')
+        $popup && $popup.hide()
+        this.methods.postAddCart.call(this)
+      } else {
+        this._toggleToast('请选择商品规格')
+      }
     },
 
     buyNow() {
@@ -250,14 +274,36 @@ export default class Goods extends wepy.page {
     },
 
     selectSku(index) {
-      if (index === this.skuIndex) return
-      this.skuIndex = index
+      if (index === this.skuIndex) this.skuIndex = -1
+      else this.skuIndex = index
       this.currentSkuId = ''
     },
 
-    selectSubSku(id) {
-      this.currentSkuId = id
-    }
+    selectSubSku(id, sku_count) {
+      if (sku_count <= 0) return
+      if (id === this.currentSkuId) this.currentSkuId = ''
+      else this.currentSkuId = id
+    },
+
+    addCart() {
+      if (!this.currentSkuDesc) this.methods.toggleCategoryDialog.call(this)
+      else this.methods.postAddCart.call(this)
+    },
+
+    postAddCart() {
+      wepy.request({
+        url: 'cart/add',
+        method: 'post',
+        data: {
+          goods_id: this.goods_id,
+          count: this.goods_count,
+          sku_id: this.currentSkuId,
+        },
+      }).then(_ => {
+        this.cartListLength++
+        this.$apply()
+      })
+    },
   }
 }
 </script>
