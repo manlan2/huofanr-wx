@@ -270,7 +270,21 @@ export default class Goods extends wepy.page {
     },
 
     buyNow() {
-      this.$navigate('/pages/cart/pay')
+      if (this.skuIndex > -1 && this.currentSkuId) {
+        wepy.request({
+          url: 'cart/do_buy',
+          method: 'post',
+          data: {
+            goods_id: this.goods_id,
+            count: this.goods_count,
+            goods_sku_id: this.currentSkuId,
+          },
+        }).then(_ => {
+          this.$navigate('/pages/cart/pay')
+        })
+      } else {
+        this._toggleToast('请选择商品规格')
+      }
     },
 
     selectSku(index) {
