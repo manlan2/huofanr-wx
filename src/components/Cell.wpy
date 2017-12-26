@@ -6,10 +6,10 @@
   border-bottom: 1px #ececec solid
   background: #fff
   font-size: 28rpx
+  overflow: hidden
 
   >.icon
     display: block
-    width: 80rpx
     color: #999
     font-size: 32rpx
     text-align: right
