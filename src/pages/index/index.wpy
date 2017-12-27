@@ -87,9 +87,10 @@ view.container
       .search_ipt 搜索商品
 
   swiper.swiper_container(indicator-dots interval="{{3000}}")
-    block(wx:for="{{imgUrls}}" wx:key)
+    block(wx:for="{{bannerList}}" wx:key)
       swiper-item
-        image.slide_image(src="{{item}}")
+        navigator.search_box(open-type="navigate" url="/pages/goods/index?goods_id={{item.goods_id}}")
+          image.slide_image(src="{{item.ad_img}}")
 
   view.lable_list.color
     view.item.flex1.tc
@@ -148,11 +149,7 @@ export default class Index extends wepy.page {
   data = {
     keyword: '',
     isFocus: false,
-    imgUrls: [
-      'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
-      'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
-      'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
-    ],
+    bannerList: [],
     countdown: {
       value: 10000,
       format: 'hh:mm:ss',
@@ -163,6 +160,7 @@ export default class Index extends wepy.page {
   }
 
   onLoad() {
+    this._fetchBanner()
     this._fetchGoodsList()
   }
 
@@ -170,6 +168,26 @@ export default class Index extends wepy.page {
     const res = await wepy.request('goods/hot')
     this.goodsList = res.goods_list
     this.$apply()
+  }
+
+  async _fetchBanner() {
+    const res = await wepy.request('banner/list?type=app_banner_recommend')
+    this.bannerList = res.map(item => ({
+      ...item,
+      goods_id: this.getQueryString(item.ad_url),
+    }))
+    this.$apply()
+  }
+
+  getQueryString(url) {
+    const index = url.indexOf('goods_id')
+    let str = url.substr(index + 9)
+    let resultStr = ''
+    while (Number(str[0]) || str[0] === '0') {
+      resultStr += str[0]
+      str = str.substr(1)
+    }
+    return resultStr
   }
 
   methods = {
