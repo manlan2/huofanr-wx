@@ -4,8 +4,8 @@
 import wepy from 'wepy'
 import 'wepy-async-function'
 import 'promise-polyfill'
-import CONFIG from './static/js/config'
-import Token from './static/js/token'
+import CONFIG from 'js/config'
+import Token from 'js/token'
 
 const token = new Token()
 
