@@ -94,28 +94,25 @@ export default class extends wepy.app {
       },
       async success(res) {
         const statusCode = res.statusCode.toString()
-        if (statusCode === '401') this.noPermissionTimes++
-        const codeStartChar = statusCode.charAt(0)
-        if (codeStartChar === '2') {
+        if (statusCode === '200') {
           if (res.data.code === 200) return res.data.data
-          wepy.showToast()
           return this._processError(res.data.msg)
         } else if (statusCode === '401') {
           // 未授权重试机制，当检测为 401 时，获取新的 token，然后重新发起对应的请求
           // 为了防止无限循环，只重新发起一次请求
-          if (this.noPermissionTimes > 1) {
+          if (this.noPermissionTimes > 0) {
             this.noPermissionTimes = 0
-          } else {
-            return this._refetchHttp()
+            return this._processError()
           }
+          this.noPermissionTimes++
+          return this._refetchHttp()
         } else {
-          this._processError('网络错误，请重试')
+          return this._processError()
         }
       },
       fail(error) {
         // TODO 提示错误信息
-        this._processError(error)
-        return error
+        return this._processError(error)
       },
     })
   }
@@ -125,19 +122,18 @@ export default class extends wepy.app {
     const res = await token.getTokenFromServer()
     if (!res) {
       // TODO 重新获取 token 失败了怎么办？
-      this._processError('重新获取 token 失败')
-      return null
+      return this._processError('重新获取 token 失败')
     }
     // 拿着上一次的 params 重新请求 API
     return wepy.request(this.requestParams)
   }
 
-  _processError(err) {
+  _processError(err = '网络错误，请重试') {
     wepy.showToast({
       title: err,
       image: '/static/imgs/error-icon.png',
     })
-    return Promise.reject(err || '网络错误，请重试')
+    return Promise.reject(err)
   }
 
   async onLaunch() {
