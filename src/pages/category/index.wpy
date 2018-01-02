@@ -60,53 +60,13 @@
 <template lang="pug">
 view.container
   view.box_left.y_scroll
-    view.menu_item(wx:for="{{categoryList}}" wx:key @tap="onCategoryChange({{item.id}})")
-      view.item(class="{{currentCatetoryId === item.id ? 'active' : ''}}") {{item.name}}
+    view.menu_item(wx:for="{{categoryList}}" wx:key @tap="onCategoryChange({{item.class_id}})")
+      view.item(class="{{currentCatetoryId === item.class_id ? 'active' : ''}}") {{item.class_title}}
   view.box_right(class="translate{{currentCategoryIndex}}")
     view.goods_container(wx:for="{{categoryList}}" wx:key)
-      view.goods_box
-        image.image(src="http://placehold.it/120x120")
-        view.ellipsis 手提包
-
-      view.goods_box
-        image.image(src="http://placehold.it/120x120")
-        view.ellipsis 手提包
-
-      view.goods_box
-        image.image(src="http://placehold.it/120x120")
-        view.ellipsis 手提包手提包提包手提包
-
-      view.goods_box
-        image.image(src="http://placehold.it/120x120")
-        view.ellipsis 手提包
-
-      view.goods_box
-        image.image(src="http://placehold.it/120x120")
-        view.ellipsis 手提包
-
-      view.goods_box
-        image.image(src="http://placehold.it/120x120")
-        view.ellipsis 手提包
-
-      view.goods_box
-        image.image(src="http://placehold.it/120x120")
-        view.ellipsis 手提包
-
-      view.goods_box
-        image.image(src="http://placehold.it/120x120")
-        view.ellipsis 手提包
-
-      view.goods_box
-        image.image(src="http://placehold.it/120x120")
-        view.ellipsis 手提包
-
-      view.goods_box
-        image.image(src="http://placehold.it/120x120")
-        view.ellipsis 手提包
-
-      view.goods_box
-        image.image(src="http://placehold.it/120x120")
-        view.ellipsis 手提包
+      view.goods_box(wx:for="{{item.submenus}}")
+        image.image(src="{{item.brand_logo}}")
+        view.ellipsis {{item.class_title}}
 </template>
 
 <script>
@@ -118,46 +78,23 @@ export default class Category extends wepy.page {
   }
 
   data = {
-    currentCatetoryId: 0,
-    categoryList: [
-      {
-        name: '牛奶',
-        id: 0,
-      },
-      {
-        name: '咖啡',
-        id: 1,
-      },
-      {
-        name: '化妆品',
-        id: 2,
-      },
-      {
-        name: '家具生活',
-        id: 3,
-      },
-      {
-        name: '家电大空调',
-        id: 4,
-      },
-      {
-        name: '牛奶咖啡',
-        id: 5,
-      },
-      {
-        name: '🐂🥛☕️',
-        id: 6,
-      },
-      {
-        name: '🍎🍌🍊🍓',
-        id: 7,
-      },
-    ]
+    currentCatetoryId: '',
+    categoryList: [],
+  }
+
+  onLoad() {
+    this.fetchCategories()
+  }
+
+  async fetchCategories() {
+    this.categoryList = await wepy.request('goods/class_list')
+    this.currentCatetoryId = this.categoryList[0].class_id
+    this.$apply()
   }
 
   computed = {
     currentCategoryIndex() {
-      return this.categoryList.findIndex(category => category.id === this.currentCatetoryId)
+      return this.categoryList.findIndex(category => category.class_id === this.currentCatetoryId)
     },
   }
 
