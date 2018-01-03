@@ -70,10 +70,6 @@ export default class extends wepy.app {
     super()
     this.use('requestfix')
     this.use('promisify')
-    this.requestParams = {}
-
-    // 为了防止无限循环，记录 401 次数
-    this.noPermissionTimes = 0
 
     this.intercept('request', {
       config(params) {
@@ -81,15 +77,9 @@ export default class extends wepy.app {
         if (params.url.indexOf('https://') < 0) {
           params.url = CONFIG.baseUrl + params.url
         }
-
         const token = wepy.getStorageSync('token')
-        if (token) params.header = {token}
-
-        // 当 url 为 'users/login' 时，不储存 params，否则会把上一次请求的 params 覆盖掉
-        if (params.url.indexOf('cmd/login') < 0) {
-          // 储存当前的 params ，如果 http 401，再次拿这个 params 重新请求 API
-          this.requestParams = params
-        }
+        const session_id = wepy.getStorageSync('session_id')
+        if (token) params.header = {token, session_id}
         return params
       },
       async success(res) {
@@ -98,34 +88,16 @@ export default class extends wepy.app {
           if (res.data.code === 200) return res.data.data
           return this._processError(res.data.msg)
         } else if (statusCode === '401') {
-          // 未授权重试机制，当检测为 401 时，获取新的 token，然后重新发起对应的请求
-          // 为了防止无限循环，只重新发起一次请求
-          if (this.noPermissionTimes > 0) {
-            this.noPermissionTimes = 0
-            return this._processError()
-          }
-          this.noPermissionTimes++
-          return this._refetchHttp()
+          wepy.removeStorageSync('token')
+          // 重定向
         } else {
           return this._processError()
         }
       },
       fail(error) {
-        // TODO 提示错误信息
         return this._processError(error)
       },
     })
-  }
-
-  async _refetchHttp() {
-    // 重新获取 token
-    const res = await token.getTokenFromServer()
-    if (!res) {
-      // TODO 重新获取 token 失败了怎么办？
-      return this._processError('重新获取 token 失败')
-    }
-    // 拿着上一次的 params 重新请求 API
-    return wepy.request(this.requestParams)
   }
 
   _processError(err = '网络错误，请重试') {
@@ -137,7 +109,7 @@ export default class extends wepy.app {
   }
 
   async onLaunch() {
-    // token.verify()
+    token.verifyToken()
   }
 }
 </script>

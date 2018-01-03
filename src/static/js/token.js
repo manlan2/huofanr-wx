@@ -2,25 +2,17 @@ import wepy from 'wepy'
 
 export default class Token {
   constructor() {
-    this.verifyUrl = 'token/verify'
-    this.tokenUrl = 'cmd/login'
+    this.tokenUrl = 'login/login_by_wxmp'
   }
 
-  async verify() {
+  verifyToken() {
     const token = wepy.getStorageSync('token')
-    if (token) {
-      this._verifyFromServer(token)
-    } else {
-      this.getTokenFromServer()
-    }
+    if (!token) this.getTokenFromServer()
   }
 
-  // 验证 token 是否过期
-  async _verifyFromServer(token) {
-    const res = wepy.request({url: this.verifyUrl, data: {token}})
-    if (!res.verify) { // 如果 Token 过期，重新获取
-      this.getTokenFromServer()
-    }
+  verifySession() {
+    const session_id = wepy.getStorageSync('session_id')
+    if (!session_id) this.createSessionId()
   }
 
   // 获取新的 token
@@ -35,10 +27,18 @@ export default class Token {
         },
       }
       const token_res = await wepy.request(params)
-      wepy.setStorageSync('token', token_res.jwt)
-      return token_res.jwt
+      if (token_res.token) {
+        wepy.setStorageSync('token', token_res.token)
+      } else {
+        this.verifySession()
+      }
     } catch (error) {
       console.log('获取 token 失败')
     }
+  }
+
+  createSessionId() {
+    const session_id = Math.random().toString(16).substring(2) + (+new Date()) + Math.random().toString(16).substring(2)
+    wepy.setStorageSync('session_id', session_id)
   }
 }
