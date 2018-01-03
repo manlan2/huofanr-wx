@@ -23,29 +23,21 @@
   border-top: 1px #ececec solid
 </style>
 
-<template>
-<view class="container">
-  <view class="card_box" wx:for="{{addressList}}" wx:key>
-    <view class="header">
-      <text>{{item.receiver_name}}</text>
-      <test class="fr">{{item.receiver_mobile_show}}</test>
-    </view>
-    <text class="address ellipsis fz24 c999">{{item.receiver_address}}</text>
-    <view class="footer">
-      <text
-        class="i mr10 {{item.is_default ? 'i-checked' : 'i-circle'}}"
-        @tap="changeDefault({{item.is_default ? '' : item.member_address_id}})">
-      </text>
-      <text>默认地址</text>
-      <view class="fr" @tap="deleteAddress({{item.member_address_id}})">
-        <wxc-icon type="delete" size="28"></wxc-icon>
-        删除
-      </view>
-    </view>
-  </view>
+<template lang="pug">
+view.container
+  view.card_box(wx:for='{{addressList}}', wx:key)
+    view.header
+      text {{item.receiver_name}}
+      test.fr {{item.receiver_mobile_show}}
+    text.address.ellipsis.fz24.c999 {{item.receiver_address}}
+    view.footer
+      text.i.mr10(class="{{item.is_default ? 'i-checked' : 'i-circle'}}", @tap="changeDefault({{item.is_default ? '' : item.member_address_id}})")
+      text 默认地址
+      view.fr(@tap='deleteAddress({{item.member_address_id}})')
+        wxc-icon(type='delete', size='28')
+        text 删除
+  button.mt40.zan-btn.zan-btn--large.zan-btn--danger(@tap='addAddress') 添加新地址
 
-  <button class="mt40 zan-btn zan-btn--large zan-btn--danger" @tap="addAddress">添加新地址</button>
-</view>
 </template>
 
 <script>
