@@ -1,4 +1,5 @@
-<style lang="sass" src="static/sass/index.sass"></style>
+<style lang="sass" src="static/sass/index.sass">
+</style>
 
 <script>
 import wepy from 'wepy'
