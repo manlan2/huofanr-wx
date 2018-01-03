@@ -33,7 +33,7 @@ export default class Token {
         this.verifySession()
       }
     } catch (error) {
-      console.log('获取 token 失败')
+      console.error('获取 token 失败')
     }
   }
 
