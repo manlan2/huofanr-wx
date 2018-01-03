@@ -128,14 +128,14 @@ view.container
     text 新春活动促销，满 100元 减 5元
   Cell.cell_box.icon_none
     wxc-label.mr20(type-color='#138b6b') 税费
-    text 新春活动促销，满 100元 减 5元
-  Cell.cell_box.icon_none
+    text 预估 ￥{{goods.tax / 100}}，实际税费请以提交订单时为准
+  Cell.cell_box(@click.user='openService')
     wxc-label.mr20(type-color='#fdbe2d') 服务
-    text 新春活动促销，满 100元 减 5元
+    text 从美国发货，预计 1~20个工作日抵达
   Cell.cell_box.icon_none
     wxc-label.mr20(type-color='#016b8a') 说明
     text 新春活动促销，满 100元 减 5元
-  CellCategory.cell_box(@click.user='toggleCategoryDialog')
+  CellCategory.cell_box(@click.user='openCategoryDialog')
     text {{currentSkuDesc || '数量规格选择'}}
   wxc-popup.J_Popup(animation-mode="bottom" align="bottom")
     view.popup_content(@tap.stop)
@@ -155,7 +155,11 @@ view.container
           ) {{item.sku_value}}
         view.label 数量
         wxc-counter.dib.mr10(number='1', max='{{99}}', min='1', bind:changenumber='onChangeNumber')
-      button.mt60.zan-btn.zan-btn--large.zan-btn--danger(@tap='saveCategory') 加入购物车
+      button.mt60.zan-btn.zan-btn--large.zan-btn--danger(@tap='addToCart') 加入购物车
+
+  wxc-popup.Q_Popup(animation-mode="bottom" align="bottom")
+    view.popup_content
+      view.header 服务说明
   view.footer
     view.cart_box
       wxc-icon.cart_icon(size='50', type='cart')
@@ -246,9 +250,19 @@ export default class Goods extends wepy.page {
   }
 
   methods = {
-    toggleCategoryDialog() {
+    openCategoryDialog() {
       const $popup = this.$wxpage.selectComponent('.J_Popup')
       $popup && $popup.show()
+    },
+
+    openService() {
+      const $popup = this.$wxpage.selectComponent('.Q_Popup')
+      $popup && $popup.show()
+    },
+
+    closeCategoryDialog() {
+      const $popup = this.$wxpage.selectComponent('.J_Popup')
+      $popup && $popup.hide()
     },
 
     onChangeNumber(e) {
@@ -259,10 +273,9 @@ export default class Goods extends wepy.page {
       console.log(2)
     },
 
-    saveCategory() {
+    addToCart() {
       if (this.skuIndex > -1 && this.currentSkuId) {
-        const $popup = this.$wxpage.selectComponent('.J_Popup')
-        $popup && $popup.hide()
+        this.methods.closeCategoryDialog.call(this)
         this.methods.postAddCart.call(this)
       } else {
         this._toggleToast('请选择商品规格')
@@ -300,7 +313,7 @@ export default class Goods extends wepy.page {
     },
 
     addCart() {
-      if (!this.currentSkuDesc) this.methods.toggleCategoryDialog.call(this)
+      if (!this.currentSkuDesc) this.methods.openCategoryDialog.call(this)
       else this.methods.postAddCart.call(this)
     },
 
