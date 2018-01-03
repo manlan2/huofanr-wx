@@ -33,52 +33,49 @@
 
 </style>
 
-<template>
-<view class="container">
-  <view class="card_box">
-    <view class="header">
-      <text>张三</text>
-    </view>
-    <text class="address ellipsis fz24 c999">身份证：xxxxxxxx</text>
-    <view class="footer">
-      <text class="i i-checked mr10"></text>
-      <text>账户默认实名人</text>
-      <view class="fr" @tap="deleteAuth">
-        <wxc-icon type="delete" size="28"></wxc-icon>
-        删除
-      </view>
-      <view class="fr mr30" @tap="editAuth">
-        <wxc-icon type="edit" size="28"></wxc-icon>
-        修改
-      </view>
-    </view>
-  </view>
-
-  <view class="card_box">
-    <view class="header">
-      <text>张三</text>
-    </view>
-    <text class="address ellipsis fz24 c999">身份证：xxxxxxxx</text>
-    <view class="footer">
-      <text class="i i-circle mr10"></text>
-      <text>账户默认实名人</text>
-      <view class="fr" @tap="deleteAuth">
-        <wxc-icon type="delete" size="28"></wxc-icon>
-        删除
-      </view>
-      <view class="fr mr30" @tap="editAuth">
-        <wxc-icon type="edit" size="28"></wxc-icon>
-        修改
-      </view>
-    </view>
-  </view>
-
-  <button class="mt40 zan-btn zan-btn--large zan-btn--danger" @tap="addIDCard">添加实名信息</button>
-</view>
+<template lang="pug">
+view.container
+  view.card_box(wx:for="{{dataList}}" wx:key)
+    view.header
+      text {{item.real_name}}
+    text.address.ellipsis.fz24.c999 身份证：{{item.id_card_show}}
+    view.footer
+      text.i.mr10(class="{{item.is_default ? 'i-checked' : 'i-circle'}}" @tap="setDefault({{item.member_auth_id}}, {{item.is_default}})")
+      text 账户默认实名人
+      view.fr(@tap='deleteAuth({{item.member_auth_id}})')
+        wxc-icon(type='delete', size='28')
+        text 删除
+      view.fr.mr30(@tap='editAuth({{item.member_auth_id}})')
+        wxc-icon(type='edit', size='28')
+        text 修改
+  button.mt40.zan-btn.zan-btn--large.zan-btn--danger(@tap='addIDCard') 添加实名信息
 </template>
 
 <script>
 import wepy from 'wepy'
+
+const mockData = [
+  {
+    member_auth_id: 2,
+    real_name: '张珊',
+    member_mobile_show: '13099999999',
+    id_card_show: '324403938888838383',
+    is_upload: 1,
+    id_card_img1: 'https://ws3.sinaimg.cn/large/006tKfTcly1fmzxu1765tj30dc0d0dg4.jpg',
+    id_card_img2: 'https://ws3.sinaimg.cn/large/006tKfTcly1fmzxu1765tj30dc0d0dg4.jpg',
+    is_default: 1
+  },
+  {
+    member_auth_id: 4,
+    real_name: '吃的是草',
+    member_mobile_show: '13678787678',
+    id_card_show: '1234131231231',
+    is_upload: 0,
+    id_card_img1: '',
+    id_card_img2: '',
+    is_default: 0
+  }
+]
 
 export default class Auth extends wepy.page {
   config = {
@@ -88,20 +85,53 @@ export default class Auth extends wepy.page {
     },
   }
 
+  data = {
+    // dataList: [],
+    dataList: mockData,
+  }
+
+  onLoad() {
+    // this.fetchData()
+  }
+
+  async _fetchData() {
+    this.dataList = await wepy.request('member/auth_list')
+  }
+
   methods = {
     addIDCard() {
       this.$navigate('/pages/profile/uploadIDCard')
     },
 
-    deleteAuth() {
+    deleteAuth(member_auth_id) {
+      wepy.request({
+        url: 'member/delete_auth',
+        method: 'POST',
+        data: {
+          member_auth_id,
+        },
+      }).then(_ => {
+        this._fetchData()
+      })
     },
 
-    editAuth() {
-      this.$preload({
-        name: 123,
-        url: '1212',
+    setDefault(member_auth_id, is_default) {
+      if (is_default) return
+      wepy.request({
+        url: 'member/save_auth',
+        method: 'POST',
+        data: {
+          member_auth_id,
+          is_default: 1,
+        }
+      }).then(_ => {
+        this._fetchData()
       })
-      this.$navigate('/pages/profile/uploadIDCard')
+    },
+
+    editAuth(member_auth_id) {
+      const member = this.dataList.find(item => item.member_auth_id === member_auth_id)
+      this.$navigate('/pages/profile/uploadIDCard', member)
     },
   }
 }
