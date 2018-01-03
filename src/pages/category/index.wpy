@@ -60,13 +60,13 @@
 <template lang="pug">
 view.container
   view.box_left.y_scroll
-    view.menu_item(wx:for="{{categoryList}}" wx:key @tap="onCategoryChange({{item.class_id}})")
-      view.item(class="{{currentCatetoryId === item.class_id ? 'active' : ''}}") {{item.class_title}}
+    view.menu_item(wx:for="{{categoryList}}" wx:key @tap="onCategoryChange({{item.category_id}})")
+      view.item(class="{{currentCatetoryId === item.category_id ? 'active' : ''}}") {{item.category_name}}
   view.box_right(class="translate{{currentCategoryIndex}}")
     view.goods_container(wx:for="{{categoryList}}" wx:key)
-      view.goods_box(wx:for="{{item.submenus}}")
-        image.image(src="{{item.brand_logo}}")
-        view.ellipsis {{item.class_title}}
+      view.goods_box(wx:for="{{item.subCategoes}}")
+        image.image(src="{{item.category_logo}}")
+        view.ellipsis {{item.category_name}}
 </template>
 
 <script>
@@ -87,14 +87,14 @@ export default class Category extends wepy.page {
   }
 
   async fetchCategories() {
-    this.categoryList = await wepy.request('goods/class_list')
-    this.currentCatetoryId = this.categoryList[0].class_id
+    this.categoryList = await wepy.request('goods/category_list')
+    this.currentCatetoryId = this.categoryList[0].category_id
     this.$apply()
   }
 
   computed = {
     currentCategoryIndex() {
-      return this.categoryList.findIndex(category => category.class_id === this.currentCatetoryId)
+      return this.categoryList.findIndex(category => category.category_id === this.currentCatetoryId)
     },
   }
 
