@@ -129,6 +129,11 @@ export default class Search extends wepy.page {
     keyword: ''
   }
 
+  onLoad({goods_parent_category_id, goods_child_category_id}) {
+    console.log(goods_parent_category_id)
+    console.log(goods_child_category_id)
+  }
+
   methods = {
     bindKeyword(e) {
       this.keyword = e.detail.value.trim()

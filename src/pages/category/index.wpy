@@ -64,7 +64,7 @@ view.container
       view.item(class="{{currentCatetoryId === item.category_id ? 'active' : ''}}") {{item.category_name}}
   view.box_right(class="translate{{currentCategoryIndex}}")
     view.goods_container(wx:for="{{categoryList}}" wx:key)
-      view.goods_box(wx:for="{{item.subCategoes}}")
+      navigator.goods_box(wx:for="{{item.subCategoes}}" wx:key open-type="navigate" url="/pages/index/search?goods_parent_category_id={{currentCatetoryId}}&goods_child_category_id={{item.category_id}}")
         image.image(src="{{item.category_logo}}")
         view.ellipsis {{item.category_name}}
 </template>
