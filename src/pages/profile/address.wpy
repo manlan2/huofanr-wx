@@ -43,6 +43,23 @@ view.container
 <script>
 import wepy from 'wepy'
 
+const mockData = [
+  {
+    member_address_id: 1,
+    receiver_name: '张珊',
+    receiver_mobile_show: '130xxxx0000',
+    receiver_address: '古平岗',
+    is_default: 0
+  },
+  {
+    member_address_id: 2,
+    receiver_name: '李四',
+    receiver_mobile_show: '131xxxx1111',
+    receiver_address: '中关村',
+    is_default: 1
+  }
+]
+
 export default class Address extends wepy.page {
   config = {
     navigationBarTitleText: '地址管理',
@@ -52,11 +69,12 @@ export default class Address extends wepy.page {
   }
 
   data = {
-    addressList: [],
+    addressList: mockData,
+    // addressList: [],
   }
 
   onLoad() {
-    this._fetchAddressList()
+    // this._fetchAddressList()
   }
 
   async _fetchAddressList() {
@@ -67,9 +85,27 @@ export default class Address extends wepy.page {
   methods = {
     async addAddress() {
       const res = await wepy.chooseAddress()
-      if (res) {
-        console.log(res)
+      const {
+        telNumber,
+        provinceName,
+        cityName,
+        countyName,
+        detailInfo,
+        userName,
+      } = res
+      const data = {
+        area_ids: provinceName + ',' + cityName + ',' + countyName,
+        receiver_name: userName,
+        receiver_mobile: telNumber,
+        receiver_address: detailInfo,
       }
+      wepy.request({
+        url: 'member/address_save',
+        method: 'POST',
+        data,
+      }).then(_ => {
+        this._fetchAddressList()
+      })
     },
 
     async changeDefault(member_address_id) {
