@@ -5,6 +5,7 @@
       class="zan-form__input zan-cell__bd"
       @input="bindInput"
       type="{{type}}"
+      value="{{value}}"
       placeholder="{{placeholder}}" />
   </view>
 </template>
