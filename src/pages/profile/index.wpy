@@ -41,8 +41,8 @@
 <template lang="pug">
 view.container
   view.header
-    image.face(src="http://placehold.it/200x200")
-    view.name 牛奶咖啡在哪
+    image.face(src="{{avatarUrl}}")
+    view.name {{nickName}}
 
   view.nav
     navigator.item(url="/pages/order/index" open-type="navigate")
@@ -75,6 +75,27 @@ export default class Profile extends wepy.page {
     CellA: Cell,
     CellB: Cell,
     CellC: Cell,
+  }
+
+  data = {
+    avatarUrl: '',
+    nickName: '',
+  }
+
+  onLoad() {
+    wepy.getUserInfo({
+      withCredentials: false,
+    }).then(res => {
+      const {
+        avatarUrl,
+        nickName,
+      } = res.userInfo
+      this.avatarUrl = avatarUrl
+      this.nickName = nickName
+      this.$apply()
+    }).catch(_ => {
+      // TODO 用户拒绝了授权获取用户的头像和昵称
+    })
   }
 
   config = {
