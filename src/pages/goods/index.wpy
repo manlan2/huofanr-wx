@@ -119,10 +119,10 @@ view.container
   wxc-elip.goods_name(line='2')
     text {{goods.goods_name}}
   view.price_box
-    wxc-price.fz40.color.price(decimal='small') {{(goods.price / 100) || 0}}
+    wxc-price.fz40.color.price(decimal='small') {{goods.price / 100}}
     view.small_price
       text 参考价
-      wxc-price.workout_price {{goods.reference_price / 100 || 0}}
+      wxc-price.workout_price {{goods.reference_price / 100}}
   CellActivity.cell_box(@click.user='linkactivity')
     wxc-label.mr20 活动
     text 新春活动促销，满 100元 减 5元
