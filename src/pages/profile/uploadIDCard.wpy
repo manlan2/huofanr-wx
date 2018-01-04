@@ -86,8 +86,8 @@ export default class UploadIDCard extends wepy.page {
   config = {
     navigationBarTitleText: '上传身份证',
     usingComponents: {
-      'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
-      'wxc-toast': '/minui/@minui/wxc-toast/_dist/index',
+      'wxc-icon': '../../packages/@minui/wxc-icon/dist/index',
+      'wxc-toast': '../../packages/@minui/wxc-toast/dist/index',
     },
   }
 

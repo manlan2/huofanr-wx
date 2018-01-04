@@ -64,7 +64,7 @@ export default class Address extends wepy.page {
   config = {
     navigationBarTitleText: '地址管理',
     usingComponents: {
-      'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
+      'wxc-icon': '../../packages/@minui/wxc-icon/dist/index',
     },
   }
 

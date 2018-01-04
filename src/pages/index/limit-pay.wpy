@@ -146,8 +146,8 @@ export default class Pay extends wepy.page {
   config = {
     navigationBarTitleText: '限时购',
     usingComponents: {
-      'wxc-price': '/minui/@minui/wxc-price/_dist/index',
-      'wxc-progress': '/minui/@minui/wxc-progress/_dist/index',
+      'wxc-price': '../../packages/@minui/wxc-price/dist/index',
+      'wxc-progress': '../../packages/@minui/wxc-progress/dist/index',
     },
   }
 

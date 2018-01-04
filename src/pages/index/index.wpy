@@ -136,9 +136,9 @@ export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '活范儿',
     usingComponents: {
-      'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
-      'wxc-countdown': '/minui/@minui/wxc-countdown/_dist/index',
-      'wxc-price': '/minui/@minui/wxc-price/_dist/index',
+      'wxc-icon': '../../packages/@minui/wxc-toast/dist/index',
+      'wxc-countdown': '../../packages/@minui/wxc-countdown/dist/index',
+      'wxc-price': '../../packages/@minui/wxc-price/dist/index',
     },
   }
 

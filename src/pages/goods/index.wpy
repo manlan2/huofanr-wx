@@ -187,14 +187,14 @@ export default class Goods extends wepy.page {
   config = {
     navigationBarTitleText: '商品详情',
     usingComponents: {
-      'wxc-label': '/minui/@minui/wxc-label/_dist/index',
-      'wxc-elip': '/minui/@minui/wxc-elip/_dist/index',
-      'wxc-price': '/minui/@minui/wxc-price/_dist/index',
-      'wxc-counter': '/minui/@minui/wxc-counter/_dist/index',
-      'wxc-badge': '/minui/@minui/wxc-badge/_dist/index',
-      'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
-      'wxc-popup': '/minui/@minui/wxc-popup/_dist/index',
-      'wxc-toast': '/minui/@minui/wxc-toast/_dist/index',
+      'wxc-label': '../../packages/@minui/wxc-label/dist/index',
+      'wxc-elip': '../../packages/@minui/wxc-elip/dist/index',
+      'wxc-price': '../../packages/@minui/wxc-price/dist/index',
+      'wxc-counter': '../../packages/@minui/wxc-counter/dist/index',
+      'wxc-badge': '../../packages/@minui/wxc-badge/dist/index',
+      'wxc-icon': '../../packages/@minui/wxc-icon/dist/index',
+      'wxc-popup': '../../packages/@minui/wxc-popup/dist/index',
+      'wxc-toast': '../../packages/@minui/wxc-toast/dist/index',
     },
   }
 

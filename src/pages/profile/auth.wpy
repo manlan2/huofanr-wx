@@ -81,7 +81,7 @@ export default class Auth extends wepy.page {
   config = {
     navigationBarTitleText: '实名认证',
     usingComponents: {
-      'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
+      'wxc-icon': '../../packages/@minui/wxc-icon/dist/index',
     },
   }
 
