@@ -1,4 +1,12 @@
 <style lang="sass">
+.header_fixed
+  position: fixed
+  left: 0
+  top: 0
+  z-index: 10
+  width: 100%
+  background: #f4f4f4
+
 .search_container
   display: flex
   line-height: 72rpx
@@ -43,6 +51,7 @@
       height: 30rpx
 
 .goods_list
+  margin-top: 200rpx
   padding: 20rpx 10rpx
   width: 100%
   background: #fff
@@ -58,7 +67,8 @@
   >.image
     margin-bottom: 5px
     width: 100%
-    height: 320rpx
+    // height: 320rpx
+    height: 380rpx
 
   >.price
     margin-bottom: -10rpx
@@ -72,56 +82,64 @@
 
 <template lang="pug">
 view.container
-  Container.search_container(topBottom="10")
-    view.search_box.flex1
-      input.search_ipt(
-        @input="bindKeyword"
-        placeholder="搜索商品"
-        placeholder-style="color: #999"
-        focus value="{{keyword}}"
-        confirm-type="search"
-        @confirm="handleSearch"
-      )
-      wxc-icon.search_icon(wx:if="{{keyword}}" type="close" size="26" @tap="clearKeyword")
+  view.header_fixed
+    Container.search_container(topBottom="10")
+      view.search_box.flex1
+        input.search_ipt(
+          @input="bindKeyword"
+          placeholder="搜索商品"
+          placeholder-style="color: #999"
+          focus value="{{keyword}}"
+          confirm-type="search"
+          @confirm="handleSearch"
+        )
+        wxc-icon.search_icon(wx:if="{{keyword}}" type="close" size="26" @tap="clearKeyword")
 
-    view.fz28.ml20(wx:if="{{keyword}}" @tap="handleSearch") 搜索
-    navigator.fz28.ml20(wx:else open-type="navigateBack" delta="1") 取消
+      view.fz28.ml20(wx:if="{{keyword}}" @tap="handleSearch") 搜索
+      navigator.fz28.ml20(wx:else open-type="navigateBack" delta="1") 取消
 
-  view.order_list
-    view.item(class="{{sort === 'default' ? 'color' : ''}}" @tap="changeSort(default)")
-      text 综合
-    view.item(class="{{sort === 'sale' ? 'color' : ''}}" @tap="changeSort(sale)")
-      text 销量
-    view.item(class="{{sort === 'price' ? 'color' : ''}}" @tap="changeSort(price)")
-      text 价格
-      image.icon(src="/static/imgs/{{orderByImg}}.png")
+    view.order_list
+      view.item(class="{{sort === 'default' ? 'color' : ''}}" @tap="changeSort(default)")
+        text 综合
+      view.item(class="{{sort === 'sale' ? 'color' : ''}}" @tap="changeSort(sale)")
+        text 销量
+      view.item(class="{{sort === 'price' ? 'color' : ''}}" @tap="changeSort(price)")
+        text 价格
+        image.icon(wx-if="{{orderByImg}}" src="/static/imgs/{{orderByImg}}.png")
 
-  view.goods_list
-    navigator.goods_card(wx:for="{{goodeList}}" wx:key open-type="navigate" url="/pages/goods/index?goods_id={{item.goods_id}}")
-      image.image(src="{{item.head_img}}")
-      view.ellipsis.fz24.c333 {{item.goods_name}}
-      view.ellipsis.fz20.color_light.subtitle {{item.goods_desc}}
-      view.price
-        wxc-price.color.fz32(value="{{item.price}}")
-        text.fr.fz20.c999 99.9%好评
+  InfiniteScroll(
+    @loadMore.user="loadMore"
+    :scrollDisabled.sync="scrollDisabled"
+    :isNothing.sync="isNothing"
+  )
+    view.goods_list
+      navigator.goods_card(wx:for="{{goodeList}}" wx:key open-type="navigate" url="/pages/goods/index?goods_id={{item.goods_id}}")
+        image.image(src="{{item.head_img}}")
+        view.ellipsis.fz24.c333 {{item.goods_name}}
+        view.ellipsis.fz20.color_light.subtitle {{item.goods_desc}}
+        view.price
+          wxc-price.color.fz32(value="{{item.price / 100}}")
+          text.fr.fz20.c999 99.9%好评
 
 </template>
 
 <script>
 import wepy from 'wepy'
 import Container from '@/Container'
+import InfiniteScroll from '@/InfiniteScroll'
 
 export default class Search extends wepy.page {
   config = {
     navigationBarTitleText: '搜索',
     usingComponents: {
-      'wxc-icon': '/minui/@minui/wxc-icon/_dist/index',
-      'wxc-price': '/minui/@minui/wxc-price/_dist/index',
+      'wxc-icon': '../../packages/@minui/wxc-icon/dist/index',
+      'wxc-price': '../../packages/@minui/wxc-price/dist/index',
     },
   }
 
   components = {
     Container,
+    InfiniteScroll,
   }
 
   computed = {
@@ -135,11 +153,12 @@ export default class Search extends wepy.page {
 
   data = {
     goodeList: [],
-    total_pages: 0,
+    page_num: 1,
+    scrollDisabled: false,
+    isNothing: false,
     keyword: '',
     goods_parent_category_id: '',
     goods_child_category_id: '',
-    page_num: 1,
     sort: 'default', // 排序：default：综合-默认，sale：销量，price：价格
     sort_type: true, // 高->低：desc => true，低到高：asc => false
   }
@@ -156,17 +175,31 @@ export default class Search extends wepy.page {
       goods_parent_category_id: this.goods_parent_category_id,
       goods_child_category_id: this.goods_child_category_id,
       page_num: this.page_num,
+      sort: this.sort,
+      sort_type: this.sort_type ? 'desc' : 'asc',
     }
     wepy.request({
       url: 'goods/list',
       data,
     }).then(res => {
-      this.goodeList = res.list
-      this.total_pages = res.total_pages
+      this.goodeList = [...this.goodeList, ...res.list]
+      if (res.cur_page === res.total_pages) {
+        this.scrollDisabled = true
+        this.isNothing = true
+      } else {
+        this.scrollDisabled = false
+      }
+      this.$apply()
     })
   }
 
   methods = {
+    loadMore() {
+      this.page_num++
+      this.scrollDisabled = true
+      this.fetchData()
+    },
+
     bindKeyword(e) {
       this.keyword = e.detail.value.trim()
     },
