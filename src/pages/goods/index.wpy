@@ -135,7 +135,7 @@ view.container
   Cell.cell_box.icon_none
     wxc-label.mr20(type-color='#016b8a') 说明
     text 新春活动促销，满 100元 减 5元
-  CellCategory.cell_box(@click.user='openCategoryDialog')
+  CellCategory.cell_box(@click.user='toggleCategoryDialog')
     text {{currentSkuDesc || '数量规格选择'}}
   wxc-popup.J_Popup(animation-mode="bottom" align="bottom")
     view.popup_content(@tap.stop)
@@ -250,19 +250,14 @@ export default class Goods extends wepy.page {
   }
 
   methods = {
-    openCategoryDialog() {
+    toggleCategoryDialog() {
       const $popup = this.$wxpage.selectComponent('.J_Popup')
-      $popup && $popup.show()
+      $popup && $popup.toggle()
     },
 
     openService() {
       const $popup = this.$wxpage.selectComponent('.Q_Popup')
       $popup && $popup.show()
-    },
-
-    closeCategoryDialog() {
-      const $popup = this.$wxpage.selectComponent('.J_Popup')
-      $popup && $popup.hide()
     },
 
     onChangeNumber(e) {
@@ -275,7 +270,7 @@ export default class Goods extends wepy.page {
 
     addToCart() {
       if (this.skuIndex > -1 && this.currentSkuId) {
-        this.methods.closeCategoryDialog.call(this)
+        this.methods.toggleCategoryDialog.call(this)
         this.methods.postAddCart.call(this)
       } else {
         this._toggleToast('请选择商品规格')
@@ -313,7 +308,7 @@ export default class Goods extends wepy.page {
     },
 
     addCart() {
-      if (!this.currentSkuDesc) this.methods.openCategoryDialog.call(this)
+      if (!this.currentSkuDesc) this.methods.toggleCategoryDialog.call(this)
       else this.methods.postAddCart.call(this)
     },
 
