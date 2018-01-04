@@ -88,22 +88,21 @@ view.container
     navigator.fz28.ml20(wx:else open-type="navigateBack" delta="1") 取消
 
   view.order_list
-    view.item
+    view.item(class="{{sort === 'default' ? 'color' : ''}}" @tap="changeSort(default)")
       text 综合
-    view.item
+    view.item(class="{{sort === 'sale' ? 'color' : ''}}" @tap="changeSort(sale)")
       text 销量
-      image.icon(src="/static/imgs/icon_order_top.png")
-    view.item
+    view.item(class="{{sort === 'price' ? 'color' : ''}}" @tap="changeSort(price)")
       text 价格
-      image.icon(src="/static/imgs/icon_order_down.png")
+      image.icon(src="/static/imgs/{{orderByImg}}.png")
 
   view.goods_list
-    view.goods_card
-      image.image(src="http://placehold.it/200x120")
-      view.ellipsis.fz24.c333 测试文字测试文字测试文字测试文字测试文字测试文字
-      view.ellipsis.fz20.color_light.subtitle 测试文字
+    navigator.goods_card(wx:for="{{goodeList}}" wx:key open-type="navigate" url="/pages/goods/index?goods_id={{item.goods_id}}")
+      image.image(src="{{item.head_img}}")
+      view.ellipsis.fz24.c333 {{item.goods_name}}
+      view.ellipsis.fz20.color_light.subtitle {{item.goods_desc}}
       view.price
-        wxc-price.color.fz32(value="99.00")
+        wxc-price.color.fz32(value="{{item.price}}")
         text.fr.fz20.c999 99.9%好评
 
 </template>
@@ -125,13 +124,46 @@ export default class Search extends wepy.page {
     Container,
   }
 
-  data = {
-    keyword: ''
+  computed = {
+    orderByImg() {
+      if (this.sort === 'price') {
+        return this.sort_type ? 'icon_order_down' : 'icon_order_top'
+      }
+      return 'icon_order_default'
+    }
   }
 
-  onLoad({goods_parent_category_id, goods_child_category_id}) {
-    console.log(goods_parent_category_id)
-    console.log(goods_child_category_id)
+  data = {
+    goodeList: [],
+    total_pages: 0,
+    keyword: '',
+    goods_parent_category_id: '',
+    goods_child_category_id: '',
+    page_num: 1,
+    sort: 'default', // 排序：default：综合-默认，sale：销量，price：价格
+    sort_type: true, // 高->低：desc => true，低到高：asc => false
+  }
+
+  onLoad({goods_parent_category_id = '', goods_child_category_id = ''}) {
+    this.goods_parent_category_id = goods_parent_category_id
+    this.goods_child_category_id = goods_child_category_id
+    this.fetchData()
+  }
+
+  fetchData() {
+    const data = {
+      keyword: this.keyword,
+      goods_parent_category_id: this.goods_parent_category_id,
+      goods_child_category_id: this.goods_child_category_id,
+      page_num: this.page_num,
+    }
+    wepy.request({
+      url: 'goods/list',
+      data,
+    }).then(res => {
+      this.goodeList = res.list
+      this.total_pages = res.total_pages
+    })
   }
 
   methods = {
@@ -144,6 +176,15 @@ export default class Search extends wepy.page {
     },
 
     handleSearch() {
+    },
+
+    changeSort(sort) {
+      this.sort = sort
+      if (sort === 'price') {
+        this.sort_type = !this.sort_type
+      } else {
+        this.sort_type = true
+      }
     },
   }
 }
