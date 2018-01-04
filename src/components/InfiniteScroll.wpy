@@ -45,7 +45,7 @@
   position: absolute;
   width: 160px;
   height: 160px;
-  border: 20px solid #1aad19;
+  border: 20px solid #ff0077;
   border-top-color: transparent;
   border-radius: 50%;
 }
@@ -71,27 +71,24 @@
   scroll-view(
     scroll-y
     enable-back-to-topx
-    style="height: {{hegiht}}"
+    style="height: 100vh"
     lower-threshold="{{scrollDistance}}"
     bindscrolltolower="scrolltoupper"
   )
     slot
-    view.loading_cell(wx:if="{{scrollDisabled && !isNothing}}")
+    view.loading_cell.mb30(wx:if="{{!isOnPullDownRefresh && scrollDisabled && !isNothing}}")
       view.lds-rolling: view
-      view 加载中...
-    view.nothing(wx:if="{{!scrollDisabled && isNothing}}")
+    view.nothing(wx:if="{{scrollDisabled && isNothing}}")
       view.line
       text 到底了
       view.line
 </template>
 <script>
 import wepy from 'wepy'
-export default class Tabbar extends wepy.component {
+import { Debounce } from 'js/utli'
+
+export default class InfiniteScroll extends wepy.component {
   props = {
-    hegiht: {
-      type: String,
-      default: 'calc(100vh - 50px)',
-    },
     scrollDisabled: {
       // 若为真，则无限滚动不会被触发
       type: Boolean,
@@ -102,17 +99,22 @@ export default class Tabbar extends wepy.component {
       type: Number,
       default: 20,
     },
+    // 是否正在处于下拉刷新中
+    isOnPullDownRefresh: {
+      type: Boolean,
+      default: false,
+    },
     isNothing: {
       // 数据加载是否完了
       type: Boolean,
       default: false,
-    }
+    },
   }
   methods = {
-    scrolltoupper() {
-      if (this.scrollDisabled) return
+    scrolltoupper: Debounce(() => {
+      if (this.scrollDisabled || this.isOnPullDownRefresh) return
       this.$emit('loadMore')
-    },
+    }, 300),
   }
 }
 </script>
