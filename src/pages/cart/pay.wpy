@@ -84,7 +84,7 @@
   </view>
 
   <view class="bg_white mt30">
-    <navigator class="cell_box" open-type="navigate" url="/pages/profile/coupon">
+    <navigator class="cell_box" open-type="navigate" url="/pages/coupon/coupon">
       <view class="flex1 ellipsis">
         优惠券
         <text class="c999 ml20">满1000减99</text>
