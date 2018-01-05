@@ -1,0 +1,106 @@
+<style lang="sass">
+.logo
+  width: 100px
+  height: 100px
+  display: block
+  margin: 50px auto
+  border-radius: 50%
+</style>
+
+<template lang="pug">
+view.container
+  image.logo(src="/static/imgs/logo.png")
+
+  view.zan-form.mt20
+    ZanInputA(label="手机号" type="number" placeholder="请输入手机号" :value.sync="phone")
+    ZanInputB(label="验证码" type="number" placeholder="请输入验证码" :value.sync="code")
+
+  view.btn_area.mt60
+    button.mt20.zan-btn.zan-btn--large(@tap='sendCode' disabled="{{sendCodeDisabled}}") {{isSendingCode ? num + ' 秒后重新获取' : '发送验证码'}}
+    button.mt40.zan-btn.zan-btn--large.zan-btn--danger(@tap="bindPhone") 绑定手机
+
+  wxc-toast.toast(icon='no') {{toastMsg}}
+</template>
+
+<script>
+import wepy from 'wepy'
+import ZanInput from '@/ZanInput'
+
+export default class Register extends wepy.page {
+  config = {
+    navigationBarTitleText: '绑定手机号',
+    usingComponents: {
+      'wxc-toast': '../../packages/@minui/wxc-toast/dist/index',
+    },
+  }
+
+  components = {
+    ZanInputA: ZanInput,
+    ZanInputB: ZanInput,
+  }
+
+  watch = {
+    phone(value) {
+      this.sendCodeDisabled = !(value.length === 11 && Number(value[0]) === 1 && !this.isSendingCode)
+    },
+  }
+
+  onLoad() {
+    this.timer = null
+  }
+
+  onUnload() {
+    if (this.timer) clearInterval(this.timer)
+  }
+
+  data = {
+    phone: '',
+    code: '',
+    num: 60,
+    isSendingCode: false,
+    sendCodeDisabled: true,
+    isGetCode: false,
+    toastMsg: '',
+  }
+
+  _toggleToast(toastMsg) {
+    this.toastMsg = toastMsg
+    this.$apply()
+    const $toast = this.$wxpage.selectComponent('.toast')
+    $toast && $toast.show()
+  }
+
+  methods = {
+    sendCode() {
+      this.isGetCode = true
+      this.isSendingCode = true
+      this.sendCodeDisabled = true
+      this.timer = setInterval(() => {
+        this.num--
+        if (this.num === 0) {
+          clearInterval(this.timer)
+          this.num = 60
+          this.isSendingCode = false
+          this.sendCodeDisabled = !(this.phone.length === 11 && Number(this.phone[0]) === 1 && !this.isSendingCode)
+        }
+        this.$apply()
+      }, 1000)
+    },
+
+    bindPhone() {
+      const {
+        phone,
+        code,
+        isGetCode,
+      } = this
+      if (phone.length !== 11 || Number(phone[0]) !== 1) {
+        return this._toggleToast('请输入正确的手机号')
+      } else if (code.length !== 6) {
+        return this._toggleToast('请输入正确的验证码')
+      } else if (!isGetCode) {
+        return this._toggleToast('请先获取验证码')
+      }
+    }
+  }
+}
+</script>
