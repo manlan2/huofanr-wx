@@ -117,7 +117,6 @@ export default class Profile extends wepy.page {
   config = {
     navigationBarTitleText: '优惠券',
     usingComponents: {
-      'wxc-icon': '../../packages/@minui/wxc-icon/dist/index',
       'wxc-price': '../../packages/@minui/wxc-price/dist/index',
     },
   }

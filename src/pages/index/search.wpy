@@ -29,7 +29,6 @@
   >.search_icon
     width: 60rpx
     text-left: center
-    color: #999
 
 .order_list
   padding-left: 20rpx
@@ -94,7 +93,7 @@ view.container
           confirm-type="search"
           @confirm="handleSearch"
         )
-        wxc-icon.search_icon(wx:if="{{keyword}}" type="close" size="26" @tap="clearKeyword")
+        wxc-icon.search_icon(wx:if="{{keyword}}" type="close" size="26" @tap="clearKeyword" color="#999")
 
       view.fz28.ml20(wx:if="{{keyword}}" @tap="handleSearch") 搜索
       navigator.fz28.ml20(wx:else open-type="navigateBack" delta="1") 取消
