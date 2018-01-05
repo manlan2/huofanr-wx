@@ -85,7 +85,7 @@
 </template>
 <script>
 import wepy from 'wepy'
-import { Debounce } from 'js/utli'
+import { Throttle } from 'js/utli'
 
 export default class InfiniteScroll extends wepy.component {
   props = {
@@ -111,10 +111,10 @@ export default class InfiniteScroll extends wepy.component {
     },
   }
   methods = {
-    scrolltoupper: Debounce(() => {
+    scrolltoupper: Throttle(() => {
       if (this.scrollDisabled || this.isOnPullDownRefresh) return
       this.$emit('loadMore')
-    }, 300),
+    }, 200),
   }
 }
 </script>
