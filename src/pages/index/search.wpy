@@ -54,6 +54,7 @@
   margin-top: 200rpx
   padding: 20rpx 10rpx
   width: 100%
+  min-height: 80vh
   background: #fff
   font-size: 0
 
@@ -127,6 +128,7 @@ view.container
 import wepy from 'wepy'
 import Container from '@/Container'
 import InfiniteScroll from '@/InfiniteScroll'
+import { Debounce } from 'js/utli'
 
 export default class Search extends wepy.page {
   config = {
@@ -140,6 +142,44 @@ export default class Search extends wepy.page {
   components = {
     Container,
     InfiniteScroll,
+  }
+
+  watch = {
+    keyword() {
+      this.page_num = 1
+      this.goodeList = []
+      this.scrollDisabled = false
+      this.isNothing = false
+      this.oods_parent_category_id = ''
+      this.goods_child_category_id = ''
+      this.sort = 'default'
+      this.sort_type = true
+      this.fetchData()
+    },
+
+    sort(value) {
+      if (value !== 'price') {
+        this.sort_type = true
+      }
+      this.page_num = 1
+      this.goodeList = []
+      this.scrollDisabled = false
+      this.isNothing = false
+      this.oods_parent_category_id = ''
+      this.goods_child_category_id = ''
+      this.fetchData()
+    },
+
+    sort_type() {
+      if (this.sort !== 'price') return
+      this.page_num = 1
+      this.goodeList = []
+      this.scrollDisabled = false
+      this.isNothing = false
+      this.oods_parent_category_id = ''
+      this.goods_child_category_id = ''
+      this.fetchData()
+    }
   }
 
   computed = {
@@ -166,7 +206,7 @@ export default class Search extends wepy.page {
   onLoad({goods_parent_category_id = '', goods_child_category_id = ''}) {
     this.goods_parent_category_id = goods_parent_category_id
     this.goods_child_category_id = goods_child_category_id
-    this.fetchData()
+    if (goods_parent_category_id && goods_child_category_id) this.fetchData()
   }
 
   fetchData() {
@@ -200,9 +240,10 @@ export default class Search extends wepy.page {
       this.fetchData()
     },
 
-    bindKeyword(e) {
+    bindKeyword: Debounce(e => {
       this.keyword = e.detail.value.trim()
-    },
+      this.$apply()
+    }, 500, true),
 
     clearKeyword() {
       this.keyword = ''
