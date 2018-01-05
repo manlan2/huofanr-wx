@@ -86,6 +86,40 @@
       border: 1px #eee solid
       color: #999
 
+.popup_content_service
+  width: 100%
+  height: auto
+  background: #fff
+  font-size: 24rpx
+
+  >.header
+    padding-left: 10px
+    width: 100%
+    font-size: 28rpx
+    background: #eee
+    height: 38px
+    line-height: 38px
+    color: #333
+    font-weight: 400
+
+  >.content
+    padding: 10px 24px
+
+    .label
+      margin-bottom: 8px
+
+      text
+        font-weight: 400
+        color: #000
+
+      .wxc_icon
+        position: absolute
+        margin-left: -14px
+        color: #ff5777 !important
+
+    .desc
+      margin-bottom: 12px
+
 .footer
   position: fixed
   left: 0
@@ -129,7 +163,7 @@ view.container
   Cell.cell_box.icon_none
     wxc-label.mr20(type-color='#138b6b') 税费
     text 预估 ￥{{goods.tax / 100}}，实际税费请以提交订单时为准
-  Cell.cell_box(@click.user='openService')
+  CellService.cell_box(@click.user='openService')
     wxc-label.mr20(type-color='#fdbe2d') 服务
     text 从美国发货，预计 1~20个工作日抵达
   Cell.cell_box.icon_none
@@ -158,8 +192,21 @@ view.container
       button.mt60.zan-btn.zan-btn--large.zan-btn--danger(@tap='addToCart') 加入购物车
 
   wxc-popup.Q_Popup(animation-mode="bottom" align="bottom")
-    view.popup_content
+    view.popup_content_service
       view.header 服务说明
+      view.content
+        view.label
+          wxc-icon.wxc_icon(type="yes" size="20" color="#ff5777")
+          text 假一赔十
+        view.desc 活范儿全部商品均来自海外官方正品渠道，全链路证明可查，承诺100%正品。
+        view.label
+          wxc-icon.wxc_icon(type="yes" size="20" color="#ff5777")
+          text 免税
+        view.desc 本商品综合税由活范儿代缴。
+        view.label
+          wxc-icon.wxc_icon(type="yes" size="20" color="#ff5777")
+          text 全球直邮
+        view.desc 本商品为海外仓直接发货，通过国际EMS或WTD快递方式配送。 通过海外直邮发货的商品，只能和其他直邮商品凑单结算。
   view.footer
     view.cart_box
       wxc-icon.cart_icon(size='50', type='cart')
@@ -181,6 +228,7 @@ export default class Goods extends wepy.page {
     Cell,
     CellActivity: Cell,
     CellCategory: Cell,
+    CellService: Cell,
     WxParse,
   }
 
