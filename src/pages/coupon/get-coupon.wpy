@@ -58,7 +58,7 @@
 </style>
 <template lang="pug">
 view.container
-  view.coupon_card(wx:for='{{couponList}}', wx:key='')
+  view.coupon_card(wx:for='{{couponList}}' wx:key)
     view.header.ellipsis
       text {{item.coupon_name}}
     view.content
