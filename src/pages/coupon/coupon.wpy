@@ -71,43 +71,31 @@
 
 
 </style>
-<template>
-<view class="container">
-  <Tab :tabData.sync="tabs" :tabValue.sync="status"></Tab>
-
-  <view wx:for="{{couponList[status]}}" wx:key class="{{status === 1 ? 'coupon_card' : 'coupon_card_used'}}">
-    <view class="header ellipsis">
-      <text>{{item.coupon_name}}</text>
-    </view>
-    <view class="content">
-      <view class="info">
-        <view class="item">
-          <view class="label active">{{item.coupon_type}}</view>
-          <view class="ellipsis text">{{item.sub_title}}</view>
-        </view>
-        <view class="item">
-          <view class="label">使用范围：</view>
-          <view class="ellipsis text">{{item.use_goods_scope}}</view>
-        </view>
-        <view class="item">
-          <view class="label">领取时间：</view>
-          <view class="ellipsis text">{{item.get_time}}</view>
-        </view>
-        <view class="item">
-          <view class="label">使用平台：</view>
-          <view class="ellipsis text">{{item.use_platform}}</view>
-        </view>
-      </view>
-      <view class="price_box">
-        <view class="price">
-          <wxc-price value="{{item.discount_money / 100}}"></wxc-price>
-        </view>
-      </view>
-    </view>
-  </view>
-
-</view>
+<template lang="pug">
+view.container
+  tab(:tabdata.sync='tabs', :tabvalue.sync='status')
+  view.coupon_card(wx:for='{{couponList[status]}}', wx:key='', class="{{status === ? 'coupon_card' : 'coupon_card_used'}}")
+    view.header.ellipsis
+      text {{item.coupon_name}}
+    view.content
+      view.info
+        view.item
+          view.label.active {{item.coupon_type}}
+          view.ellipsis.text {{item.sub_title}}
+        view.item
+          view.label 使用范围：
+          view.ellipsis.text {{item.use_goods_scope}}
+        view.item
+          view.label 领取时间：
+          view.ellipsis.text {{item.get_time}}
+        view.item
+          view.label 使用平台：
+          view.ellipsis.text {{item.use_platform}}
+      view.price_box
+        view.price
+          wxc-price(value='{{item.discount_money / 100}}')
 </template>
+
 
 <script>
 import wepy from 'wepy'
@@ -115,7 +103,7 @@ import Tab from '@/Tab'
 
 export default class Profile extends wepy.page {
   config = {
-    navigationBarTitleText: '优惠券',
+    navigationBarTitleText: '优惠券列表',
     usingComponents: {
       'wxc-price': '../../packages/@minui/wxc-price/dist/index',
     },
