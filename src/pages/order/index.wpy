@@ -62,58 +62,36 @@
     height: 50rpx
 
 </style>
-<template>
-  <view class="container">
-    <Container topBottom="10" class="search_container">
-      <view class="search_box">
-        <wxc-icon type="search" size="28" @tap="searchInputFocus" class="search_icon" color="#999"></wxc-icon>
-        <input type="text" class="search_ipt" @input="bindKeyword" placeholder="商品名称 | 订单号" placeholder-style="color: #999" focus="{{isFocus}}" />
-      </view>
-    </Container>
-    <Tab :tabData.sync="tabs" :tabValue.sync="currentTab"></Tab>
+<template lang="pug">
+view.container
+  Container.search_container(topBottom='10')
+    view.search_box
+      wxc-icon.search_icon(type='search', size='28', @tap='searchInputFocus', color='#999')
+      input.search_ipt(type='text', @input='bindKeyword', placeholder='商品名称 | 订单号', placeholder-style='color: #999', focus='{{isFocus}}')
+  Tab(:tabData.sync='tabs', :tabValue.sync='currentTab')
+  view.order_card
+    view.header
+      text 订单编号：881888381838838
+      text.fr 等待买家付款
+    view.goods_info_box
+      image.goods_image(src='http://placehold.it/50x50')
+      view.info
+        wxc-elip.fz24(line='2') 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
+        view.c999.fz22
+          text 蓝色
+          text.fr 2017-12-12
+    view.order_info
+      view.info.fz24.mt10
+        view.fr
+          text 共 1 件 应付总额：
+          wxc-price.color(value='99.00')
+      view.btn_list
+        button.fr.zan-btn.zan-btn--small(@tap='showDialog') 取消订单
+        button.fr.mr20.zan-btn.zan-btn--small.zan-btn--danger 立即付款
+  wxc-dialog.wxc-dialog(title='确认取消订单？', confirm-text='取消订单', cancel-text='放弃', bindconfirm='onConfirm', bindcancel='onCancel')
 
-    <view class="order_card">
-      <view class="header">
-        <text>订单编号：881888381838838</text>
-        <text class="fr">等待买家付款</text>
-      </view>
-
-      <view class="goods_info_box">
-        <image class="goods_image" src="http://placehold.it/50x50"></image>
-        <view class="info">
-          <wxc-elip class="fz24" line="2">测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字</wxc-elip>
-          <view class="c999 fz22">
-            蓝色
-            <text class="fr">2017-12-12</text>
-          </view>
-        </view>
-      </view>
-
-      <view class="order_info">
-        <view class="info fz24 mt10">
-          <view class="fr">
-            共 1 件 应付总额：
-            <wxc-price class="color" value="99.00"></wxc-price>
-          </view>
-        </view>
-        <view class="btn_list">
-          <button class="fr zan-btn zan-btn--small" @tap="showDialog">取消订单</button>
-          <button class="fr mr20 zan-btn zan-btn--small zan-btn--danger">立即付款</button>
-        </view>
-      </view>
-    </view>
-
-    <wxc-dialog
-      class="wxc-dialog"
-      title="确认取消订单？"
-      confirm-text="取消订单"
-      cancel-text="放弃"
-      bindconfirm="onConfirm"
-      bindcancel="onCancel"
-    >
-    </wxc-dialog>
-  </view>
 </template>
+
 
 <script>
 import wepy from 'wepy'
