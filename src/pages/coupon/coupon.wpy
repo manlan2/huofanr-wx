@@ -68,13 +68,11 @@
 
   .price_box .price
     background: #888
-
-
 </style>
 <template lang="pug">
 view.container
-  tab(:tabdata.sync='tabs', :tabvalue.sync='status')
-  view.coupon_card(wx:for='{{couponList[status]}}', wx:key='', class="{{status === ? 'coupon_card' : 'coupon_card_used'}}")
+  Tab(:tabData.sync='tabs' :tabValue.sync='status')
+  view.coupon_card(wx:for="{{couponList[status]}}" wx:key class="{{status === 1 ? 'coupon_card' : 'coupon_card_used'}}")
     view.header.ellipsis
       text {{item.coupon_name}}
     view.content
