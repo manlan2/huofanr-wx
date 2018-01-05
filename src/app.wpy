@@ -19,7 +19,6 @@ export default class extends wepy.app {
       'pages/category/index',
       'pages/profile/index',
       'pages/profile/address',
-      'pages/profile/coupon',
       'pages/profile/auth',
       'pages/profile/uploadIDCard',
       'pages/cart/index',
@@ -28,6 +27,8 @@ export default class extends wepy.app {
       'pages/order/index',
       'pages/goods/index',
       'pages/register/index',
+      'pages/coupon/coupon',
+      'pages/coupon/get-coupon',
     ],
     window: {
       backgroundTextStyle: 'light',
