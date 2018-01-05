@@ -84,63 +84,164 @@
 <template lang="pug">
 view.container
   view.tab_box
-    view(wx:for="{{tabData}}" wx:key @tap="tabChange({{item.value}})" class="{{currentTab === item.value ? 'tab active' : 'tab'}}")
-      view {{item.label}}
-      view {{item.time}}
+    view(wx:for="{{tabData}}" wx:key @tap="tabChange({{index}})" class="{{currentTab === index ? 'tab active' : 'tab'}}")
+      view {{item.title}}
+      view {{statusData[item.status]}}
 
   view.goods_list
-    view.goods_card
+    view.goods_card(wx:for="{{tabData[currentTab].goods_list}}" wx:key open-type="navigate" url="/pages/goods/index?goods_id={{item.goods_id}}")
       view.image
-        image(src="http://placehold.it/200x120")
+        image(src="{{item.head_img}}")
       view.goods_info
-        view.ellipsis.fz24.c333 测试文字测试文字测试文字测试文字测试文字测试文字
-        view.ellipsis.fz20.color.subtitle 测试文字
+        view.ellipsis.fz24.c333 {{item.goods_name}}
+        view.ellipsis.fz20.color.subtitle {{item.goods_desc}}
         view.progress
           wxc-progress(percent="40" background-color="transparent" active-color="#ff0077" radius="0" stroke-width="8")
-          view.limit_num.color 剩余 23 件
+          view.limit_num.color 剩余 {{item.count}} 件
 
       view.footer
         view.left
-          text.price.fz28.mr10 ￥99
-          text.fz20.text_delete 原价￥200
-        view.right 立即抢购
-
-    view.goods_card
-      view.image
-        image(src="http://placehold.it/200x120")
-      view.goods_info
-        view.ellipsis.fz24.c333 测试文字测试文字测试文字测试文字测试文字测试文字
-        view.ellipsis.fz20.color.subtitle 测试文字
-        view.progress
-          wxc-progress(percent="40" background-color="transparent" active-color="#ff0077" radius="0" stroke-width="8")
-          view.limit_num.color 剩余 23 件
-
-      view.footer
-        view.left
-          text.price.fz28.mr10 ￥99
-          text.fz20.text_delete 原价￥200
-        view.right 立即抢购
-
-    view.goods_card
-      view.image
-        image(src="http://placehold.it/200x120")
-      view.goods_info
-        view.ellipsis.fz24.c333 测试文字测试文字测试文字测试文字测试文字测试文字
-        view.ellipsis.fz20.color.subtitle 测试文字
-        view.progress
-          wxc-progress(percent="40" background-color="transparent" active-color="#ff0077" radius="0" stroke-width="8")
-          view.limit_num.color 剩余 23 件
-
-      view.footer
-        view.left
-          text.price.fz28.mr10 ￥99
-          text.fz20.text_delete 原价￥200
+          text.price.fz28.mr10 ￥{{item.timer_price / 100}}
+          text.fz20.text_delete 原价￥{{item.price / 100}}
         view.right 立即抢购
 </template>
 
 <script>
 import wepy from 'wepy'
 import Tab from '@/Tab'
+
+const mockData = [
+  {
+    title: '10：00',
+    status: 'sellout',
+    goods_list: [
+      {
+        goods_id: 3,
+        goods_name: '优衣库男装',
+        head_img: '3.png',
+        price: 9800,
+        count: 90,
+        timer_price: 8000,
+        goods_desc: '1',
+        status: 'sellout'
+      },
+      {
+        goods_id: 3,
+        goods_name: '优衣库男装',
+        head_img: '3.png',
+        price: 9800,
+        count: 90,
+        timer_price: 8000,
+        goods_desc: '1',
+        status: 'sellout'
+      }
+    ]
+  },
+  {
+    title: '15：00',
+    status: 'sellout',
+    goods_list: [
+      {
+        goods_id: 3,
+        goods_name: '美特斯邦威',
+        head_img: '3.png',
+        price: 9800,
+        count: 90,
+        timer_price: 8000,
+        goods_desc: '2',
+        status: 'sellout'
+      },
+      {
+        goods_id: 3,
+        goods_name: '优衣库男装',
+        head_img: '3.png',
+        price: 9800,
+        count: 90,
+        timer_price: 8000,
+        goods_desc: '1',
+        status: 'sellout'
+      }
+    ]
+  },
+  {
+    title: '20：00',
+    status: 'selling',
+    goods_list: [
+      {
+        goods_id: 3,
+        goods_name: '森马',
+        head_img: '3.png',
+        price: 9800,
+        count: 90,
+        timer_price: 8000,
+        goods_desc: '1',
+        status: 'selling'
+      },
+      {
+        goods_id: 3,
+        goods_name: '优衣库男装',
+        head_img: '3.png',
+        price: 9800,
+        count: 90,
+        timer_price: 8000,
+        goods_desc: '1',
+        status: 'selling'
+      }
+    ]
+  },
+  {
+    title: '明10：00',
+    status: 'waiting',
+    goods_list: [
+      {
+        goods_id: 3,
+        goods_name: '男装',
+        head_img: '3.png',
+        price: 9800,
+        count: 90,
+        timer_price: 8000,
+        goods_desc: '1',
+        status: 'waiting'
+      },
+      {
+        goods_id: 3,
+        goods_name: '优衣库男装',
+        head_img: '3.png',
+        price: 9800,
+        count: 90,
+        timer_price: 8000,
+        goods_desc: '1',
+        status: 'waiting'
+      }
+    ]
+  },
+  {
+    title: '明15：00',
+    status: 'waiting',
+    goods_list: [
+      {
+        goods_id: 3,
+        goods_name: '优衣库男装',
+        head_img: '3.png',
+        price: 9800,
+        count: 90,
+        timer_price: 8000,
+        goods_desc: '1',
+        status: 'waiting'
+      },
+      {
+        goods_id: 3,
+        goods_name: '优衣库男装',
+        head_img: '3.png',
+        price: 9800,
+        count: 90,
+        timer_price: 8000,
+        goods_desc: '1',
+        status: 'waiting'
+      }
+    ]
+  }
+]
 
 export default class Pay extends wepy.page {
   config = {
@@ -157,33 +258,21 @@ export default class Pay extends wepy.page {
 
   data = {
     currentTab: 0,
-    tabData: [
-      {
-        label: '已开始',
-        time: '10:00',
-        value: 0,
-      },
-      {
-        label: '已开抢',
-        time: '15:00',
-        value: 1,
-      },
-      {
-        label: '抢购中',
-        time: '20:00',
-        value: 2,
-      },
-      {
-        label: '即将开始',
-        time: '明15:00',
-        value: 3,
-      },
-      {
-        label: '即将开始',
-        time: '明15:00',
-        value: 4,
-      },
-    ]
+    tabData: [],
+    statusData: {
+      sellout: '结束',
+      selling: '销售中',
+      waiting: '等待销售',
+    },
+  }
+
+  onLoad() {
+    this.fetchData()
+  }
+
+  async fetchData() {
+    this.tabData = await wepy.request('goods/timer_goods_list')
+    this.$apply()
   }
 
   methods = {
