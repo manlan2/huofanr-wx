@@ -157,7 +157,7 @@ view.container
     view.small_price
       text 参考价
       wxc-price.workout_price {{goods.reference_price / 100}}
-  CellActivity.cell_box(@click.user='linkactivity')
+  CellActivity.cell_box(url='/pages/coupon/get-coupon')
     wxc-label.mr20 活动
     text 新春活动促销，满 100元 减 5元
   Cell.cell_box.icon_none
@@ -310,10 +310,6 @@ export default class Goods extends wepy.page {
 
     onChangeNumber(e) {
       this.goods_count = e.detail.number
-    },
-
-    linkactivity() {
-      console.log(2)
     },
 
     addToCart() {
