@@ -1,23 +1,31 @@
 import wepy from 'wepy'
 
 export default class WxcDialogMixin extends wepy.mixin {
+  showDialog() {
+    let dialogComponent = this.$wxpage.selectComponent('.wxc-dialog')
+    dialogComponent && dialogComponent.show()
+  }
+
+  hideDialog() {
+    let dialogComponent = this.$wxpage.selectComponent('.wxc-dialog')
+    dialogComponent && dialogComponent.hide()
+  }
+
   methods = {
     showDialog() {
-      let dialogComponent = this.$wxpage.selectComponent('.wxc-dialog')
-      dialogComponent && dialogComponent.show()
+      this.showDialog()
     },
 
     hideDialog() {
-      let dialogComponent = this.$wxpage.selectComponent('.wxc-dialog')
-      dialogComponent && dialogComponent.hide()
+      this.showDialog()
     },
 
     onConfirm() {
-      this.$mixins[0].methods.hideDialog.call(this)
+      this.hideDialog()
     },
 
     onCancel() {
-      this.$mixins[0].methods.hideDialog.call(this)
+      this.hideDialog()
     },
   }
 }
