@@ -62,6 +62,7 @@ view.container
       text.label 我的订单
 
   CellA(url='/pages/coupon/coupon') 我的优惠券
+  CellD(url='/pages/profile/point') 我的积分
   CellB(url='/pages/profile/auth') 我的实名认证
   CellC(url='/pages/profile/address') 我的收货地址
 </template>
@@ -75,6 +76,7 @@ export default class Profile extends wepy.page {
     CellA: Cell,
     CellB: Cell,
     CellC: Cell,
+    CellD: Cell,
   }
 
   data = {
