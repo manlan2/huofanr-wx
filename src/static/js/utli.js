@@ -8,6 +8,14 @@ export const formatDate = (date = new Date()) => {
   return year + '-' + month.toString().padStart(2, 0) + '-' + day.toString().padStart(2, 0)
 }
 
+export const formatTime = (date = new Date()) => {
+  date = new Date(date)
+  const hour = date.getHours()
+  const minute = date.getMinutes()
+
+  return formatDate(date) + ' ' + hour.toString().padStart(2, 0) + ':' + minute.toString().padStart(2, 0)
+}
+
 /*
 * 频率控制 返回函数连续调用时，fn 执行频率限定为每多少时间执行一次
 * @param fn {function}  需要调用的函数

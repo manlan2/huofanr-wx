@@ -59,6 +59,7 @@ view.container
 
 <script>
 import wepy from 'wepy'
+import { formatTime } from 'js/utli'
 
 export default class Point extends wepy.page {
   config = {
@@ -79,7 +80,10 @@ export default class Point extends wepy.page {
   async fetchData() {
     const res = await wepy.request('member/point')
     this.point = res.point
-    this.pointList = res.point_list
+    this.pointList = res.point_list.map(item => ({
+      ...item,
+      create_time: formatTime(item.create_time),
+    }))
     this.$apply()
   }
 }
