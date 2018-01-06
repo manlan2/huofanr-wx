@@ -89,7 +89,8 @@ view.container
           @input="bindKeyword"
           placeholder="搜索商品"
           placeholder-style="color: #999"
-          focus value="{{keyword}}"
+          focus
+          value="{{keyword}}"
           confirm-type="search"
           @confirm="handleSearch"
         )
@@ -246,9 +247,6 @@ export default class Search extends wepy.page {
 
     clearKeyword() {
       this.keyword = ''
-    },
-
-    handleSearch() {
     },
 
     changeSort(sort) {
