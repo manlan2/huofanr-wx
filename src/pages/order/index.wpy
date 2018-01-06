@@ -15,6 +15,10 @@
     width: 70rpx
     text-align: right
 
+  >.close_icon
+    width: 70rpx
+    text-align: center
+
   >.search_ipt
     flex: 1
     margin-top: 6rpx
@@ -34,11 +38,12 @@
   line-height: 60rpx
   font-size: 24rpx
   color: #999
+  border-bottom: 1px #ececec solid
 
 .goods_info_box
-  padding-top: 10px
+  padding: 10px 0
   display: flex
-  border-top: 1px #ececec solid
+  border-bottom: 1px #ececec solid
 
   >.goods_image
     width: 100rpx
@@ -59,45 +64,70 @@
   >.btn_list
     margin-top: 10rpx
     width: 100%
-    height: 50rpx
 
+    .zan-btn:first-child
+      margin-left: 20rpx
+
+.refund_input
+  margin-bottom: 10rpx
+  padding-left: 4px
+  height: 30px
+  font-size: 24rpx
+  border: 1px #eee solid
+  width: 100%
 </style>
 <template lang="pug">
 view.container
   Container.search_container(topBottom='10')
     view.search_box
       wxc-icon.search_icon(type='search', size='28', @tap='searchInputFocus', color='#999')
-      input.search_ipt(type='text', @input='bindKeyword', placeholder='商品名称 | 订单号', placeholder-style='color: #999', focus='{{isFocus}}')
+      input.search_ipt(type='text', @input='bindKeyword' value="{{keyword}}" placeholder='商品名称 | 订单号', placeholder-style='color: #999')
+      wxc-icon.close_icon(wx:if="{{keyword}}" type="close" size="26" @tap="clearKeyword" color="#999")
   Tab(:tabData.sync='tabs', :tabValue.sync='currentTab')
-  view.order_card
-    view.header
-      text 订单编号：881888381838838
-      text.fr 等待买家付款
-    view.goods_info_box
-      image.goods_image(src='http://placehold.it/50x50')
-      view.info
-        wxc-elip.fz24(line='2') 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
-        view.c999.fz22
-          text 蓝色
-          text.fr 2017-12-12
-    view.order_info
-      view.info.fz24.mt10
-        view.fr
-          text 共 1 件 应付总额：
-          wxc-price.color(value='99.00')
-      view.btn_list
-        button.fr.zan-btn.zan-btn--small(@tap='showDialog') 取消订单
-        button.fr.mr20.zan-btn.zan-btn--small.zan-btn--danger 立即付款
-  wxc-dialog.wxc-dialog(title='确认取消订单？', confirm-text='取消订单', cancel-text='放弃', bindconfirm='onConfirm', bindcancel='onCancel')
+  InfiniteScroll(
+    @loadMore.user="loadMore"
+    :scrollDisabled.sync="scrollDisabled"
+    :isNothing.sync="isNothing"
+  )
+    navigator.order_card(wx:for="{{orderList}}" wx:key  open-type="navigate" url="/pages/order/detail?order_id={{item.order_id}}")
+      view.header
+        text 订单编号：{{item.order_no}}
+        text.fr {{statusDesc[item.status].orderStatus}}
+      view.goods_info_box(wx:for="{{item.goods_list}}" wx:key wx:for-item="goods")
+        image.goods_image(src='{{goods.head_img}}')
+        view.info
+          wxc-elip.fz24(line='2') {{goods.goods_name}}
+          view.c999.fz22
+            text 蓝色（写死的）x {{goods.count}} 件
 
+      view.order_info
+        view.info.fz24.mt10
+          view.fl.c999 {{item.create_time}}
+          view.fr
+            text 共 {{item.all_buy_count}} 件 {{statusDesc[item.status].priceStatus}}：
+            wxc-price.color(value='{{item.amout / 100}}')
+        view.btn_list(wx:if="{{statusDesc[item.status].btnList.length}}")
+          button.zan-btn.zan-btn--small.fr(
+            wx:for="{{statusDesc[item.status].btnList}}"
+            wx:for-item="_item"
+            wx:key
+            class="{{_item.isPrimary ? 'zan-btn--danger' : ''}}"
+            @tap="btnHandle({{_item.type}}, {{item.order_id}})"
+          ) {{_item.value}}
+  wxc-dialog.wxc-dialog(title='{{dialogTitle}}', confirm-text='{{dialogConfirmText}}', cancel-text='放弃', bindconfirm='onConfirm', bindcancel='onCancel')
+  wxc-dialog.wxc-dialog_refund(title='确定申请退款？' content="请输入退款理由" confirm-text='申请退款' cancel-text='放弃' bindconfirm='onRefundConfirm' bindcancel='onRefundCancel')
+    input.refund_input(placeholder="退款理由" @input='bindRund')
+  wxc-toast.toast(icon='no') 请输入退款理由
 </template>
-
 
 <script>
 import wepy from 'wepy'
 import Tab from '@/Tab'
 import Container from '@/Container'
 import WxcDialogMixin from '../../mixins/dialog'
+import orderList from './order'
+import InfiniteScroll from '@/InfiniteScroll'
+import { Debounce, formatTime } from 'js/utli'
 
 export default class Profile extends wepy.page {
   config = {
@@ -107,19 +137,46 @@ export default class Profile extends wepy.page {
       'wxc-price': '../../packages/@minui/wxc-price/dist/index',
       'wxc-elip': '../../packages/@minui/wxc-elip/dist/index',
       'wxc-dialog': '../../packages/@minui/wxc-dialog/dist/index',
+      'wxc-toast': '../../packages/@minui/wxc-toast/dist/index',
     },
   }
 
   components = {
     Tab,
     Container,
+    InfiniteScroll,
   }
 
   mixins = [WxcDialogMixin]
 
+  watch = {
+    keyword() {
+      this.page_num = 1
+      this.orderList = []
+      this.scrollDisabled = false
+      this.isNothing = false
+      this.fetchData()
+    },
+
+    currentTab() {
+      this.page_num = 1
+      this.orderList = []
+      this.scrollDisabled = false
+      this.isNothing = false
+      this.fetchData()
+    },
+  }
+
   data = {
+    keyword: '',
+    page_num: 1,
+    scrollDisabled: false,
+    isNothing: false,
     isFocus: false,
     currentTab: 0,
+    currentType: '',
+    currentOrderId: '',
+    refund_reason: '',
     tabs: [
       {
         label: '全部',
@@ -137,20 +194,261 @@ export default class Profile extends wepy.page {
         label: '待收货',
         value: 3,
       },
-    ]
+    ],
+    dialogTitle: '',
+    dialogConfirmText: '',
+    orderList,
+    // status：0 或空：全部，1待付款，2待发货，3已发货，4已关闭，5退款中，6已完成，7已退款
+    // pay => 立即付款
+    // cancel => 取消订单
+    // refund => 申请退款
+    // trace => 查看物流
+    // delete => 删除订单
+    // confirm_receipt => 确认收货
+    statusDesc: {
+      1: {
+        orderStatus: '等待买家付款',
+        priceStatus: '应付总额',
+        btnList: [
+          {
+            type: 'cancel',
+            value: '取消订单',
+          },
+          {
+            type: 'pay',
+            value: '立即付款',
+            isPrimary: true,
+          },
+        ],
+      },
+      2: {
+        orderStatus: '待发货',
+        priceStatus: '实付款',
+        btnList: [
+          {
+            type: 'refund',
+            value: '申请退款',
+          },
+        ],
+      },
+      3: {
+        orderStatus: '订单派送中',
+        priceStatus: '实付款',
+        btnList: [
+          {
+            type: 'trace',
+            value: '查看物流',
+          },
+          {
+            type: 'confirm_receipt',
+            value: '确认收货',
+            isPrimary: true,
+          },
+        ],
+      },
+      4: {
+        orderStatus: '已关闭订单',
+        priceStatus: '实付款',
+        btnList: [
+          {
+            type: 'delete',
+            value: '删除订单',
+          }
+        ],
+      },
+      5: {
+        orderStatus: '退款中',
+        priceStatus: '实付款',
+      },
+      6: {
+        orderStatus: '已完成',
+        priceStatus: '实付款',
+        btnList: [
+          {
+            type: 'delete',
+            value: '删除订单',
+          },
+          {
+            type: 'trace',
+            value: '查看物流',
+          },
+        ],
+      },
+      7: {
+        orderStatus: '已退款',
+        priceStatus: '退款总额',
+        btnList: [
+          {
+            type: 'delete',
+            value: '删除订单',
+          },
+        ],
+      },
+    },
+  }
+
+  onLoad() {
+    // this.fetchData()
+  }
+
+  fetchData() {
+    const data = {
+      status: this.currentTab,
+      keyword: this.keyword,
+      page_num: this.page_num,
+    }
+    wepy.request({
+      url: 'member/order_list',
+      data,
+    }).then(res => {
+      let list = res.list
+      list = list.map(item => ({
+        ...item,
+        create_time: formatTime(item.create_time),
+      }))
+      this.orderList = [...this.orderList, ...list]
+      if (res.cur_page === res.total_pages) {
+        this.scrollDisabled = true
+        this.isNothing = true
+      } else {
+        this.scrollDisabled = false
+      }
+      this.$apply()
+    })
+  }
+
+  showRefundDialog() {
+    let dialogComponent = this.$wxpage.selectComponent('.wxc-dialog_refund')
+    dialogComponent && dialogComponent.show()
+  }
+
+  hideRefundDialog() {
+    let dialogComponent = this.$wxpage.selectComponent('.wxc-dialog_refund')
+    dialogComponent && dialogComponent.hide()
+  }
+
+  _toggleToast() {
+    const $toast = this.$wxpage.selectComponent('.toast')
+    $toast && $toast.show()
+  }
+
+  postOrderStatus(url) {
+    wepy.request({
+      url,
+      method: 'POST',
+      data: {
+        order_id: this.currentOrderId,
+      },
+    }).then(_ => {
+      this.hideDialog()
+      this.fetchData()
+    }).catch(_ => this.hideDialog())
   }
 
   methods = {
-    bindKeyword(e) {
-      // this.keyword = e.detail.value.trim()
+    loadMore() {
+      this.page_num++
+      this.scrollDisabled = true
+      this.fetchData()
+    },
+
+    bindKeyword: Debounce(e => {
+      this.keyword = e.detail.value.trim()
+      this.$apply()
+    }, 500, true),
+
+    clearKeyword() {
+      this.keyword = ''
+    },
+
+    bindRund(e) {
+      this.refund_reason = e.detail.value.trim()
     },
 
     searchInputFocus() {
       this.isFocus = true
     },
 
+    btnHandle(type, order_id) {
+      // pay => 立即付款
+      // cancel => 取消订单
+      // refund => 申请退款
+      // trace => 查看物流
+      // delete => 删除订单
+      // confirm_receipt => 确认收货
+      this.currentOrderId = order_id
+      switch (type) {
+        case 'pay':
+          break
+        case 'cancel':
+          this.dialogTitle = '确定取消订单？'
+          this.dialogConfirmText = '取消订单'
+          this.currentType = 'pay'
+          this.showDialog()
+          break
+        case 'refund':
+          this.showRefundDialog()
+          break
+        case 'trace':
+          const order = this.orderList.find(item => item.order_id === order_id)
+          if (!order) {
+            return console.error('没找到改订单')
+          }
+          this.$navigate('/pages/order/express', {
+            order_id,
+            express_no: order.express_no,
+            express_name: order.express_name,
+          })
+          break
+        case 'delete':
+          this.dialogTitle = '确定删除订单？'
+          this.dialogConfirmText = '删除订单'
+          this.currentType = 'refund'
+          this.showDialog()
+          break
+        case 'confirm_receipt':
+          this.dialogTitle = '确定已经收到商品？'
+          this.dialogConfirmText = '确认收货'
+          this.currentType = 'confirm_receipt'
+          this.showDialog()
+          break
+      }
+    },
+
     onConfirm() {
-      // todo
+      switch (this.currentType) {
+        case 'pay':
+          this.postOrderStatus('TODO')
+          break
+        case 'cancel':
+          this.postOrderStatus('member/order_cancel')
+          break
+        case 'delete':
+          this.postOrderStatus('order/delete')
+          break
+        case 'confirm_receipt':
+          this.postOrderStatus('order/confirm_receipt')
+          break
+      }
+    },
+
+    onRefundConfirm() {
+      if (!this.refund_reason) return this._toggleToast()
+      wepy.request({
+        url: 'member/apply_refund',
+        method: 'POST',
+        data: {
+          order_id: this.currentOrderId,
+          refund_reason: this.refund_reason,
+        },
+      }).then(_ => {
+        this.hideRefundDialog()
+        this.fetchData()
+      }).catch(_ => this.hideRefundDialog())
+    },
+
+    onRefundCancel() {
+      this.hideRefundDialog()
     },
   }
 }
