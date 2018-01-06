@@ -1,0 +1,85 @@
+<style lang="sass">
+.title
+  padding: 10px
+  background: #fff
+  font-size: 26rpx
+
+.content
+  margin-top: 10px
+  padding: 10px
+  width: 100%
+  height: auto
+  background: #fff
+
+  .zan-steps__step--cur
+    .zan-steps__title
+      color: #ff0077
+
+  .zan-steps__title--desc
+    display: block
+    margin-top: 10px
+    padding-left: 30px
+</style>
+
+<template lang="pug">
+view.container
+  view.title(wx:if="{{express_name}}") {{express_name + '：'}}{{express_no}}
+  view.content
+    zanSteps(type="vertical" :hasDesc="_true" :steps.sync="traceList")
+
+</template>
+
+<script>
+import wepy from 'wepy'
+import { formatTime } from 'js/utli'
+import zanSteps from '@/ZanSteps'
+
+const mockData = [
+  {
+    trace_name: '已到达南京中转站',
+    trace_time: '2017-09-11 12:00:00',
+    is_cur: true
+  },
+  {
+    trace_name: '正在发送至中转站',
+    trace_time: '2017-09-10 12:00:00'
+  },
+  {
+    trace_name: '卖家已发货',
+    trace_time: '2017-09-09 12:00:00'
+  }
+]
+
+export default class Express extends wepy.page {
+  config = {
+    navigationBarTitleText: '订单跟踪',
+  }
+
+  components = {
+    zanSteps,
+  }
+
+  data = {
+    _true: true,
+    order_id: '',
+    traceList: [],
+  }
+
+  onLoad({order_id, express_no, express_name}) {
+    this.order_id = order_id
+    this.express_no = express_no
+    this.express_name = express_name
+    this.fetchData()
+  }
+
+  fetchData() {
+    const list = wepy.request('order/trace?order_id=' + this.order_id)
+    this.traceList = list.map(item => ({
+      text: item.trace_name,
+      desc: formatTime(item.trace_time),
+      current: item.is_cur,
+    }))
+    this.$apply()
+  }
+}
+</script>
