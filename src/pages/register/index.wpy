@@ -45,8 +45,9 @@ export default class Register extends wepy.page {
     },
   }
 
-  onLoad() {
+  onLoad({backUrl}) {
     this.timer = null
+    this.backUrl = backUrl
   }
 
   onUnload() {
@@ -85,9 +86,18 @@ export default class Register extends wepy.page {
         }
         this.$apply()
       }, 1000)
+      wepy.request({
+        url: 'login/get_bind_sms',
+        method: 'POST',
+        data: {
+          mobile: this.phone,
+        },
+      }).then(_ => {
+        return this._toggleToast('验证码已发送')
+      })
     },
 
-    bindPhone() {
+    async bindPhone() {
       const {
         phone,
         code,
@@ -95,11 +105,37 @@ export default class Register extends wepy.page {
       } = this
       if (phone.length !== 11 || Number(phone[0]) !== 1) {
         return this._toggleToast('请输入正确的手机号')
-      } else if (code.length !== 6) {
+      } else if (code.length !== 4) {
         return this._toggleToast('请输入正确的验证码')
       } else if (!isGetCode) {
         return this._toggleToast('请先获取验证码')
       }
+
+      const res_code = await wepy.login()
+      const res_unionid = await wepy.request({
+        url: 'login/get_unionid',
+        method: 'POST',
+        data: {
+          code: res_code.code
+        },
+      })
+      wepy.request({
+        url: 'login/do_bind',
+        method: 'POST',
+        data: {
+          mobile: this.phone,
+          sms_code: this.code,
+          weixin_unionid: res_unionid.unionid,
+        }
+      }).then(res => {
+        console.log(res)
+        wepy.setStorageSync('token', res)
+        this._toggleToast('绑定成功')
+        this.$redirect(this.backUrl)
+      }).catch(error => {
+        console.log(error)
+        this._toggleToast('绑定手机失败，请重试')
+      })
     }
   }
 }
