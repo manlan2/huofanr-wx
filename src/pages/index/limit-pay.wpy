@@ -110,139 +110,6 @@ view.container
 import wepy from 'wepy'
 import Tab from '@/Tab'
 
-const mockData = [
-  {
-    title: '10：00',
-    status: 'sellout',
-    goods_list: [
-      {
-        goods_id: 3,
-        goods_name: '优衣库男装',
-        head_img: '3.png',
-        price: 9800,
-        count: 90,
-        timer_price: 8000,
-        goods_desc: '1',
-        status: 'sellout'
-      },
-      {
-        goods_id: 3,
-        goods_name: '优衣库男装',
-        head_img: '3.png',
-        price: 9800,
-        count: 90,
-        timer_price: 8000,
-        goods_desc: '1',
-        status: 'sellout'
-      }
-    ]
-  },
-  {
-    title: '15：00',
-    status: 'sellout',
-    goods_list: [
-      {
-        goods_id: 3,
-        goods_name: '美特斯邦威',
-        head_img: '3.png',
-        price: 9800,
-        count: 90,
-        timer_price: 8000,
-        goods_desc: '2',
-        status: 'sellout'
-      },
-      {
-        goods_id: 3,
-        goods_name: '优衣库男装',
-        head_img: '3.png',
-        price: 9800,
-        count: 90,
-        timer_price: 8000,
-        goods_desc: '1',
-        status: 'sellout'
-      }
-    ]
-  },
-  {
-    title: '20：00',
-    status: 'selling',
-    goods_list: [
-      {
-        goods_id: 3,
-        goods_name: '森马',
-        head_img: '3.png',
-        price: 9800,
-        count: 90,
-        timer_price: 8000,
-        goods_desc: '1',
-        status: 'selling'
-      },
-      {
-        goods_id: 3,
-        goods_name: '优衣库男装',
-        head_img: '3.png',
-        price: 9800,
-        count: 90,
-        timer_price: 8000,
-        goods_desc: '1',
-        status: 'selling'
-      }
-    ]
-  },
-  {
-    title: '明10：00',
-    status: 'waiting',
-    goods_list: [
-      {
-        goods_id: 3,
-        goods_name: '男装',
-        head_img: '3.png',
-        price: 9800,
-        count: 90,
-        timer_price: 8000,
-        goods_desc: '1',
-        status: 'waiting'
-      },
-      {
-        goods_id: 3,
-        goods_name: '优衣库男装',
-        head_img: '3.png',
-        price: 9800,
-        count: 90,
-        timer_price: 8000,
-        goods_desc: '1',
-        status: 'waiting'
-      }
-    ]
-  },
-  {
-    title: '明15：00',
-    status: 'waiting',
-    goods_list: [
-      {
-        goods_id: 3,
-        goods_name: '优衣库男装',
-        head_img: '3.png',
-        price: 9800,
-        count: 90,
-        timer_price: 8000,
-        goods_desc: '1',
-        status: 'waiting'
-      },
-      {
-        goods_id: 3,
-        goods_name: '优衣库男装',
-        head_img: '3.png',
-        price: 9800,
-        count: 90,
-        timer_price: 8000,
-        goods_desc: '1',
-        status: 'waiting'
-      }
-    ]
-  }
-]
-
 export default class Pay extends wepy.page {
   config = {
     navigationBarTitleText: '限时购',
@@ -271,6 +138,7 @@ export default class Pay extends wepy.page {
   }
 
   async fetchData() {
+    // 状态：sellout：结束，selling：销售中，waiting：等待销售
     this.tabData = await wepy.request('goods/timer_goods_list')
     this.$apply()
   }
