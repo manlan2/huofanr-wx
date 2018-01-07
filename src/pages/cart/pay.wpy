@@ -2,7 +2,7 @@
 .goods_list
   margin-top: 20rpx
   padding: 20rpx
-  padding-top: 0
+  padding-top: 10rpx
   width: 100%
   background: #fff
 

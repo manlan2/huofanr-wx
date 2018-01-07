@@ -1,0 +1,226 @@
+<style lang="sass">
+.goods_list
+  margin-top: 20rpx
+  padding: 20rpx
+  padding-top: 10rpx
+  width: 100%
+  background: #fff
+
+.goods_info_box
+  margin-top: 30rpx
+  display: flex
+
+  >.goods_image
+    width: 100rpx
+    height: 100rpx
+    margin-right: 20rpx
+
+  >.info
+    flex: 1
+
+.order_info_cell
+  margin-top: 10px
+  padding: 16rpx 20rpx
+  background: #fff
+  width: 100%
+  font-size: 28rpx
+
+  >.info_cell
+    padding: 10rpx 0
+    display: flex
+    border-bottom: 1px #eee solid
+    color: #999
+
+    .label
+      margin-right: 10px
+      width: 120rpx
+      text-align: right
+      color: #333
+
+
+.pay_info_list
+  margin-top: 10px
+  padding: 10rpx 20rpx
+  background: #fff
+  width: 100%
+  font-size: 28rpx
+
+  >.info
+    line-height: 50rpx
+
+.btn_area
+  margin-top: 20rpx
+  margin-bottom: 20rpx
+  padding: 0 20rpx
+  width: 100%
+</style>
+
+<template lang="pug">
+view.container
+  view.goods_list
+    view.goods_info_box(wx:for="{{order.goodsInfo}}" wx:key)
+      image.goods_image(src='{{item.head_img}}')
+      view.info
+        wxc-elip.fz24(line='2') {{item.goods_name}}
+        view.c999.fz22 蓝色 x 2
+  view.order_info_cell
+    view.info_cell
+      view.label 订单状态
+      view.desc {{orderStatus[order.status].status}}
+      //- view.flex1.tr {{order.create_time}}
+
+    view.info_cell
+      view.label 订单编号
+      view.desc {{order.order_no}}
+
+    view.info_cell
+      view.label 下单时间
+      view.desc {{order.create_time}}
+    view.info_cell
+      view.label 支付方式
+      view.desc {{PAT_TYPE[order.pay_type]}}
+
+    view.info_cell
+      view.label 收货人
+      view.desc {{order.receiverInfo.receiver_name}}，{{order.receiverInfo.receiver_mobile}}
+
+    view.info_cell
+      view.label 收货地址
+      wxc-elip.flex1(line='2') {{order.receiverInfo.receiver_address}}
+  view.pay_info_list
+    view.info
+      text 商品应付总计：
+      text.orange.fr ￥{{order.amoutInfo.goods_amout / 100}}
+    view.info
+      text 运费:
+      text.orange.fr ￥{{order.amoutInfo.express_amout / 100}}
+    view.info
+      text 税费:
+      text.orange.fr ￥{{order.amoutInfo.tallage_amout / 100}}
+    view.info
+      text 优惠券:
+      text.orange.fr ￥{{order.amoutInfo.coupon_amout / 100}}
+    view.info
+      text 积分抵扣:
+      text.orange.fr ￥{{order.amoutInfo.point_amout / 100}}
+    view.info
+      text 应付金额:
+      text.color.fr ￥{{order.amoutInfo.amout / 100}}
+  view.btn_area(wx:if="{{orderStatus[order.status].btnText}}")
+    button.mt40.zan-btn.zan-btn--danger(@tap="orderHandle({{orderStatus[order.status].type}})") 再次购买
+</template>
+
+<script>
+import wepy from 'wepy'
+// TODO
+// import { formatTime } from 'js/utli'
+
+const mockData = {
+  order_id: '4a9f8GnqCl_KGYwch_w7JS4I1sIxHnAP',
+  order_no: 'AOg_03raptqn39We',
+  create_time: '2017-12-24T17:22:15.000Z',
+  status: 1,
+  member_name: null,
+  is_use_coupon: 0,
+  pay_type: 'weixin',
+  goodsInfo: [
+    {
+      goods_id: 3,
+      goods_name: '优衣库男装',
+      head_img: 'http://otq0t8ph7.bkt.clouddn.com/image/%E5%A4%B4%E5%83%8F_1510214288206.jpg',
+      tax: 50,
+      price: 9800,
+      count: 1
+    },
+    {
+      goods_id: 3,
+      goods_name: '优衣库男装',
+      head_img: 'http://otq0t8ph7.bkt.clouddn.com/image/%E5%A4%B4%E5%83%8F_1510214288206.jpg',
+      tax: 50,
+      price: 9800,
+      count: 1
+    },
+  ],
+  receiverInfo: {
+    member_address_id: 10,
+    receiver_name: '234',
+    receiver_mobile: '13057501723',
+    receiver_address: '4455',
+    area_ids: '',
+    remark: null,
+    is_default: 1
+  },
+  amoutInfo: {
+    pay_type: 'weixin',
+    goods_amout: 9800,
+    express_amout: 10,
+    tallage_amout: 50,
+    coupon_amout: 10,
+    point_amout: 20,
+    amout: 9850
+  }
+}
+
+export default class OrderDetail extends wepy.page {
+  config = {
+    navigationBarTitleText: '订单详情',
+    usingComponents: {
+      'wxc-price': '../../packages/@minui/wxc-price/dist/index',
+      'wxc-elip': '../../packages/@minui/wxc-elip/dist/index',
+    },
+  }
+
+  onLoad({order_id}) {
+    console.log(order_id)
+  }
+
+  // status：0 或空：全部，1待付款，2待发货，3已发货，4已关闭，5退款中，6已完成，7已退款
+  data = {
+    order: mockData,
+    PAT_TYPE: {
+      alipay: '支付宝',
+      wxpay: '微信',
+      unpa: '银联',
+    },
+    orderStatus: {
+      1: {
+        status: '待付款',
+        btnText: '立即付款',
+        type: 'pay',
+      },
+      2: {
+        status: '待发货',
+      },
+      3: {
+        status: '已发货',
+      },
+      4: {
+        status: '已关闭',
+        btnText: '再次购买',
+        type: 'buy',
+      },
+      5: {
+        status: '退款中',
+      },
+      6: {
+        status: '交易成功',
+        btnText: '再次购买',
+        type: 'buy',
+      },
+      7: {
+        status: '已退款',
+      },
+    },
+  }
+
+  methods = {
+    orderHandle(type) {
+      if (type === 'buy') {
+
+      } else if (type === 'pay') {
+
+      }
+    },
+  }
+}
+</script>
