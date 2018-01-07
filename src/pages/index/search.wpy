@@ -121,7 +121,7 @@ view.container
         view.price
           wxc-price.color.fz32(value="{{item.price / 100}}")
           text.fr.fz20.c999 99.9%好评
-
+  wxc-toast.toast(icon='no') 该场景下暂无商品
 </template>
 
 <script>
@@ -136,6 +136,7 @@ export default class Search extends wepy.page {
     usingComponents: {
       'wxc-icon': '../../packages/@minui/wxc-icon/dist/index',
       'wxc-price': '../../packages/@minui/wxc-price/dist/index',
+      'wxc-toast': '../../packages/@minui/wxc-toast/dist/index',
     },
   }
 
@@ -222,6 +223,7 @@ export default class Search extends wepy.page {
       url: 'goods/list',
       data,
     }).then(res => {
+      if (!res.list.length) this._toggleToast()
       this.goodeList = [...this.goodeList, ...res.list]
       if (res.cur_page === res.total_pages) {
         this.scrollDisabled = true
@@ -231,6 +233,11 @@ export default class Search extends wepy.page {
       }
       this.$apply()
     })
+  }
+
+  _toggleToast() {
+    const $toast = this.$wxpage.selectComponent('.toast')
+    $toast && $toast.show()
   }
 
   methods = {
