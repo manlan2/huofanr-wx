@@ -9,7 +9,9 @@
   color: #999
 
   >.search_icon
-    width: 70rpx
+    width: 50rpx
+    line-height: 70rpx
+    font-size: 40rpx
     text-align: right
 
   >.search_ipt
@@ -51,7 +53,8 @@
     background: #f2e7da
     font-size: 28rpx
 
-  >.banner
+  .banner
+    width: 100%
     height: 300rpx
 
 .goods_list
@@ -83,7 +86,7 @@
 view.container
   Container(topBottom="10")
     navigator.search_box(open-type="navigate" url="/pages/index/search")
-      wxc-icon.search_icon(type="search" size="28")
+      text.i.search_icon &#xe63e;
       .search_ipt 搜索商品
 
   swiper.swiper_container(indicator-dots interval="{{3000}}")
@@ -115,8 +118,8 @@ view.container
         symbol-style="{{countdown.symbolStyle}}"
         bind:endcount="endcount"
       )
-
-    image.banner.flex1(src="http://placehold.it/400x220")
+    navigator.search_box.flex1(open-type="navigate" url="/pages/index/limit-pay")
+      image.banner(src="http://placehold.it/400x220")
 
   view.goods_list
     view.title.tc.mb20.pt10.fz28 猜你喜欢
@@ -165,8 +168,7 @@ export default class Index extends wepy.page {
   }
 
   async _fetchGoodsList() {
-    const res = await wepy.request('goods/hot')
-    this.goodsList = res.goods_list
+    this.goodsList = await wepy.request('goods/history')
     this.$apply()
   }
 
@@ -174,20 +176,20 @@ export default class Index extends wepy.page {
     const res = await wepy.request('banner/list?type=app_banner_recommend')
     this.bannerList = res.map(item => ({
       ...item,
-      goods_id: this.getQueryString(item.ad_url),
+      goods_id: this.getGoodsId(item.ad_url),
     }))
     this.$apply()
   }
 
-  getQueryString(url) {
+  getGoodsId(url) {
     const index = url.indexOf('goods_id')
     let str = url.substr(index + 9)
-    let resultStr = ''
+    let goods_id = ''
     while (Number(str[0]) || str[0] === '0') {
-      resultStr += str[0]
+      goods_id += str[0]
       str = str.substr(1)
     }
-    return resultStr
+    return goods_id
   }
 
   methods = {
