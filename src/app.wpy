@@ -86,17 +86,17 @@ export default class extends wepy.app {
         }
         const token = wepy.getStorageSync('token')
         const session_id = wepy.getStorageSync('session_id')
-        if (token) params.header = {token, session_id}
+        params.header = {token, session_id}
         return params
       },
       success(res) {
         const statusCode = res.statusCode.toString()
         if (statusCode === '200') {
           if (res.data.code === 200) return res.data.data
+          else if (res.data.code === 403) this._redirectToRegister()
           return this._processError(res.data.msg)
         } else if (statusCode === '401') {
-          wepy.removeStorageSync('token')
-          // 重定向
+          this._redirectToRegister()
         } else {
           return this._processError()
         }
@@ -116,6 +116,14 @@ export default class extends wepy.app {
       image: '/static/imgs/error-icon.png',
     })
     return Promise.reject(err)
+  }
+
+  _redirectToRegister() {
+    wepy.removeStorageSync('token')
+    const backUrl = '/' + this.$wxapp.getCurrentPage().route
+    wepy.redirectTo({
+      url: '/pages/register/index?backUrl=' + backUrl,
+    })
   }
 
   onLaunch() {
