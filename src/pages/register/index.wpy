@@ -45,7 +45,7 @@ export default class Register extends wepy.page {
     },
   }
 
-  onLoad({backUrl}) {
+  onLoad({backUrl = ''}) {
     this.timer = null
     this.backUrl = backUrl
   }
@@ -55,6 +55,7 @@ export default class Register extends wepy.page {
   }
 
   data = {
+    backUrl: '',
     phone: '',
     code: '',
     num: 60,
@@ -69,6 +70,16 @@ export default class Register extends wepy.page {
     this.$apply()
     const $toast = this.$wxpage.selectComponent('.toast')
     $toast && $toast.show()
+  }
+
+  redirectToBackPage() {
+    if (!this.backUrl) {
+      wepy.navigateBack(1)
+    } else {
+      const redirectParams = wepy.getStorageSync('redirectParams')
+      wepy.removeStorageSync('redirectParams')
+      this.$redirect(this.backUrl, redirectParams)
+    }
   }
 
   methods = {
@@ -131,7 +142,7 @@ export default class Register extends wepy.page {
         console.log(res)
         wepy.setStorageSync('token', res)
         this._toggleToast('绑定成功')
-        this.$redirect(this.backUrl)
+        this.redirectToBackPage()
       }).catch(error => {
         console.log(error)
         this._toggleToast('绑定手机失败，请重试')

@@ -76,7 +76,6 @@ export default class extends wepy.app {
     super()
     this.use('requestfix')
     this.use('promisify')
-
     this.intercept('request', {
       config(params) {
         wepy.showNavigationBarLoading()
@@ -120,9 +119,16 @@ export default class extends wepy.app {
 
   _redirectToRegister() {
     wepy.removeStorageSync('token')
-    const backUrl = '/' + this.$wxapp.getCurrentPage().route
+    let route = ''
+    const currentPage = this.$wxapp.getCurrentPage()
+    if (currentPage) {
+      route = this.$wxapp.getCurrentPage().__route__ || this.$wxapp.getCurrentPage().route || ''
+      const options = this.$wxapp.getCurrentPage().options
+      if (Object.keys(options).length) wepy.setStorageSync('redirectParams', options)
+    }
+    route = route ? '/' + route : ''
     wepy.redirectTo({
-      url: '/pages/register/index?backUrl=' + backUrl,
+      url: '/pages/register/index?backUrl=' + route,
     })
   }
 
