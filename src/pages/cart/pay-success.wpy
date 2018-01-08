@@ -59,8 +59,7 @@ export default class Pay extends wepy.page {
     },
 
     linkToOrderDeatil() {
-      this.$navigate({
-        url: '/pages/order/detail',
+      this.$navigate('/pages/order/detail', {
         order_id: this.order_id,
       })
     },
