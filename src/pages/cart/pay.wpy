@@ -53,30 +53,17 @@
 <template lang="pug">
 view.container
   view.goods_list
-    view.goods_info_box
-      image.goods_image(src='http://placehold.it/50x50')
+    navigator.goods_info_box(wx:for="{{goods_list}}" wx:key url="{{'/pages/goods/index?goods_id=' + item.goods_id}}" open-type="navigate")
+      image.goods_image(src='{{item.head_img}}')
       view.info
-        wxc-elip.fz24(line='2') 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
+        wxc-elip.fz24(line='2') {{item.goods_name}}
         view.c999.fz22 蓝色 x 2
-    view.goods_info_box
-      image.goods_image(src='http://placehold.it/50x50')
-      view.info
-        wxc-elip.fz24(line='2') 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
-        view.c999.fz22 蓝色 x 2
-    view.goods_info_box
-      image.goods_image(src='http://placehold.it/50x50')
-      view.info
-        wxc-elip.fz24(line='2') 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
-        view.c999.fz22 蓝色 x 2
-    view.fz28.tr
-      text 应付：
-      wxc-price.color(value='99.00')
   view.bg_white.mt30
     navigator.cell_box(open-type='navigate', url='/pages/coupon/coupon')
       view.flex1.ellipsis
         text 优惠券
         text.c999.ml20 满1000减99
-      text.i.icon 
+      text.i.icon &#xe600;
     view.cell_box
       view.flex1.ellipsis
         text 积分
@@ -86,7 +73,7 @@ view.container
       view.flex1.ellipsis
         text 收货地址
         text.c999.ml20 测试文测试文字测试文字测试文字测试文字测试文字测试文字字测试文字
-      text.i.icon 
+      text.i.icon &#xe600;
     view.info_list
       view.info
         text 商品应付总计：
@@ -162,34 +149,6 @@ const mockData = {
       receiver_address: '4455',
       is_default: 1
     },
-    {
-      member_address_id: 11,
-      receiver_name: '12355',
-      receiver_mobile_show: null,
-      receiver_address: '3344',
-      is_default: 0
-    },
-    {
-      member_address_id: 12,
-      receiver_name: '5544',
-      receiver_mobile_show: '13057501765',
-      receiver_address: '3434',
-      is_default: 0
-    },
-    {
-      member_address_id: 13,
-      receiver_name: '',
-      receiver_mobile_show: '',
-      receiver_address: '',
-      is_default: 0
-    },
-    {
-      member_address_id: 14,
-      receiver_name: '',
-      receiver_mobile_show: '',
-      receiver_address: '',
-      is_default: 0
-    }
   ]
 }
 
@@ -206,9 +165,12 @@ export default class Pay extends wepy.page {
     order_id: '',
     point: 0,
     is_auth: false,
-    goods_list: [],
-    coupon_list: [],
-    address_list: [],
+    // goods_list: [],
+    // coupon_list: [],
+    // address_list: [],
+    goods_list: mockData.goods_list,
+    coupon_list: mockData.coupon_list,
+    address_list: mockData.address_list,
   }
 
   onLoad({goods_cart_ids, order_id}) {
@@ -221,11 +183,16 @@ export default class Pay extends wepy.page {
     else if (order_id) this.buyAgain(order_id)
   }
 
+  // 结算
   async postSettle(goods_cart_ids) {
     const res = await wepy.request('cart/settle?goods_cart_ids=' + goods_cart_ids)
+    // TODO 结算的时候会拿到是否认证的状态，如果该状态未认证，要提示用户认证。
+    // 确认订单前要完成提交认证
     this.fittingData(res)
   }
 
+  // 确认提交订单
+  // 确认订单说明肯定认证过了，不然不可能再次购买
   async buyAgain(order_id) {
     const res = await wepy.request('order/buy_again?order_id=' + order_id)
     this.fittingData(res)
