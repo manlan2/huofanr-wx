@@ -47,6 +47,3 @@ usingComponents: {
 - [在 wepy 下使用 wxParse](http://blog.csdn.net/wyk304443164/article/details/77977577)
 - [页面之间通信](https://wepyjs.github.io/wepy/#/api?id=wepypage-class)
 - selectComponent 方式是由 page 调用的，在 wepy 里使用 page 对象的方式： this.$wxpage.selectComponent()
-
-## TODO
-1. 添加/修改收货地址
