@@ -76,7 +76,7 @@
 </style>
 <template lang="pug">
 view.container
-  view.coupon_card(wx:for='{{couponList}}' wx:key)
+  view.coupon_card(wx:for='{{couponList}}' wx:key @tap="getCoupon({{item.coupon_id}})")
     view.header.ellipsis
       text {{item.coupon_name}}
     view.content
@@ -97,6 +97,7 @@ view.container
         view.price
           view.box
             wxc-price(value='{{item.discount_money / 100}}')
+  wxc-toast.toast(icon='yes') 领取成功
 </template>
 
 
@@ -108,34 +109,48 @@ export default class GetConpun extends wepy.page {
     navigationBarTitleText: '领取优惠券',
     usingComponents: {
       'wxc-price': '../../packages/@minui/wxc-price/dist/index',
+      'wxc-toast': '../../packages/@minui/wxc-toast/dist/index',
     },
   }
 
   data = {
-    page_num: 1,
-    total_pages: 1,
+    goods_id: '',
     couponList: [],
   }
 
-  onLoad() {
+  onLoad({goods_id = ''}) {
+    this.goods_id = goods_id
     this._fetchCouponList()
   }
 
   async _fetchCouponList() {
     const params = {
-      url: 'member/coupon_list',
+      url: 'coupon/available_list',
       data: {
-        status: this.status,
-        page_num: this.page_num,
+        goods_id: this.goods_id,
       }
     }
-    const res = await wepy.request(params)
-    this.total_pages = res.list.total_pages
-    this.couponList = res.list.list
+    this.couponList = await wepy.request(params)
     this.$apply()
   }
 
+  _toggleToast() {
+    const $toast = this.$wxpage.selectComponent('.toast')
+    $toast && $toast.show()
+  }
+
   methods = {
+    getCoupon(coupon_id) {
+      wepy.request({
+        url: 'coupon/get',
+        method: 'POST',
+        data: {
+          coupon_id,
+        },
+      }).then(_ => {
+        this._toggleToast('领取成功')
+      })
+    },
   }
 }
 </script>
