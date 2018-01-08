@@ -61,7 +61,7 @@ view.container
       image.goods_image(src='{{item.head_img}}')
       view.info
         wxc-elip.fz24(line='2') {{item.goods_name}}
-        view.c999.fz22 蓝色 x 2
+        view.c999.fz22(wx:if="{{item.sku}}") 蓝色 x 2
   view.order_info_cell
     view.info_cell
       view.label 订单状态
@@ -75,7 +75,7 @@ view.container
     view.info_cell
       view.label 下单时间
       view.desc {{order.create_time}}
-    view.info_cell
+    view.info_cell(wx:if="{{order.pay_type}}")
       view.label 支付方式
       view.desc {{PAT_TYPE[order.pay_type]}}
 
@@ -106,59 +106,14 @@ view.container
       text 应付金额:
       text.color.fr ￥{{order.amoutInfo.amout / 100}}
   view.btn_area(wx:if="{{orderStatus[order.status].btnText}}")
-    button.mt40.zan-btn.zan-btn--danger(@tap="orderHandle({{orderStatus[order.status].type}})") 再次购买
+    button.mt40.zan-btn.zan-btn--danger(@tap="orderHandle({{orderStatus[order.status].type}})") {{orderStatus[order.status].btnText}}
+  wxc-toast.toast(icon='no') 支付失败，请重试
 </template>
 
 <script>
 import wepy from 'wepy'
-// TODO
-// import { formatTime } from 'js/utli'
-
-const mockData = {
-  order_id: '4a9f8GnqCl_KGYwch_w7JS4I1sIxHnAP',
-  order_no: 'AOg_03raptqn39We',
-  create_time: '2017-12-24T17:22:15.000Z',
-  status: 1,
-  member_name: null,
-  is_use_coupon: 0,
-  pay_type: 'weixin',
-  goodsInfo: [
-    {
-      goods_id: 3,
-      goods_name: '优衣库男装',
-      head_img: 'http://otq0t8ph7.bkt.clouddn.com/image/%E5%A4%B4%E5%83%8F_1510214288206.jpg',
-      tax: 50,
-      price: 9800,
-      count: 1
-    },
-    {
-      goods_id: 3,
-      goods_name: '优衣库男装',
-      head_img: 'http://otq0t8ph7.bkt.clouddn.com/image/%E5%A4%B4%E5%83%8F_1510214288206.jpg',
-      tax: 50,
-      price: 9800,
-      count: 1
-    },
-  ],
-  receiverInfo: {
-    member_address_id: 10,
-    receiver_name: '234',
-    receiver_mobile: '13057501723',
-    receiver_address: '4455',
-    area_ids: '',
-    remark: null,
-    is_default: 1
-  },
-  amoutInfo: {
-    pay_type: 'weixin',
-    goods_amout: 9800,
-    express_amout: 10,
-    tallage_amout: 50,
-    coupon_amout: 10,
-    point_amout: 20,
-    amout: 9850
-  }
-}
+import WxPay from 'js/wxPay'
+import { formatTime } from 'js/utli'
 
 export default class OrderDetail extends wepy.page {
   config = {
@@ -166,16 +121,19 @@ export default class OrderDetail extends wepy.page {
     usingComponents: {
       'wxc-price': '../../packages/@minui/wxc-price/dist/index',
       'wxc-elip': '../../packages/@minui/wxc-elip/dist/index',
+      'wxc-toast': '../../packages/@minui/wxc-toast/dist/index',
     },
   }
 
   onLoad({order_id}) {
-    console.log(order_id)
+    this.order_id = order_id
+    this.fetchData()
   }
 
   // status：0 或空：全部，1待付款，2待发货，3已发货，4已关闭，5退款中，6已完成，7已退款
   data = {
-    order: mockData,
+    order_id: '',
+    order: {},
     PAT_TYPE: {
       alipay: '支付宝',
       wxpay: '微信',
@@ -212,12 +170,29 @@ export default class OrderDetail extends wepy.page {
     },
   }
 
+  async fetchData() {
+    let res = await wepy.request('order/info?order_id=' + this.order_id)
+    res.create_time = formatTime(res.create_time)
+    this.order = res
+    this.$apply()
+  }
+
+  _toggleToast() {
+    const $toast = this.$wxpage.selectComponent('.toast')
+    $toast && $toast.show()
+  }
+
   methods = {
     orderHandle(type) {
-      if (type === 'buy') {
-
-      } else if (type === 'pay') {
-
+      if (type === 'pay') {
+        const wxPay = new WxPay()
+        try {
+          wxPay.requestWxPay(this.order_id).catch(_ => this._toggleToast())
+        } catch (error) {
+          this._toggleToast()
+        }
+      } else if (type === 'buy') {
+        this.$navigate('/pages/cart/pay', {order_id: this.order_id})
       }
     },
   }
