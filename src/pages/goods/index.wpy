@@ -253,7 +253,7 @@ export default class Goods extends wepy.page {
     content: '',
     skuIndex: -1,
     currentSkuId: '',
-    goods_count: 0,
+    goods_count: 1,
     cartListLength: 0,
     toastMsg: '',
   }
@@ -316,6 +316,7 @@ export default class Goods extends wepy.page {
 
     onChangeNumber(e) {
       this.goods_count = e.detail.number
+      this.$apply()
     },
 
     addToCart() {
@@ -370,7 +371,7 @@ export default class Goods extends wepy.page {
         data: {
           goods_id: this.goods_id,
           count: this.goods_count,
-          sku_id: this.currentSkuId,
+          goods_sku_id: this.currentSkuId,
         },
       }).then(_ => {
         this.cartListLength += this.goods_count
