@@ -1,7 +1,27 @@
 <style lang="sass">
+.container
+  padding: 30px 20px
+  background: #fff
+  text-align: center
+
+.header
+  margin-bottom: 20px
+  font-size: 22px
+
+.price
+  margin-bottom: 40px
+  font-size: 18px
 </style>
 
-<template>
+<template lang="pug">
+view.container
+  view.header
+    wxc-icon.close_icon.mr20(type="check" size="32" color="#f07")
+    text 支付成功
+  view.price.color ￥{{price}}
+  view.btn_list
+    button.zan-btn.zan-btn--small.zan-btn--danger(@tap="linkToOrderDeatil") 查看订单
+    button.zan-btn.zan-btn--small.zan-btn--danger(@tap="backToHome") 返回首页
 </template>
 
 <script>
@@ -10,12 +30,40 @@ import wepy from 'wepy'
 export default class Pay extends wepy.page {
   config = {
     navigationBarTitleText: '支付成功',
+    usingComponents: {
+      'wxc-icon': '../../packages/@minui/wxc-icon/dist/index',
+    },
   }
 
   data = {
+    order_id: '',
+    price: 0,
+  }
+
+  onLoad({order_id}) {
+    this.order_id = order_id
+    this.fetchOrderDetail()
+  }
+
+  async fetchOrderDetail() {
+    const res = await wepy.request('order/info?order_id=' + this.order_id)
+    this.price = res.amoutInfo.amout / 100
+    this.$apply()
   }
 
   methods = {
+    backToHome() {
+      wepy.switchTab({
+        url: '/pages/index/index',
+      })
+    },
+
+    linkToOrderDeatil() {
+      this.$navigate({
+        url: '/pages/order/detail',
+        order_id: this.order_id,
+      })
+    },
   }
 }
 </script>
