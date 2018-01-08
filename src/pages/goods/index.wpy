@@ -157,9 +157,9 @@ view.container
     view.small_price
       text 参考价
       wxc-price.workout_price {{goods.reference_price / 100}}
-  CellActivity.cell_box(url='/pages/coupon/get-coupon')
+  CellActivity.cell_box(@click.user='getCoupon')
     wxc-label.mr20 活动
-    text 新春活动促销，满 100元 减 5元
+    text 领取优惠券
   Cell.cell_box.icon_none
     wxc-label.mr20(type-color='#138b6b') 税费
     text 预估 ￥{{goods.tax / 100}}，实际税费请以提交订单时为准
@@ -168,7 +168,8 @@ view.container
     text 从美国发货，预计 1~20个工作日抵达
   Cell.cell_box.icon_none
     wxc-label.mr20(type-color='#016b8a') 说明
-    text 新春活动促销，满 100元 减 5元
+    wxc-icon.wxc_icon(type="yes" size="24" color="#999")
+    text 支持七天无理由退款
   CellCategory.cell_box(@click.user='toggleCategoryDialog')
     text {{currentSkuDesc || '数量规格选择'}}
   wxc-popup.J_Popup(animation-mode="bottom" align="bottom")
@@ -208,7 +209,7 @@ view.container
           text 全球直邮
         view.desc 本商品为海外仓直接发货，通过国际EMS或WTD快递方式配送。 通过海外直邮发货的商品，只能和其他直邮商品凑单结算。
   view.footer
-    view.cart_box
+    navigator.cart_box(open-type="switchTab" url="/pages/cart/index")
       wxc-icon.cart_icon(size='50', type='cart')
       wxc-badge.cart_badge {{cartListLength}}
     button.flex1.zan-btn.zan-btn--large.zan-btn--danger_light(@tap="addCart") 加入购物车
@@ -295,9 +296,14 @@ export default class Goods extends wepy.page {
   async _fetchCartList() {
     const res = await wepy.request('cart/list')
     this.cartListLength = res.length
+    this.$apply()
   }
 
   methods = {
+    getCoupon() {
+      this.$navigate('/pages/coupon/get-coupon', {goods_id: this.goods_id})
+    },
+
     toggleCategoryDialog() {
       const $popup = this.$wxpage.selectComponent('.J_Popup')
       $popup && $popup.toggle()
@@ -357,6 +363,7 @@ export default class Goods extends wepy.page {
     },
 
     postAddCart() {
+      // is_sku为0说明这个商品没有sku属性，就不用传sku_id
       wepy.request({
         url: 'cart/add',
         method: 'post',
@@ -366,7 +373,7 @@ export default class Goods extends wepy.page {
           sku_id: this.currentSkuId,
         },
       }).then(_ => {
-        this.cartListLength++
+        this.cartListLength += this.goods_count
         this.$apply()
       })
     },
