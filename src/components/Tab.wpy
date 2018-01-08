@@ -1,4 +1,10 @@
 <style lang="sass">
+.fixed
+  position: fixed
+  left: 0
+  top: 0
+  z-index: 10
+
 .tab_box
   width: 100%
   display: flex
@@ -17,7 +23,7 @@
     border-bottom: 2px #ff0077 solid
 </style>
 <template>
-  <view class="tab_box">
+  <view class="tab_box {{isFixed ? 'fixed' : ''}}">
     <view wx:for="{{tabData}}" wx:key @tap="tabChange({{item.value}})" class="{{tabValue === item.value ? 'tab active' : 'tab'}}">
       {{item.label}}
     </view>
@@ -38,6 +44,10 @@ export default class Profile extends wepy.component {
       type: [String, Number],
       required: true,
       twoWay: true,
+    },
+    isFixed: {
+      type: Boolean,
+      default: true,
     },
   }
 
