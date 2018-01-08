@@ -128,9 +128,9 @@ import wepy from 'wepy'
 import Tab from '@/Tab'
 import Container from '@/Container'
 import WxcDialogMixin from '../../mixins/dialog'
-import orderList from './order'
 import InfiniteScroll from '@/InfiniteScroll'
 import { Debounce, formatTime } from 'js/utli'
+import WxPay from 'js/wxPay'
 
 export default class Profile extends wepy.page {
   config = {
@@ -200,7 +200,7 @@ export default class Profile extends wepy.page {
     ],
     dialogTitle: '',
     dialogConfirmText: '',
-    orderList,
+    orderList: [],
     // status：0 或空：全部，1待付款，2待发货，3已发货，4已关闭，5退款中，6已完成，7已退款
     // pay => 立即付款
     // cancel => 取消订单
@@ -291,7 +291,7 @@ export default class Profile extends wepy.page {
   }
 
   onLoad() {
-    // this.fetchData()
+    this.fetchData()
   }
 
   fetchData() {
@@ -348,6 +348,15 @@ export default class Profile extends wepy.page {
     }).catch(_ => this.hideDialog())
   }
 
+  requestWxPay() {
+    const wxPay = new WxPay()
+    try {
+      wxPay.requestWxPay(this.currentOrderId).catch(_ => this._toggleToast())
+    } catch (error) {
+      this._toggleToast()
+    }
+  }
+
   methods = {
     loadMore() {
       this.page_num++
@@ -382,6 +391,7 @@ export default class Profile extends wepy.page {
       this.currentOrderId = order_id
       switch (type) {
         case 'pay':
+          this.requestWxPay()
           break
         case 'cancel':
           this.dialogTitle = '确定取消订单？'
