@@ -1,4 +1,7 @@
 <style lang="sass">
+.container
+  padding-top: 80rpx
+
 .coupon_card
   margin-top: 30rpx
   width: 100%
@@ -83,54 +86,73 @@
   .info .active
     background: #888
 
-  .price_box .price
-    background: #888
+  .price_box
+    >.price
+      background: #888
+      background: radial-gradient(rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 6rpx, #888 6rpx)
+      background-size: 28rpx 28rpx
+      background-position: 14rpx 0
+
+    .box
+      background: #888
+
 </style>
 <template lang="pug">
 view.container
   Tab(:tabData.sync='tabs' :tabValue.sync='status')
-  view.coupon_card(wx:for="{{couponList[status]}}" wx:key class="{{status === 1 ? 'coupon_card' : 'coupon_card_used'}}")
-    view.header.ellipsis
-      text {{item.coupon_name}}
-    view.content
-      view.info
-        view.item
-          view.label.active {{item.coupon_type}}
-          view.ellipsis.text {{item.sub_title}}
-        view.item
-          view.label 使用范围：
-          view.ellipsis.text {{item.use_goods_scope}}
-        view.item
-          view.label 领取时间：
-          view.ellipsis.text {{item.get_time}}
-        view.item
-          view.label 使用平台：
-          view.ellipsis.text {{item.use_platform}}
-      view.price_box
-        view.price
-          view.box
-            wxc-price(value='{{item.discount_money / 100}}')
+  InfiniteScroll(
+    @loadMore.user="loadMore"
+    :scrollDisabled.sync="scrollDisabled"
+    :isNothing.sync="isNothing"
+  )
+    view.coupon_card(wx:for="{{couponList}}" wx:key class="{{status === 1 ? 'coupon_card' : 'coupon_card_used'}}")
+      view.header.ellipsis
+        text {{item.coupon_name}}
+      view.content
+        view.info
+          view.item
+            view.label.active {{item.coupon_type}}
+            view.ellipsis.text {{item.sub_title}}
+          view.item
+            view.label 使用范围：
+            view.ellipsis.text {{item.use_goods_scope}}
+          view.item
+            view.label 领取时间：
+            view.ellipsis.text {{item.get_time}}
+          view.item
+            view.label 使用平台：
+            view.ellipsis.text {{item.use_platform}}
+        view.price_box
+          view.price
+            view.box
+              wxc-price(value='{{item.discount_money / 100}}')
+  wxc-toast.toast(icon='no') 该商品暂无优惠券
 </template>
 
 
 <script>
 import wepy from 'wepy'
 import Tab from '@/Tab'
+import InfiniteScroll from '@/InfiniteScroll'
+import {formatTime} from 'js/utli'
 
 export default class Profile extends wepy.page {
   config = {
     navigationBarTitleText: '优惠券列表',
     usingComponents: {
       'wxc-price': '../../packages/@minui/wxc-price/dist/index',
+      'wxc-toast': '../../packages/@minui/wxc-toast/dist/index',
     },
   }
 
   components = {
     Tab,
+    InfiniteScroll,
   }
 
   data = {
-    isFocus: false,
+    scrollDisabled: false,
+    isNothing: false,
     status: 1,
     page_num: 1,
     total_pages: 1,
@@ -148,11 +170,7 @@ export default class Profile extends wepy.page {
         value: 3,
       },
     ],
-    couponList: {
-      '1': [],
-      '2': [],
-      '3': [],
-    },
+    couponList: [],
   }
 
   onLoad() {
@@ -161,7 +179,10 @@ export default class Profile extends wepy.page {
 
   watch = {
     status() {
-      this.page = 1
+      this.page_num = 1
+      this.couponList = []
+      this.scrollDisabled = false
+      this.isNothing = false
       this._fetchCouponList()
     }
   }
@@ -174,13 +195,34 @@ export default class Profile extends wepy.page {
         page_num: this.page_num,
       }
     }
-    const res = await wepy.request(params)
-    this.total_pages = res.list.total_pages
-    this.couponList[this.status] = res.list.list
+    let res = await wepy.request(params)
+    res = res.list
+    if (!res.list.length) this._toggleToast()
+    res.list = res.list.map(item => ({
+      ...item,
+      get_time: formatTime(item.get_time),
+    }))
+    this.couponList = [...this.couponList, ...res.list]
+    if (res.cur_page === res.total_pages) {
+      this.scrollDisabled = true
+      this.isNothing = true
+    } else {
+      this.scrollDisabled = false
+    }
     this.$apply()
   }
 
+  _toggleToast() {
+    const $toast = this.$wxpage.selectComponent('.toast')
+    $toast && $toast.show()
+  }
+
   methods = {
+    loadMore() {
+      this.page_num++
+      this.scrollDisabled = true
+      this._fetchCouponList()
+    },
   }
 }
 </script>
