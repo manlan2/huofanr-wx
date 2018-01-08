@@ -1,4 +1,7 @@
 <style lang="sass">
+.container
+  padding-top: 80rpx
+
 .search_container
   background: #fff
   border-bottom: 1px #ececec solid
@@ -383,7 +386,7 @@ export default class Profile extends wepy.page {
         case 'cancel':
           this.dialogTitle = '确定取消订单？'
           this.dialogConfirmText = '取消订单'
-          this.currentType = 'pay'
+          this.currentType = 'cancel'
           this.showDialog()
           break
         case 'refund':
@@ -403,7 +406,7 @@ export default class Profile extends wepy.page {
         case 'delete':
           this.dialogTitle = '确定删除订单？'
           this.dialogConfirmText = '删除订单'
-          this.currentType = 'refund'
+          this.currentType = 'delete'
           this.showDialog()
           break
         case 'confirm_receipt':
