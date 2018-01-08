@@ -37,7 +37,6 @@
       text-align: right
       color: #333
 
-
 .pay_info_list
   margin-top: 10px
   padding: 10rpx 20rpx
