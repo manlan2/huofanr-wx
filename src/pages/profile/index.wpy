@@ -91,6 +91,7 @@ export default class Profile extends wepy.page {
       const {
         avatarUrl,
         nickName,
+        // gender,
       } = res.userInfo
       this.avatarUrl = avatarUrl
       this.nickName = nickName
