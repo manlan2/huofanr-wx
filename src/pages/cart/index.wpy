@@ -29,7 +29,7 @@
     text-align: center
     line-height: 200rpx
 
-  >.image
+  .image
     margin-right: 20rpx
     width: 200rpx
     height: 200rpx
@@ -72,9 +72,10 @@
 <template lang="pug">
 view.container.pb40
   view.goods_group
-    navigator.goods_card(wx:for="{{goodsList}}" wx:key open-type="navigate" url="/pages/goods/index?goods_id={{item.goods_id}}")
+    view.goods_card(wx:for="{{goodsList}}" wx:key)
       text.checkbox.i(class="{{item.isSelect ? 'i-checked' : 'i-circle'}}" @tap.stop="selectHandle({{item.goods_cart_id}})")
-      image.image(src="{{item.head_img}}")
+      navigator(open-type="navigate" url="/pages/goods/index?goods_id={{item.goods_id}}")
+        image.image(src="{{item.head_img}}")
       .info.flex1
         wxc-elip.flex1(line="2") {{item.goods_name}}
         .num_box
@@ -89,11 +90,16 @@ view.container.pb40
     .felx2
       wxc-price.color.tr(value="99.00" decimal="small")
       text.fz20 （包邮）
-    button.btn.zan-btn.zan-btn--danger.zan-btn--small(disabled="{{!settleEnable}}" class="{{!settleEnable ? 'zan-btn--disabled' : ''}}") 去结算
+    button.btn.zan-btn.zan-btn--danger.zan-btn--small(
+      disabled="{{!settleEnable}}"
+      class="{{!settleEnable ? 'zan-btn--disabled' : ''}}"
+      @tap="settle"
+    ) 去结算
 </template>
 
 <script>
 import wepy from 'wepy'
+import { Debounce } from 'js/utli'
 
 export default class Cart extends wepy.page {
   config = {
@@ -130,12 +136,24 @@ export default class Cart extends wepy.page {
     this.$apply()
   }
 
+  updateCount = Debounce((goods_cart_id, goods_count) => {
+    wepy.request({
+      url: 'cart/update_count',
+      method: 'POST',
+      data: {
+        goods_cart_id,
+        goods_count,
+      },
+    })
+  }, 300, true)
+
   methods = {
     onChangeNumber(goods_cart_id, e) {
       this.goodsList = this.goodsList.map(item => ({
         ...item,
         goods_count: goods_cart_id === item.goods_cart_id ? e.detail.number : item.goods_count,
       }))
+      this.updateCount(goods_cart_id, e.detail.number)
     },
 
     selectHandle(goods_cart_id) {
@@ -165,7 +183,14 @@ export default class Cart extends wepy.page {
         isSelect: !isSelectAll,
       }))
       this.isSelectAll = !isSelectAll
-    }
+    },
+
+    settle() {
+      const goods_cart_ids = this.goodsList.filter(item => item.isSelect).map(item => item.goods_cart_id).join(',')
+      this.$navigate('/pages/cart/pay', {
+        goods_cart_ids,
+      })
+    },
   }
 }
 </script>
