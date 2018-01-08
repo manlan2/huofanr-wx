@@ -52,8 +52,25 @@
     line-height: 110rpx
     text-align: center
     background: #ff0077
+    background: radial-gradient(rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 3px, #f07 3px)
+    background-size: 14px 14px
+    background-position: 9px 0
     color: #fff
     font-size: 54rpx
+
+    &:before
+      content: ''
+      position: absolute
+      top: 0
+      bottom: 0
+      left: 10px
+      right: 10px
+      z-index: -1
+
+    .box
+      width: 100%
+      height: 100%
+      background: #f07
 
 .coupon_card_used
   @extend .coupon_card
@@ -91,7 +108,8 @@ view.container
           view.ellipsis.text {{item.use_platform}}
       view.price_box
         view.price
-          wxc-price(value='{{item.discount_money / 100}}')
+          view.box
+            wxc-price(value='{{item.discount_money / 100}}')
 </template>
 
 
