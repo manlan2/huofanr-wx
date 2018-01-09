@@ -95,63 +95,14 @@ view.container
         text 应付金额:
         text.fr.color ￥{{payAmount}}
   view.btn_area
-    button.mt40.zan-btn.zan-btn--primary 微信支付
+    button.mt40.zan-btn.zan-btn--primary(@tap="createOrder") 微信支付
   wxc-toast.toast(icon='no') {{toastMsg}}
 </template>
 
 <script>
 import wepy from 'wepy'
 import G from 'js/global'
-
-const mockData = {
-  order_id: 'Ekz9OH_ny_4EpibC7KIWUIuFkgFnR98e',
-  point: 288,
-  is_auth: true,
-  goods_list: [
-    {
-      goods_id: 3,
-      goods_name: '优衣库男装',
-      head_img: 'http://otq0t8ph7.bkt.clouddn.com/image/%E5%A4%B4%E5%83%8F_1510214288206.jpg',
-      tax: 50,
-      price: 9800,
-      count: 4
-    },
-    {
-      goods_id: 2,
-      goods_name: '九牧王男装',
-      head_img: 'http://otq0t8ph7.bkt.clouddn.com/image/%E5%A4%B4%E5%83%8F_1510214288206.jpg',
-      tax: 50,
-      price: 9800,
-      count: 1
-    }
-  ],
-  coupon_list: [
-    {
-      coupon_entity_id: 50,
-      coupon_name: '双十一钜惠',
-      discount_money: 1000,
-      use_platform: '全平台',
-      use_goods_scope: '指定类目',
-      get_time: '2017-12-05T16:00:00.000Z'
-    }
-  ],
-  address_list: [
-    {
-      member_address_id: 9,
-      receiver_name: '333',
-      receiver_mobile_show: null,
-      receiver_address: '123423',
-      is_default: 0
-    },
-    {
-      member_address_id: 10,
-      receiver_name: '234',
-      receiver_mobile_show: null,
-      receiver_address: '4455',
-      is_default: 1
-    },
-  ]
-}
+import WxPay from 'js/wxPay'
 
 export default class Pay extends wepy.page {
   config = {
@@ -159,6 +110,7 @@ export default class Pay extends wepy.page {
     usingComponents: {
       'wxc-price': '../../packages/@minui/wxc-price/dist/index',
       'wxc-elip': '../../packages/@minui/wxc-elip/dist/index',
+      'wxc-toast': '../../packages/@minui/wxc-toast/dist/index',
     },
   }
 
@@ -170,12 +122,9 @@ export default class Pay extends wepy.page {
     is_auth: false,
     currentCouponId: '',
     currentAddress_id: '',
-    // goods_list: [],
-    // coupon_list: [],
-    // address_list: [],
-    goods_list: mockData.goods_list,
-    coupon_list: mockData.coupon_list,
-    address_list: mockData.address_list,
+    goods_list: [],
+    coupon_list: [],
+    address_list: [],
   }
 
   computed = {
@@ -299,6 +248,33 @@ export default class Pay extends wepy.page {
       if (!this.coupon_list.length) return this._toggleToast('没有可用优惠券')
       this.$preload({couponList: this.coupon_list})
       this.$navigate('/pages/coupon/select-coupon')
+    },
+
+    async createOrder() {
+      const {
+        order_id,
+        point,
+        isUsePoint,
+        currentCouponId,
+        currentAddress_id,
+      } = this
+      if (!currentAddress_id) return this._toggleToast('请选择收货地址')
+      const data = {
+        order_id,
+        coupon_entity_id: currentCouponId || null,
+        member_address_id: currentAddress_id,
+        point: isUsePoint ? point : null,
+      }
+      await wepy.request({
+        url: 'cart/confirm',
+        method: 'PSOT',
+        data,
+      })
+      const wxPay = new WxPay()
+      wxPay.requestWxPay(this.currentOrderId).catch(_ => {
+        this._toggleToast('支付失败')
+        this.$navigate('/pages/order/index')
+      })
     },
   }
 }
