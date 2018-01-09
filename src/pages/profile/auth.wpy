@@ -54,29 +54,6 @@ view.container
 <script>
 import wepy from 'wepy'
 
-const mockData = [
-  {
-    member_auth_id: 2,
-    real_name: '张珊',
-    member_mobile_show: '13099999999',
-    id_card_show: '324403938888838383',
-    is_upload: 1,
-    id_card_img1: 'https://ws3.sinaimg.cn/large/006tKfTcly1fmzxu1765tj30dc0d0dg4.jpg',
-    id_card_img2: 'https://ws3.sinaimg.cn/large/006tKfTcly1fmzxu1765tj30dc0d0dg4.jpg',
-    is_default: 1
-  },
-  {
-    member_auth_id: 4,
-    real_name: '吃的是草',
-    member_mobile_show: '13678787678',
-    id_card_show: '1234131231231',
-    is_upload: 0,
-    id_card_img1: '',
-    id_card_img2: '',
-    is_default: 0
-  }
-]
-
 export default class Auth extends wepy.page {
   config = {
     navigationBarTitleText: '实名认证',
@@ -86,16 +63,16 @@ export default class Auth extends wepy.page {
   }
 
   data = {
-    // dataList: [],
-    dataList: mockData,
+    dataList: [],
   }
 
   onLoad() {
-    // this.fetchData()
+    this.fetchData()
   }
 
-  async _fetchData() {
+  async fetchData() {
     this.dataList = await wepy.request('member/auth_list')
+    this.$apply()
   }
 
   methods = {
@@ -111,7 +88,7 @@ export default class Auth extends wepy.page {
           member_auth_id,
         },
       }).then(_ => {
-        this._fetchData()
+        this.fetchData()
       })
     },
 
@@ -125,7 +102,7 @@ export default class Auth extends wepy.page {
           is_default: 1,
         }
       }).then(_ => {
-        this._fetchData()
+        this.fetchData()
       })
     },
 
