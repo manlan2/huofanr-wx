@@ -59,20 +59,21 @@ view.container
         wxc-elip.fz24(line='2') {{item.goods_name}}
         view.c999.fz22 蓝色 x 2
   view.bg_white.mt30
-    navigator.cell_box(open-type='navigate', url='/pages/coupon/coupon')
+    view.cell_box(@tap="selectCoupon")
       view.flex1.ellipsis
-        text 优惠券
-        text.c999.ml20 满1000减99
-      text.i.icon &#xe600;
-    view.cell_box
+        text 优惠券：{{currentCouponName || '未选择'}}
+      view
+        text.c999 {{coupon_list.length}}张
+        text.i.icon &#xe600;
+    view.cell_box(wx:if="{{point}}")
       view.flex1.ellipsis
         text 积分
-        text.color.ml20 使用59积分抵扣 100 块
-      switch(checked='', bindchange='switchChange', color='#ff0077')
+        text.color.ml20 使用{{point}}积分抵扣 ￥{{point / 100}}
+      switch(checked='' @change='switchChange' color='#ff0077')
     navigator.cell_box(open-type='navigate', url='/pages/profile/address')
       view.flex1.ellipsis
         text 收货地址
-        text.c999.ml20 测试文测试文字测试文字测试文字测试文字测试文字测试文字字测试文字
+        text.c999.ml20 {{currentAddressName}}
       text.i.icon &#xe600;
     view.info_list
       view.info
@@ -95,12 +96,12 @@ view.container
         wxc-price.color.fr(value='99.00')
   view.btn_area
     button.mt40.zan-btn.zan-btn--primary 微信支付
-
+  wxc-toast.toast(icon='no') {{toastMsg}}
 </template>
-
 
 <script>
 import wepy from 'wepy'
+import G from 'js/global'
 
 const mockData = {
   order_id: 'Ekz9OH_ny_4EpibC7KIWUIuFkgFnR98e',
@@ -162,15 +163,32 @@ export default class Pay extends wepy.page {
   }
 
   data = {
+    toastMsg: '',
     order_id: '',
-    point: 0,
+    point: 20,
+    isUsePoint: false,
     is_auth: false,
+    currentCouponId: '',
+    currentAddress_id: '',
     // goods_list: [],
     // coupon_list: [],
     // address_list: [],
     goods_list: mockData.goods_list,
     coupon_list: mockData.coupon_list,
     address_list: mockData.address_list,
+  }
+
+  computed = {
+    currentCouponName() {
+      const coupon = this.coupon_list.find(item => item.coupon_entity_id === this.currentCouponId)
+      return coupon ? coupon.coupon_name : ''
+    },
+
+    currentAddressName() {
+      if (!this.currentAddress_id) return '添加收货地址'
+      const address = this.address_list.find(item => item.member_address_id === this.currentAddress_id)
+      return address ? (address.receiver_name + '，' + address.receiver_address) : ''
+    },
   }
 
   onLoad({goods_cart_ids, order_id}) {
@@ -181,6 +199,25 @@ export default class Pay extends wepy.page {
     // 在调用确认订单前，订单是临时的并不真正的生成
     if (goods_cart_ids) this.postSettle(goods_cart_ids)
     else if (order_id) this.buyAgain(order_id)
+  }
+
+  onShow() {
+    // 选择优惠券页后退到此页后触发，
+    if (G.coupon.isSelect) {
+      this.currentCouponId = G.coupon.coupon_id
+      G.coupon = {
+        isSelect: false,
+        coupon_id: '',
+      }
+    }
+
+    if (G.address.isSelect) {
+      this.currentAddress_id = G.address.member_address_id
+      G.address = {
+        isSelect: false,
+        member_address_id: '',
+      }
+    }
   }
 
   // 结算
@@ -205,13 +242,32 @@ export default class Pay extends wepy.page {
     this.goods_list = res.goods_list
     this.coupon_list = res.coupon_list
     this.address_list = res.address_list
+    if (res.address_list.length) {
+      const address = res.address_list.find(item => item.is_default)
+      this.currentAddress_id = address ? address.member_address_id : res.address_list[0].member_address_id
+    } else {
+      this.currentAddress_id = ''
+    }
     this.$apply()
+  }
+
+  _toggleToast(toastMsg) {
+    this.toastMsg = toastMsg
+    this.$apply()
+    const $toast = this.$wxpage.selectComponent('.toast')
+    $toast && $toast.show()
   }
 
   methods = {
     switchChange(e) {
-      console.log(e.dateil.value)
-    }
+      this.isUsePoint = e.detail.value
+    },
+
+    selectCoupon() {
+      if (!this.coupon_list.length) return this._toggleToast('没有可用优惠券')
+      this.$preload({couponList: this.coupon_list})
+      this.$navigate('/pages/coupon/select-coupon')
+    },
   }
 }
 </script>
