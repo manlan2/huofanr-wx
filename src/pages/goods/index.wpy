@@ -3,10 +3,13 @@
   margin-bottom: 100rpx
   background: #fff
 
-.header_img
-  display: block
+.header_img_box
   width: 100%
   height: 440rpx
+  text-align: center
+
+  >.header_img
+    height: 100%
 
 .goods_name
   display: block
@@ -149,7 +152,8 @@
 
 <template lang="pug">
 view.container
-  image.header_img(src='{{goods.head_img}}')
+  view.header_img_box
+    image.header_img(src='{{goods.head_img}}' mode="aspectFit")
   wxc-elip.goods_name(line='2')
     text {{goods.goods_name}}
   view.price_box
