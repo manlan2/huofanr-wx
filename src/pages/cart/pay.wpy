@@ -206,16 +206,19 @@ export default class Pay extends wepy.page {
     },
 
     discountAmount() {
+      // 优惠券抵扣金额
       if (!this.currentCouponId) return 0
       const coupon = this.coupon_list.find(item => item.coupon_entity_id === this.currentCouponId)
       return coupon ? coupon.discount_money / 100 : 0
     },
 
     pointAmount() {
+      // 积分
       return this.isUsePoint ? this.point / 100 : 0
     },
 
     payAmount() {
+      // 最终要支付的钱
       return this.goodsTotal + this.freight + this.taxes - this.discountAmount - this.pointAmount
     },
   }
