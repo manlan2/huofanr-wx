@@ -1,0 +1,137 @@
+<style lang="sass">
+.coupon_card
+  margin-top: 30rpx
+  width: 100%
+  background: #fff4f1
+
+.header
+  height: 70rpx
+  padding: 0 20rpx
+  line-height: 70rpx
+  color: #fff
+  font-size: 26rpx
+  background: #fc522d
+
+.content
+  display: flex
+  height: 260rpx
+
+.info
+  width: calc(100% - 260rpx)
+
+  >.item
+    margin: 20rpx 10rpx 20rpx 20rpx
+    height: 40rpx
+    display: flex
+    line-height: 40rpx
+    font-size: 24rpx
+
+    .label
+      width: 120rpx
+
+    .active
+      margin-right: 20rpx
+      width: 100rpx
+      text-align: center
+      background: #ff0077
+      color: #fff
+
+    .text
+      flex: 1
+
+.price_box
+  padding: 0 10rpx
+  width: 244rpx
+  line-height: 260rpx
+
+  >.price
+    padding: 0 10rpx
+    display: inline-block
+    vertical-align: middle
+    width: 100%
+    height: 110rpx
+    line-height: 110rpx
+    text-align: center
+    color: #fff
+    font-size: 48rpx
+    background: #f07
+    background: radial-gradient(rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 6rpx, #f07 6rpx)
+    background-size: 28rpx 28rpx
+    background-position: 14rpx 0
+
+    &:before
+      content: ''
+      position: absolute
+      top: 0
+      bottom: 0
+      left: 10px
+      right: 10px
+      z-index: -1
+
+    .box
+      width: 100%
+      height: 100%
+      background: #f07
+
+</style>
+<template lang="pug">
+view.container
+  view.coupon_card(wx:for='{{couponList}}' wx:key @tap="selectCoupon({{item.coupon_entity_id}})")
+    view.header.ellipsis
+      text {{item.coupon_name}}
+    view.content
+      view.info
+        view.item(wx:if="{{item.coupon_type}}")
+          view.label.active {{item.coupon_type}}
+          view.ellipsis.text {{item.sub_title}}
+        view.item
+          view.label 使用范围：
+          view.ellipsis.text {{item.use_goods_scope}}
+        view.item
+          view.label 领取时间：
+          view.ellipsis.text {{item.get_time}}
+        view.item
+          view.label 使用平台：
+          view.ellipsis.text {{item.use_platform}}
+      view.price_box
+        view.price
+          view.box
+            wxc-price(value='{{item.discount_money / 100}}')
+  wxc-toast.toast(icon='yes') 领取成功
+</template>
+
+<script>
+import wepy from 'wepy'
+import G from 'js/global'
+
+export default class SelectConpun extends wepy.page {
+  config = {
+    navigationBarTitleText: '选择优惠券',
+    usingComponents: {
+      'wxc-price': '../../packages/@minui/wxc-price/dist/index',
+      'wxc-toast': '../../packages/@minui/wxc-toast/dist/index',
+    },
+  }
+
+  data = {
+    couponList: [],
+  }
+
+  onLoad(data, {preload}) {
+    const {
+      couponList = []
+    } = preload
+    this.couponList = couponList
+  }
+
+  methods = {
+    selectCoupon(coupon_id) {
+      G.coupon = {
+        isSelect: true,
+        coupon_id,
+      }
+      wepy.navigateBack()
+    },
+  }
+}
+</script>
