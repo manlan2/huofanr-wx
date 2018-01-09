@@ -126,7 +126,7 @@ view.container
     navigator.goods_card(wx:for="{{goodsList}}" wx:key url="{{'/pages/goods/index?goods_id=' + item.goods_id}}" open-type="navigate")
       image.image(src="{{item.head_img}}")
       view.name.fz24.ellipsis.mt10 {{item.goods_name}}
-      view.fz20.lh40.ellipsis.c999 测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字测试文字
+      view.fz20.lh40.ellipsis.c999 {{item.goods_desc}}
       wxc-price.fz24.color(value="{{item.price / 100}}" decimal="small")
 
 </template>
