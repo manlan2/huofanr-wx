@@ -45,15 +45,15 @@ view.container
     view.name {{nickName}}
 
   view.nav
-    navigator.item(url="/pages/order/index" open-type="navigate")
+    navigator.item(url="/pages/order/index?tab=1" open-type="navigate")
       text.i &#xe613;
       text.label 待付款
 
-    navigator.item(url="/pages/order/index" open-type="navigate")
+    navigator.item(url="/pages/order/index?tab=2" open-type="navigate")
       text.i &#xe604;
       text.label 待发货
 
-    navigator.item(url="/pages/order/index" open-type="navigate")
+    navigator.item(url="/pages/order/index?tab=3" open-type="navigate")
       text.i &#xe62c;
       text.label 待收货
 

@@ -290,7 +290,8 @@ export default class Profile extends wepy.page {
     },
   }
 
-  onLoad() {
+  onLoad({tab = 0}) {
+    this.currentTab = Number(tab)
     this.fetchData()
   }
 
