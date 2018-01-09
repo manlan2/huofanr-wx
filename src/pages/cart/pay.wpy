@@ -78,22 +78,22 @@ view.container
     view.info_list
       view.info
         text 商品应付总计：
-        wxc-price.orange.fr(value='99.00')
+        text.fr.orange ￥{{goodsTotal}}
       view.info
         text 运费:
-        wxc-price.orange.fr(value='99.00')
+        text.fr.orange ￥{{freight}}
       view.info
         text 税费:
-        wxc-price.orange.fr(value='99.00')
+        text.fr.orange ￥{{taxes}}
       view.info
         text 优惠券:
-        wxc-price.orange.fr(value='99.00')
+        text.fr.orange ￥{{discountAmount}}
       view.info
         text 积分抵扣:
-        wxc-price.orange.fr(value='99.00')
+        text.fr.orange ￥{{pointAmount}}
       view.info
         text 应付金额:
-        wxc-price.color.fr(value='99.00')
+        text.fr.color ￥{{payAmount}}
   view.btn_area
     button.mt40.zan-btn.zan-btn--primary 微信支付
   wxc-toast.toast(icon='no') {{toastMsg}}
@@ -188,6 +188,35 @@ export default class Pay extends wepy.page {
       if (!this.currentAddress_id) return '添加收货地址'
       const address = this.address_list.find(item => item.member_address_id === this.currentAddress_id)
       return address ? (address.receiver_name + '，' + address.receiver_address) : ''
+    },
+
+    goodsTotal() {
+      // 商品应付总计
+      return this.goods_list.reduce((total, goods) => total + goods.price * goods.count, 0) / 100
+    },
+
+    freight() {
+      // 运费
+      return 0
+    },
+
+    taxes() {
+      // 税费
+      return this.goods_list.reduce((total, goods) => total + goods.tax * goods.count, 0) / 100
+    },
+
+    discountAmount() {
+      if (!this.currentCouponId) return 0
+      const coupon = this.coupon_list.find(item => item.coupon_entity_id === this.currentCouponId)
+      return coupon ? coupon.discount_money / 100 : 0
+    },
+
+    pointAmount() {
+      return this.isUsePoint ? this.point / 100 : 0
+    },
+
+    payAmount() {
+      return this.goodsTotal + this.freight + this.taxes - this.discountAmount - this.pointAmount
     },
   }
 
