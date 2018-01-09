@@ -89,7 +89,7 @@ view.container
           @input="bindKeyword"
           placeholder="搜索商品"
           placeholder-style="color: #999"
-          focus
+          focus="{{isFocus}}"
           value="{{keyword}}"
           confirm-type="search"
           @confirm="handleSearch"
@@ -189,10 +189,11 @@ export default class Search extends wepy.page {
         return this.sort_type ? 'icon_order_down' : 'icon_order_top'
       }
       return 'icon_order_default'
-    }
+    },
   }
 
   data = {
+    isFocus: false,
     goodeList: [],
     page_num: 1,
     scrollDisabled: false,
@@ -204,7 +205,9 @@ export default class Search extends wepy.page {
     sort_type: true, // 高->低：desc => true，低到高：asc => false
   }
 
-  onLoad({goods_parent_category_id = '', goods_child_category_id = ''}) {
+  onLoad({goods_parent_category_id = '', goods_child_category_id = ''}, {from}) {
+    if (from.$name === 'Index') this.isFocus = true
+    console.log(from.$name)
     this.goods_parent_category_id = goods_parent_category_id
     this.goods_child_category_id = goods_child_category_id
     if (goods_parent_category_id && goods_child_category_id) this.fetchData()
