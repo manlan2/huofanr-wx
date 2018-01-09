@@ -121,10 +121,11 @@ export default class UploadIDCard extends wepy.page {
   }
 
   _validate() {
+    const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
     if (!this.id_card_img1) return '请上传身份证正面照片'
     if (!this.id_card_img2) return '请上传身份证反面照片'
     if (!this.real_name) return '请输入真实姓名'
-    if (!this.id_card_show) return '请输入身份证号'
+    if (!reg.test(this.id_card_show)) return '请输入正确的身份证号'
     else return ''
   }
 
@@ -132,7 +133,11 @@ export default class UploadIDCard extends wepy.page {
     async chooseImg(type) {
       const res = await wepy.chooseImage({count: 1})
       const file = res.tempFilePaths[0]
-      const token = await wepy.request('common/get_qiniu_token')
+      let token = this.token
+      if (!token) {
+        token = await wepy.request('common/get_qiniu_token')
+        this.token = token
+      }
       this._uploadImg({
         filePath: file,
         formData: {
@@ -142,7 +147,7 @@ export default class UploadIDCard extends wepy.page {
       }).then(img_url => {
         this[type] = img_url
         this.$apply()
-      })
+      }).catch(error => console.log(error))
     },
 
     async submit() {
@@ -158,7 +163,7 @@ export default class UploadIDCard extends wepy.page {
       try {
         await wepy.request({
           url: 'member/save_auth',
-          method: 'post',
+          method: 'POST',
           data: {
             member_auth_id,
             id_card_img1,
@@ -167,7 +172,7 @@ export default class UploadIDCard extends wepy.page {
             id_card_show,
           },
         })
-        this._toggleToast('上传身份证成功')
+        this.$navigate('/pages/profile/auth')
       } catch (error) {
         this._toggleToast('上传身份证失败')
       }
@@ -186,7 +191,8 @@ export default class UploadIDCard extends wepy.page {
       formData,
     }).catch(error => console.error(error))
     if (res.statusCode === 200) {
-      return API.STATICDOMAIN + res.data.key
+      const data = typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+      return API.STATICDOMAIN + data.key
     }
     return ''
   }
