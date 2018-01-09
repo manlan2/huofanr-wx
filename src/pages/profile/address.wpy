@@ -25,15 +25,15 @@
 
 <template lang="pug">
 view.container
-  view.card_box(wx:for='{{addressList}}', wx:key)
+  view.card_box(wx:for='{{addressList}}' wx:key @tap="selectAddressToPay({{item.member_address_id}})")
     view.header
       text {{item.receiver_name}}
       test.fr {{item.receiver_mobile_show}}
     text.address.ellipsis.fz24.c999 {{item.receiver_address}}
     view.footer
-      text.i.mr10(class="{{item.is_default ? 'i-checked' : 'i-circle'}}", @tap="changeDefault({{item.is_default ? '' : item.member_address_id}})")
+      text.i.mr10(class="{{item.is_default ? 'i-checked' : 'i-circle'}}", @tap.stop="changeDefault({{item.is_default ? '' : item.member_address_id}})")
       text 默认地址
-      view.fr(@tap='deleteAddress({{item.member_address_id}})')
+      view.fr(@tap.stop='deleteAddress({{item.member_address_id}})')
         wxc-icon(type='delete', size='28')
         text 删除
   button.mt40.zan-btn.zan-btn--large.zan-btn--danger(@tap='addAddress') 添加新地址
@@ -42,23 +42,7 @@ view.container
 
 <script>
 import wepy from 'wepy'
-
-const mockData = [
-  {
-    member_address_id: 1,
-    receiver_name: '张珊',
-    receiver_mobile_show: '130xxxx0000',
-    receiver_address: '古平岗',
-    is_default: 0
-  },
-  {
-    member_address_id: 2,
-    receiver_name: '李四',
-    receiver_mobile_show: '131xxxx1111',
-    receiver_address: '中关村',
-    is_default: 1
-  }
-]
+import G from 'js/global'
 
 export default class Address extends wepy.page {
   config = {
@@ -69,12 +53,14 @@ export default class Address extends wepy.page {
   }
 
   data = {
-    addressList: mockData,
-    // addressList: [],
+    isFromPay: false,
+    addressList: [],
   }
 
-  onLoad() {
-    // this._fetchAddressList()
+  onLoad(data, {from}) {
+    const name = from.$name
+    if (name === 'Pay') this.isFromPay = true
+    this._fetchAddressList()
   }
 
   async _fetchAddressList() {
@@ -83,6 +69,15 @@ export default class Address extends wepy.page {
   }
 
   methods = {
+    selectAddressToPay(member_address_id) {
+      if (!this.isFromPay) return
+      G.address = {
+        isSelect: true,
+        member_address_id,
+      }
+      wepy.navigateBack()
+    },
+
     async addAddress() {
       const res = await wepy.chooseAddress()
       const {
