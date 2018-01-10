@@ -88,8 +88,8 @@ view.container.pb40
       text.checkbox.i(class="{{isSelectAll ? 'i-checked' : 'i-circle'}}")
       text 全选
     .felx2
-      wxc-price.color.tr(value="99.00" decimal="small")
-      text.fz20 （包邮）
+      text.color.tr ￥{{amount}}
+      //- text.fz20 （包邮）
     button.btn.zan-btn.zan-btn--danger.zan-btn--small(
       disabled="{{!settleEnable}}"
       class="{{!settleEnable ? 'zan-btn--disabled' : ''}}"
@@ -120,6 +120,9 @@ export default class Cart extends wepy.page {
   computed = {
     settleEnable() {
       return this.goodsList.some(item => item.isSelect)
+    },
+    amount() {
+      return this.goodsList.reduce((sum, goods) => sum + (goods.isSelect ? goods.price * goods.goods_count : 0), 0) / 100
     },
   }
 
