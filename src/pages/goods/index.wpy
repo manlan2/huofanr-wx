@@ -183,7 +183,8 @@ view.container
     wxc-icon.wxc_icon(type="yes" size="24" color="#999")
     text 支持七天无理由退款
   CellCategory.cell_box(@click.user='toggleCategoryDialog')
-    text {{currentSkuDesc || '数量规格选择'}}
+    text {{currentSkuDesc}}
+    text(slot="rightText") 数量规格选择
   wxc-popup.J_Popup(animation-mode="bottom" align="bottom")
     view.popup_content(@tap.stop)
       view.header
@@ -225,8 +226,9 @@ view.container
     navigator.cart_box(open-type="switchTab" url="/pages/cart/index")
       wxc-icon.cart_icon(size='50', type='cart')
       wxc-badge.cart_badge {{cartListLength}}
-    button.flex1.zan-btn.zan-btn--large.zan-btn--danger_light(@tap="addCart") 加入购物车
-    button.flex1.zan-btn.zan-btn--large.zan-btn--danger(@tap='buyNow') 立即购买
+    button.flex1.zan-btn.zan-btn--large.zan-btn--danger_light(@tap="addCart" disabled="{{!goods.count}}") 加入购物车
+    button.flex1.zan-btn.zan-btn--large.zan-btn--danger(wx:if="{{goods.count}}" @tap='buyNow') 立即购买
+    button.flex1.zan-btn.zan-btn--large.zan-btn--danger.zan-btn.zan-btn--disabled(wx:else disabled) 暂时缺货
   view.tip.wxParse
     WxParse(:parserContent.sync='content')
   wxc-toast.toast(icon='no') {{toastMsg}}
@@ -324,9 +326,8 @@ export default class Goods extends wepy.page {
   verifySku() {
     if (this.goods.is_sku && this.sku && this.sku.length) {
       return this.skuIndex > -1 && this.currentSkuId && this.goods_count
-    } else {
-      return this.goods_count
     }
+    return this.goods_count
   }
 
   methods = {
@@ -342,6 +343,7 @@ export default class Goods extends wepy.page {
     },
 
     toggleCategoryDialog() {
+      if (!this.goods.count) return
       const $popup = this.$wxpage.selectComponent('.J_Popup')
       $popup && $popup.toggle()
     },
