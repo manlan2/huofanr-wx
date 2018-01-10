@@ -14,6 +14,13 @@
     height: 200rpx
     border-radius: 50%
 
+  >.face_default
+    margin-bottom: 20rpx
+    width: 200rpx
+    height: 200rpx
+    border-radius: 50%
+    background: #eee
+
 .nav
   display: flex
   margin-bottom: 20rpx
@@ -41,7 +48,8 @@
 <template lang="pug">
 view.container
   view.header
-    image.face(src="{{avatarUrl}}")
+    image.face(wx:if="{{avatarUrl}}" src="{{avatarUrl}}")
+    view.face_default(wx:else)
     view.name {{nickName}}
 
   view.nav
