@@ -72,6 +72,10 @@ import wepy from 'wepy'
 import Cell from '@/Cell'
 
 export default class Profile extends wepy.page {
+  config = {
+    navigationBarTitleText: '个人中心',
+  }
+
   components = {
     CellA: Cell,
     CellB: Cell,
@@ -85,13 +89,24 @@ export default class Profile extends wepy.page {
   }
 
   onLoad() {
+    const token = wepy.getStorageSync('token')
+    token ? this.fetchUserInfo() : this.wxGetUserInfo()
+  }
+
+  async fetchUserInfo() {
+    const res = await wepy.request('member/info')
+    this.avatarUrl = res.head_img
+    this.nickName = res.member_name
+    this.$apply()
+  }
+
+  wxGetUserInfo() {
     wepy.getUserInfo({
       withCredentials: false,
     }).then(res => {
       const {
         avatarUrl,
         nickName,
-        // gender,
       } = res.userInfo
       this.avatarUrl = avatarUrl
       this.nickName = nickName
@@ -99,10 +114,6 @@ export default class Profile extends wepy.page {
     }).catch(_ => {
       // TODO 用户拒绝了授权获取用户的头像和昵称
     })
-  }
-
-  config = {
-    navigationBarTitleText: '个人中心',
   }
 }
 </script>
