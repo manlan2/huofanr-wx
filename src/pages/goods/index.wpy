@@ -189,19 +189,20 @@ view.container
       view.header
         image.image(src='{{goods.head_img}}')
       view.pl20.pr20
-        view.label {{goods.sku[0].sku_name}}
-        view.category_list
-          view.item(wx:for="{{goods.sku}}" wx:key @tap="selectSku({{index}})" class="{{index === skuIndex ? 'active' : ''}}") {{item.sku_value}}
-        view.label(wx:if="{{skuIndex > -1}}") {{goods.sku[0].sub_sku[0].sku_name}}
-        view.category_list(wx:if="{{skuIndex > -1}}")
-          view.item(
-            wx:for="{{goods.sku[skuIndex].sub_sku}}"
-            wx:key
-            @tap="selectSubSku({{item.sku_id}}, {{item.sku_count}})"
-            class="{{item.sku_id === currentSkuId ? 'active' : (item.sku_count ? '' : 'disabled')}}"
-          ) {{item.sku_value}}
+        view.sku_conainer(wx:if="{{goods.is_sku && sku && sku.length}}")
+          view.label {{goods.sku[0].sku_name}}
+          view.category_list
+            view.item(wx:for="{{goods.sku}}" wx:key @tap="selectSku({{index}})" class="{{index === skuIndex ? 'active' : ''}}") {{item.sku_value}}
+          view.label(wx:if="{{skuIndex > -1}}") {{goods.sku[0].sub_sku[0].sku_name}}
+          view.category_list(wx:if="{{skuIndex > -1}}")
+            view.item(
+              wx:for="{{goods.sku[skuIndex].sub_sku}}"
+              wx:key
+              @tap="selectSubSku({{item.sku_id}}, {{item.sku_count}})"
+              class="{{item.sku_id === currentSkuId ? 'active' : (item.sku_count ? '' : 'disabled')}}"
+            ) {{item.sku_value}}
         view.label 数量
-        wxc-counter.dib.mr10(number='1', max='{{99}}', min='1', bind:changenumber='onChangeNumber')
+        wxc-counter.dib.mr10(number='1', max='{{99}}', min='{{1}}', bind:changenumber='onChangeNumber')
       button.mt60.zan-btn.zan-btn--large.zan-btn--danger(@tap='addToCart') 加入购物车
 
   wxc-popup.Q_Popup(animation-mode="bottom" align="bottom")
@@ -265,7 +266,7 @@ export default class Goods extends wepy.page {
       goods_imgs: '',
     },
     content: '',
-    skuIndex: -1,
+    skuIndex: -1, // 当前选择的第几个 sku，如果为 -1，代表还没选择 sku
     currentSkuId: '',
     goods_count: 1,
     cartListLength: 0,
@@ -274,13 +275,16 @@ export default class Goods extends wepy.page {
 
   computed = {
     currentSkuDesc() {
-      if (this.skuIndex > -1 && this.currentSkuId) {
-        const firstValue = this.goods.sku[this.skuIndex].sku_value
-        const currentSubSku = this.goods.sku[this.skuIndex].sub_sku.find(item => item.sku_id === this.currentSkuId)
-        const secondValue = currentSubSku.sku_value
-        return firstValue + '，' + secondValue
+      if (this.goods.is_sku) {
+        if (this.skuIndex > -1 && this.currentSkuId) {
+          const firstValue = this.goods.sku[this.skuIndex].sku_value
+          const currentSubSku = this.goods.sku[this.skuIndex].sub_sku.find(item => item.sku_id === this.currentSkuId)
+          const secondValue = currentSubSku ? currentSubSku.sku_value : ''
+          return firstValue + '，' + secondValue + (secondValue ? '，' : '') + this.goods_count + '件'
+        }
+        return ''
       }
-      return ''
+      return this.goods_count + '件'
     },
 
     goodsImgs() {
@@ -317,6 +321,14 @@ export default class Goods extends wepy.page {
     this.$apply()
   }
 
+  verifySku() {
+    if (this.goods.is_sku && this.sku && this.sku.length) {
+      return this.skuIndex > -1 && this.currentSkuId && this.goods_count
+    } else {
+      return this.goods_count
+    }
+  }
+
   methods = {
     getCoupon() {
       this.$navigate('/pages/coupon/get-coupon', {goods_id: this.goods_id})
@@ -338,7 +350,7 @@ export default class Goods extends wepy.page {
     },
 
     addToCart() {
-      if (this.skuIndex > -1 && this.currentSkuId) {
+      if (this.verifySku()) {
         this.methods.toggleCategoryDialog.call(this)
         this.methods.postAddCart.call(this)
       } else {
@@ -347,7 +359,7 @@ export default class Goods extends wepy.page {
     },
 
     buyNow() {
-      if (this.skuIndex > -1 && this.currentSkuId) {
+      if (this.verifySku()) {
         wepy.request({
           url: 'cart/do_buy',
           method: 'post',
@@ -389,7 +401,7 @@ export default class Goods extends wepy.page {
         data: {
           goods_id: this.goods_id,
           count: this.goods_count,
-          goods_sku_id: this.currentSkuId,
+          goods_sku_id: this.goods.is_sku ? this.currentSkuId : null,
         },
       }).then(_ => {
         this.cartListLength += this.goods_count
