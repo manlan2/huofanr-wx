@@ -161,7 +161,7 @@
 view.container
   swiper.swiper_container(indicator-dots interval="{{3000}}" circular)
     block(wx:for="{{goodsImgs}}" wx:key)
-      swiper-item
+      swiper-item(@tap="previewImage({{item}})")
         view.header_img_box
           image.header_img(src='{{item}}' mode="aspectFit")
   wxc-elip.goods_name(line='1') {{goods.goods_name}}
@@ -330,6 +330,13 @@ export default class Goods extends wepy.page {
   }
 
   methods = {
+    previewImage(current) {
+      wepy.previewImage({
+        current, // 当前显示图片的http链接
+        urls: this.goodsImgs, // 需要预览的图片http链接列表
+      })
+    },
+
     getCoupon() {
       this.$navigate('/pages/coupon/get-coupon', {goods_id: this.goods_id})
     },
