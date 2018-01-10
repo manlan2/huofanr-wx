@@ -33,17 +33,13 @@
   border-bottom: 1px #ececec solid
 
   >.small_price
-    margin-left: 30rpx
+    margin-left: 20rpx
     display: inline-block
     vertical-align: middle
     font-size: 24rpx
+    text-decoration: line-through
 
   .price
-    vertical-align: middle
-
-  .workout_price
-    margin-top: -5rpx
-    display: inline-block
     vertical-align: middle
 
 .cell_box
@@ -165,9 +161,7 @@ view.container
     text {{goods.goods_name}}
   view.price_box
     wxc-price.fz40.color.price(decimal='small') {{goods.price / 100}}
-    view.small_price
-      text 参考价
-      wxc-price.workout_price {{goods.reference_price / 100}}
+    view.small_price 参考价 ￥{{goods.reference_price / 100}}
   CellActivity.cell_box(@click.user='getCoupon')
     wxc-label.mr20 活动
     text 领取优惠券
