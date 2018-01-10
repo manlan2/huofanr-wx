@@ -89,7 +89,7 @@ view.container
       text.i.search_icon &#xe63e;
       .search_ipt 搜索商品
 
-  swiper.swiper_container(indicator-dots interval="{{3000}}")
+  swiper.swiper_container(indicator-dots interval="{{3000}}" circular)
     block(wx:for="{{bannerList}}" wx:key)
       swiper-item
         navigator.search_box(open-type="navigate" url="/pages/goods/index?goods_id={{item.goods_id}}")

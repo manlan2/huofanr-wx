@@ -3,6 +3,10 @@
   margin-bottom: 100rpx
   background: #fff
 
+.swiper_container
+  width: 100%
+  height: 440rpx
+
 .header_img_box
   width: 100%
   height: 440rpx
@@ -152,8 +156,11 @@
 
 <template lang="pug">
 view.container
-  view.header_img_box
-    image.header_img(src='{{goods.head_img}}' mode="aspectFit")
+  swiper.swiper_container(indicator-dots interval="{{3000}}" circular)
+    block(wx:for="{{goodsImgs}}" wx:key)
+      swiper-item
+        view.header_img_box
+          image.header_img(src='{{item}}' mode="aspectFit")
   wxc-elip.goods_name(line='2')
     text {{goods.goods_name}}
   view.price_box
@@ -253,7 +260,9 @@ export default class Goods extends wepy.page {
 
   data = {
     goods_id: '',
-    goods: {},
+    goods: {
+      goods_imgs: '',
+    },
     content: '',
     skuIndex: -1,
     currentSkuId: '',
@@ -271,6 +280,10 @@ export default class Goods extends wepy.page {
         return firstValue + '，' + secondValue
       }
       return ''
+    },
+
+    goodsImgs() {
+      return this.goods.goods_imgs.split(',')
     },
   }
 
