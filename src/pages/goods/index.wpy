@@ -23,6 +23,13 @@
   font-size: 28rpx
   color: #333
 
+.goods_desc
+  width: 100%
+  display: block
+  padding-left: 10rpx
+  font-size: 24rpx
+  color: #666
+
 .price_box
   padding: 0 20rpx
   width: 100%
@@ -157,11 +164,11 @@ view.container
       swiper-item
         view.header_img_box
           image.header_img(src='{{item}}' mode="aspectFit")
-  wxc-elip.goods_name(line='2')
-    text {{goods.goods_name}}
+  wxc-elip.goods_name(line='1') {{goods.goods_name}}
+  wxc-elip.goods_desc(line='2') {{goods.goods_desc}}
   view.price_box
     wxc-price.fz40.color.price(decimal='small') {{goods.price / 100}}
-    view.small_price 参考价 ￥{{goods.reference_price / 100}}
+    view.small_price(wx:if="{{goods.reference_price }}") 原价 ￥{{goods.reference_price / 100}}
   CellActivity.cell_box(@click.user='getCoupon')
     wxc-label.mr20 活动
     text 领取优惠券
