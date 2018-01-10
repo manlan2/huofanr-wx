@@ -82,6 +82,21 @@ export default class Register extends wepy.page {
     }
   }
 
+  async postUserInfo() {
+    const res = await wepy.getUserInfo({withCredentials: false})
+    const data = {
+      head_img: res.avatarUrl,
+      member_name: res.nickName,
+      sex: res.gender ? (res.gender > 1 ? 'woman' : 'man') : 'unknown',
+      sign: '',
+    }
+    await wepy.request({
+      url: 'member/save_info',
+      method: 'POST',
+      data,
+    })
+  }
+
   methods = {
     sendCode() {
       this.isGetCode = true
@@ -139,10 +154,10 @@ export default class Register extends wepy.page {
           weixin_unionid: res_unionid.unionid,
         }
       }).then(res => {
-        console.log(res)
         wepy.setStorageSync('token', res)
-        this._toggleToast('绑定成功')
-        this.redirectToBackPage()
+        this.postUserInfo().then(_ => {
+          this.redirectToBackPage()
+        }).catch(_ => this.redirectToBackPage())
       }).catch(error => {
         console.log(error)
         this._toggleToast('绑定手机失败，请重试')
