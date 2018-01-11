@@ -34,17 +34,20 @@ export default class WxPay {
       signType,
       paySign,
     } = wxPayParams
-    return wepy.requestPayment({
+    const data = {
       timeStamp,
       nonceStr,
       signType,
       paySign,
       'package': wxPayParams.package,
-    }).then(res => {
+    }
+    console.log(data)
+    return wepy.requestPayment(data).then(res => {
       wepy.navigateTo({
         url: '/pages/cart/pay-success?order_id=' + order_id,
       })
     }).catch(error => {
+      console.log(error)
       return Promise.reject(error)
     })
   }
