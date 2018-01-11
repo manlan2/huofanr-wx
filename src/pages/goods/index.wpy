@@ -367,9 +367,9 @@ export default class Goods extends wepy.page {
       }
     },
 
-    buyNow() {
+    async buyNow() {
       if (this.verifySku()) {
-        wepy.request({
+        const goods_cart_ids = await wepy.request({
           url: 'cart/do_buy',
           method: 'post',
           data: {
@@ -377,8 +377,9 @@ export default class Goods extends wepy.page {
             count: this.goods_count,
             goods_sku_id: this.currentSkuId,
           },
-        }).then(_ => {
-          this.$navigate('/pages/cart/pay')
+        })
+        this.$navigate('/pages/cart/pay', {
+          goods_cart_ids,
         })
       } else {
         this._toggleToast('请选择商品规格')
