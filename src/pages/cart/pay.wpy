@@ -57,7 +57,9 @@ view.container
       image.goods_image(src='{{item.head_img}}')
       view.info
         wxc-elip.fz24(line='2') {{item.goods_name}}
-        view.c999.fz22 蓝色 x 2
+        view.c999.fz22
+          view(wx:if="{{item.goods_sku}}") 规格：{{item.goods_sku}}
+          view 数量：{{item.count}}
   view.bg_white.mt30
     view.cell_box(@tap="selectCoupon")
       view.flex1.ellipsis
@@ -259,11 +261,13 @@ export default class Pay extends wepy.page {
         currentAddress_id,
       } = this
       if (!currentAddress_id) return this._toggleToast('请选择收货地址')
-      const data = {
+      let data = {
         order_id,
-        coupon_entity_id: currentCouponId || null,
         member_address_id: currentAddress_id,
-        point: isUsePoint ? point : null,
+        point: isUsePoint ? point : 0,
+      }
+      if (currentCouponId) {
+        data.coupon_entity_id = currentCouponId
       }
       await wepy.request({
         url: 'cart/confirm',

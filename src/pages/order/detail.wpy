@@ -61,7 +61,8 @@ view.container
       image.goods_image(src='{{item.head_img}}')
       view.info
         wxc-elip.fz24(line='2') {{item.goods_name}}
-        view.c999.fz22(wx:if="{{item.sku}}") 蓝色 x 2
+        view.c999.fz22(wx:if="item.goods_sku") 规格：{{item.goods_sku}}
+        view.c999.fz22 数量：{{item.count}}
   view.order_info_cell
     view.info_cell
       view.label 订单状态

@@ -101,7 +101,8 @@ view.container
         view.info
           wxc-elip.fz24(line='2') {{goods.goods_name}}
           view.c999.fz22
-            text 蓝色（写死的）x {{goods.count}} 件
+            view(wx:if="{{goods.goods_sku}}") 规格：{{goods.goods_sku}}
+            view 数量：{{goods.count}}
 
       view.order_info
         view.info.fz24.mt10
