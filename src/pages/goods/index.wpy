@@ -226,8 +226,8 @@ view.container
     navigator.cart_box(open-type="switchTab" url="/pages/cart/index")
       wxc-icon.cart_icon(size='50', type='cart')
       wxc-badge.cart_badge {{cartListLength}}
-    button.flex1.zan-btn.zan-btn--large.zan-btn--danger_light(@tap="addCart" disabled="{{!goods.count}}") 加入购物车
-    button.flex1.zan-btn.zan-btn--large.zan-btn--danger(wx:if="{{goods.count}}" @tap='buyNow') 立即购买
+    button.flex1.zan-btn.zan-btn--large.zan-btn--danger_light(@tap="addCart" disabled="{{!isStockout}}") 加入购物车
+    button.flex1.zan-btn.zan-btn--large.zan-btn--danger(wx:if="{{isStockout}}" @tap='buyNow') 立即购买
     button.flex1.zan-btn.zan-btn--large.zan-btn--danger.zan-btn.zan-btn--disabled(wx:else disabled) 暂时缺货
   view.tip.wxParse
     WxParse(:parserContent.sync='content')
@@ -291,6 +291,15 @@ export default class Goods extends wepy.page {
 
     goodsImgs() {
       return this.goods.goods_imgs.split(',')
+    },
+
+    isStockout() { // 是否缺货
+      // is_sku为0说明这个商品没有sku属性
+      if (!this.goods.is_sku) {
+        return this.count
+      }
+      if (!this.goods.sku || !this.goods.sku.length) return false
+      return !this.goods.sku.every(item => item.sku_count <= 0)
     },
   }
 
