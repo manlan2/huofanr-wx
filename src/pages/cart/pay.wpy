@@ -80,22 +80,22 @@ view.container
     view.info_list
       view.info
         text 商品应付总计：
-        text.fr.orange ￥{{goodsTotal}}
+        text.fr.orange ￥{{amount.goodsAmout / 100}}
       view.info
         text 运费:
-        text.fr.orange ￥{{freight}}
+        text.fr.orange ￥{{amount.postAmout / 100}}
       view.info
         text 税费:
-        text.fr.orange ￥{{taxes}}
+        text.fr.orange ￥{{amount.taxAmout / 100}}
       view.info
         text 优惠券:
-        text.fr.orange ￥{{discountAmount}}
+        text.fr.orange ￥{{amount.couponAmout / 100}}
       view.info
         text 积分抵扣:
-        text.fr.orange ￥{{pointAmount}}
+        text.fr.orange ￥{{amount.pointAmout / 100}}
       view.info
         text 应付金额:
-        text.fr.color ￥{{payAmount}}
+        text.fr.color ￥{{amount.payAmout / 100}}
   view.btn_area
     button.mt40.zan-btn.zan-btn--primary(@tap="createOrder") 微信支付
   wxc-toast.toast(icon='no') {{toastMsg}}
@@ -119,7 +119,7 @@ export default class Pay extends wepy.page {
   data = {
     toastMsg: '',
     order_id: '',
-    point: 20,
+    point: 0,
     isUsePoint: false,
     is_auth: false,
     currentCouponId: '',
@@ -127,6 +127,31 @@ export default class Pay extends wepy.page {
     goods_list: [],
     coupon_list: [],
     address_list: [],
+    amount: {
+      goodsAmout: 0, // 商品费用
+      taxAmout: 0, // 税费
+      postAmout: 0, // 邮费
+      pointAmout: 0, // 积分抵扣
+      couponAmout: 0, // 优惠券抵扣
+      payAmout: 0, // 应付费用
+      totalAmout: 0, // 总费用
+    },
+  }
+
+  watch = {
+    currentAddress_id(receiver_id) {
+      if (receiver_id && this.order_id) {
+        this.computAmout()
+      }
+    },
+
+    currentCouponId(currentCouponId) {
+      this.computAmout()
+    },
+
+    isUsePoint(currentCouponId) {
+      this.computAmout()
+    },
   }
 
   computed = {
@@ -139,38 +164,6 @@ export default class Pay extends wepy.page {
       if (!this.currentAddress_id) return '添加收货地址'
       const address = this.address_list.find(item => item.member_address_id === this.currentAddress_id)
       return address ? (address.receiver_name + '，' + address.receiver_address) : ''
-    },
-
-    goodsTotal() {
-      // 商品应付总计
-      return this.goods_list.reduce((total, goods) => total + goods.price * goods.count, 0) / 100
-    },
-
-    freight() {
-      // 运费
-      return 0
-    },
-
-    taxes() {
-      // 税费
-      return this.goods_list.reduce((total, goods) => total + goods.tax * goods.count, 0) / 100
-    },
-
-    discountAmount() {
-      // 优惠券抵扣金额
-      if (!this.currentCouponId) return 0
-      const coupon = this.coupon_list.find(item => item.coupon_entity_id === this.currentCouponId)
-      return coupon ? coupon.discount_money / 100 : 0
-    },
-
-    pointAmount() {
-      // 积分
-      return this.isUsePoint ? this.point / 100 : 0
-    },
-
-    payAmount() {
-      // 最终要支付的钱
-      return this.goodsTotal + this.freight + this.taxes - this.discountAmount - this.pointAmount
     },
   }
 
@@ -203,21 +196,6 @@ export default class Pay extends wepy.page {
     }
   }
 
-  // 结算
-  async postSettle(goods_cart_ids) {
-    const res = await wepy.request('cart/settle?goods_cart_ids=' + goods_cart_ids)
-    // TODO 结算的时候会拿到是否认证的状态，如果该状态未认证，要提示用户认证。
-    // 确认订单前要完成提交认证
-    this.fittingData(res)
-  }
-
-  // 确认提交订单
-  // 确认订单说明肯定认证过了，不然不可能再次购买
-  async buyAgain(order_id) {
-    const res = await wepy.request('order/buy_again?order_id=' + order_id)
-    this.fittingData(res)
-  }
-
   fittingData(res) {
     this.order_id = res.order_id // 新的订单 id
     this.point = res.point
@@ -232,6 +210,37 @@ export default class Pay extends wepy.page {
       this.currentAddress_id = ''
     }
     this.$apply()
+  }
+
+  async computAmout() {
+    const order_id = this.order_id
+    if (!order_id) return
+    this.amount = await wepy.request({
+      url: 'cart/comput_amout',
+      method: 'POST',
+      data: {
+        order_id: this.order_id,
+        receiver_id: this.currentAddress_id,
+        coupon_entity_id: this.currentCouponId,
+        point: this.isUsePoint ? this.point : 0,
+      }
+    })
+    this.$apply()
+  }
+
+  // 结算
+  async postSettle(goods_cart_ids) {
+    const res = await wepy.request('cart/settle?goods_cart_ids=' + goods_cart_ids)
+    // TODO 结算的时候会拿到是否认证的状态，如果该状态未认证，要提示用户认证。
+    // 确认订单前要完成提交认证
+    this.fittingData(res)
+  }
+
+  // 确认提交订单
+  // 确认订单说明肯定认证过了，不然不可能再次购买
+  async buyAgain(order_id) {
+    const res = await wepy.request('order/buy_again?order_id=' + order_id)
+    this.fittingData(res)
   }
 
   _toggleToast(toastMsg) {
