@@ -126,7 +126,7 @@ export default class Cart extends wepy.page {
     },
   }
 
-  onLoad() {
+  onRoute() {
     this.fetchGoodsList()
   }
 
