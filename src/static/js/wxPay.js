@@ -41,14 +41,22 @@ export default class WxPay {
       paySign,
       'package': wxPayParams.package,
     }
-    console.log(data)
-    return wepy.requestPayment(data).then(res => {
+    await wepy.requestPayment(data).then(res => {
       wepy.navigateTo({
         url: '/pages/cart/pay-success?order_id=' + order_id,
       })
-    }).catch(error => {
-      console.log(error)
-      return Promise.reject(error)
+    }).catch(_ => {
+      wepy.showToast({
+        title: '支付失败',
+        image: '/static/imgs/error-icon.png',
+        duration: 1000
+      }).then(_ => {
+        setTimeout(_ => {
+          wepy.navigateTo({
+            url: '/pages/order/index',
+          })
+        }, 1000)
+      })
     })
   }
 }

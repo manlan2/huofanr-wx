@@ -352,11 +352,7 @@ export default class Profile extends wepy.page {
 
   requestWxPay() {
     const wxPay = new WxPay()
-    try {
-      wxPay.requestWxPay(this.currentOrderId).catch(_ => this._toggleToast())
-    } catch (error) {
-      this._toggleToast()
-    }
+    wxPay.requestWxPay(this.currentOrderId)
   }
 
   methods = {

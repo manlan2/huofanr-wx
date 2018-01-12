@@ -275,10 +275,7 @@ export default class Pay extends wepy.page {
         data,
       })
       const wxPay = new WxPay()
-      wxPay.requestWxPay(this.currentOrderId).catch(_ => {
-        this._toggleToast('支付失败')
-        this.$navigate('/pages/order/index')
-      })
+      wxPay.requestWxPay(this.currentOrderId)
     },
   }
 }
