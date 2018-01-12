@@ -271,11 +271,11 @@ export default class Pay extends wepy.page {
       }
       await wepy.request({
         url: 'cart/confirm',
-        method: 'PSOT',
+        // method: 'PSOT', // 奇怪，发 POST 总是 502 错误，暂定发 GET 吧
         data,
       })
       const wxPay = new WxPay()
-      wxPay.requestWxPay(this.currentOrderId)
+      wxPay.requestWxPay(order_id)
     },
   }
 }
