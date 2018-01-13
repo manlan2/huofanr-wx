@@ -1,4 +1,5 @@
-# 活范儿小程序
+# 活范儿电商微信小程序
+> 使用 wepy + wxParse + sass + pug + async await + zanUI + MinUI 搭建的微信小程序实例项目
 
 ## Start
 ```bash
