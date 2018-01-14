@@ -166,8 +166,6 @@ export default class Search extends wepy.page {
       this.goodeList = []
       this.scrollDisabled = false
       this.isNothing = false
-      this.oods_parent_category_id = ''
-      this.goods_child_category_id = ''
       this.fetchData()
     },
 
@@ -177,8 +175,6 @@ export default class Search extends wepy.page {
       this.goodeList = []
       this.scrollDisabled = false
       this.isNothing = false
-      this.oods_parent_category_id = ''
-      this.goods_child_category_id = ''
       this.fetchData()
     }
   }
