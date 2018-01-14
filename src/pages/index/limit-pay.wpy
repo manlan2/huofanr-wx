@@ -114,7 +114,6 @@ view.container
 
 <script>
 import wepy from 'wepy'
-import Tab from '@/Tab'
 
 export default class Pay extends wepy.page {
   config = {
@@ -123,10 +122,6 @@ export default class Pay extends wepy.page {
       'wxc-price': '../../packages/@minui/wxc-price/dist/index',
       'wxc-progress': '../../packages/@minui/wxc-progress/dist/index',
     },
-  }
-
-  components = {
-    Tab,
   }
 
   data = {
