@@ -273,6 +273,7 @@ export default class Goods extends wepy.page {
     goods_count: 1,
     cartListLength: 0,
     toastMsg: '',
+    isStockout: false, // 是否缺货
   }
 
   computed = {
@@ -292,15 +293,6 @@ export default class Goods extends wepy.page {
     goodsImgs() {
       return this.goods.goods_imgs.split(',')
     },
-
-    isStockout() { // 是否缺货
-      // is_sku为0说明这个商品没有sku属性
-      if (!this.goods.is_sku) {
-        return this.count
-      }
-      if (!this.goods.sku || !this.goods.sku.length) return false
-      return !this.goods.sku.every(item => item.sku_count <= 0)
-    },
   }
 
   onLoad({goods_id}) {
@@ -319,6 +311,15 @@ export default class Goods extends wepy.page {
   async _fetchGoodsDetail(goods_id) {
     this.goods = await wepy.request('goods/info?goods_id=' + goods_id)
     this.content = this.goods.content
+    if (!this.goods.is_sku) {
+      this.isStockout = !!this.goods.count
+    } else if (!this.goods.sku || !this.goods.sku.length) {
+      this.isStockout = false
+    } else {
+      // is_sku为0说明这个商品没有sku属性
+      this.isStockout = !this.goods.sku.every(item => item.sku_count <= 0)
+    }
+
     this.$apply()
     // 调用通知接口通知组件更新数据
     // BUG 需要调用两次才能真正的 invoke
