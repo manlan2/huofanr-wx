@@ -11,6 +11,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@minui/wxc-abnor": "^1.0.5",
     "@minui/wxc-badge": "^1.0.3",
     "@minui/wxc-countdown": "^1.0.3",
     "@minui/wxc-counter": "^1.0.3",
@@ -20,6 +21,7 @@
     "@minui/wxc-label": "^1.0.3",
     "@minui/wxc-price": "^1.0.6",
     "@minui/wxc-progress": "^1.0.3",
+    "@minui/wxc-tab": "^1.0.5",
     "@minui/wxc-toast": "^1.0.6",
     "promise-polyfill": "^6.1.0",
     "wepy": "^1.6.0",
