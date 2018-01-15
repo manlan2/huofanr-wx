@@ -62,14 +62,14 @@
   width: 100%
   height: auto
   background: #fff
-  font-size: 0
+  display: flex
+  flex-wrap: wrap
 
   >.goods_card
     margin-bottom: 10rpx
     padding: 6rpx
     width: 50%
-    height: 240px
-    display: inline-block
+    height: 252px
 
     .name
       padding: 0 10rpx
@@ -80,6 +80,9 @@
     .image
       width: 100%
       height: 330rpx
+
+  .goods_desc
+    height: 20px
 
 </style>
 <template lang="pug">
@@ -121,14 +124,13 @@ view.container
     navigator.search_box.flex1(open-type="navigate" url="/pages/index/limit-pay")
       image.banner(src="{{timerImage}}")
 
+  view.title.tc.pt20.fz28.bg_white 猜你喜欢
   view.goods_list
-    view.title.tc.mb20.pt10.fz28 猜你喜欢
     navigator.goods_card(wx:for="{{goodsList}}" wx:key url="{{'/pages/goods/index?goods_id=' + item.goods_id}}" open-type="navigate")
       image.image(src="{{item.head_img}}" mode="aspectFit")
       view.name.fz24.ellipsis.mt10 {{item.goods_name}}
-      view.fz20.lh40.ellipsis.c999 {{item.goods_desc}}
-      wxc-price.fz24.color(value="{{item.price / 100}}" decimal="small")
-
+      view.fz20.lh40.ellipsis.c999.goods_desc {{item.goods_desc}}
+      wxc-price.fz24.color.db(value="{{item.price / 100}}" decimal="small")
 </template>
 
 <script>
