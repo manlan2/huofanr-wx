@@ -15,6 +15,7 @@
     border-radius: 50%
 
   >.face_default
+    display: inline-block
     margin-bottom: 20rpx
     width: 200rpx
     height: 200rpx
