@@ -126,7 +126,7 @@ view.container
           view.price
             view.box
               wxc-price(value='{{item.discount_money / 100}}')
-  wxc-toast.toast(icon='no') 该商品暂无优惠券
+  wxc-toast.toast(icon='no') 该场景下暂无优惠券
 </template>
 
 
