@@ -69,7 +69,7 @@
       top: -10rpx
       font-size: 18rpx
 
-.footer
+.selling
   display: flex
   height: 64rpx
   line-height: 64rpx
@@ -85,6 +85,26 @@
     width: 30%
     color: #ff0077
     font-size: 22rpx
+
+.sellout
+  @extend .selling
+  border: 1px #999 solid
+
+  >.left
+    background: #999
+
+  >.right
+    color: #999
+
+.waiting
+  @extend .selling
+  border: 1px #4185c4 solid
+
+  >.left
+    background: #4185c4
+
+  >.right
+    color: #4185c4
 </style>
 
 <template lang="pug">
@@ -95,21 +115,21 @@ view.container
       view {{statusData[item.status]}}
 
   view.goods_list
-    view.goods_card(wx:for="{{tabData[currentTab].goods_list}}" wx:key open-type="navigate" url="/pages/goods/index?goods_id={{item.goods_id}}")
+    navigator.goods_card(wx:for="{{tabData[currentTab].goods_list}}" wx:key open-type="navigate" url="/pages/goods/index?goods_id={{item.goods_id}}")
       view.image
         image(src="{{item.head_img}}")
       view.goods_info
         view.ellipsis.fz24.c333 {{item.goods_name}}
         view.ellipsis.fz20.color.subtitle {{item.goods_desc}}
-        view.progress
+        view.progress(wx:if="{{item.status === 'selling'}}")
           wxc-progress(percent="40" background-color="transparent" active-color="#ff0077" radius="0" stroke-width="8")
           view.limit_num.color 剩余 {{item.count}} 件
 
-      view.footer
+      view.footer(class="{{item.status}}")
         view.left
           text.price.fz28.mr10 ￥{{item.timer_price / 100}}
           text.fz20.text_delete 原价￥{{item.price / 100}}
-        view.right 立即抢购
+        view.right {{item.status === 'selling' ? '立即抢购' : (item.status === 'sellout' ? '已结束' : '即将开抢')}}
 </template>
 
 <script>
@@ -128,9 +148,9 @@ export default class Pay extends wepy.page {
     currentTab: 0,
     tabData: [],
     statusData: {
-      sellout: '结束',
-      selling: '销售中',
-      waiting: '等待销售',
+      sellout: '已结束',
+      selling: '抢购中',
+      waiting: '等待开抢',
     },
   }
 
