@@ -117,7 +117,7 @@ view.container
   view.goods_list
     navigator.goods_card(wx:for="{{tabData[currentTab].goods_list}}" wx:key open-type="navigate" url="/pages/goods/index?goods_id={{item.goods_id}}")
       view.image
-        image(src="{{item.head_img}}")
+        image(src="{{item.head_img}}" mode="aspectFit")
       view.goods_info
         view.ellipsis.fz24.c333 {{item.goods_name}}
         view.ellipsis.fz20.color.subtitle {{item.goods_desc}}
