@@ -92,11 +92,11 @@ view.container
     :scrollDisabled.sync="scrollDisabled"
     :isNothing.sync="isNothing"
   )
-    navigator.order_card(wx:for="{{orderList}}" wx:key  open-type="navigate" url="/pages/order/detail?order_id={{item.order_id}}")
+    view.order_card(wx:for="{{orderList}}" wx:key)
       view.header
         text 订单编号：{{item.order_no}}
         text.fr {{statusDesc[item.status].orderStatus}}
-      view.goods_info_box(wx:for="{{item.goods_list}}" wx:key wx:for-item="goods")
+      navigator.goods_info_box(wx:for="{{item.goods_list}}" wx:key wx:for-item="goods" open-type="navigate" url="/pages/order/detail?order_id={{item.order_id}}")
         image.goods_image(src='{{goods.head_img}}')
         view.info
           wxc-elip.fz24(line='2') {{goods.goods_name}}
