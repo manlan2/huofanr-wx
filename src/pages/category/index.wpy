@@ -86,6 +86,13 @@ export default class Category extends wepy.page {
     this.fetchCategories()
   }
 
+  onShareAppMessage() {
+    return {
+      title: '活范儿嗨购——国内领先的跨境购物商城',
+      path: '/pages/index/index',
+    }
+  }
+
   async fetchCategories() {
     this.categoryList = await wepy.request('goods/category_list')
     this.currentCatetoryId = this.categoryList[0].category_id

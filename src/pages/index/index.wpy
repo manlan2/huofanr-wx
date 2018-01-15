@@ -170,6 +170,13 @@ export default class Index extends wepy.page {
     this._fetchGoodsList()
   }
 
+  onShareAppMessage() {
+    return {
+      title: '活范儿嗨购——国内领先的跨境购物商城',
+      path: '/pages/index/index',
+    }
+  }
+
   async _fetchTimer() {
     const timerList = await wepy.request('goods/timer_goods_list')
     const timer = timerList.find(item => item.status === 'waiting')
@@ -181,7 +188,8 @@ export default class Index extends wepy.page {
   }
 
   async _fetchGoodsList() {
-    this.goodsList = await wepy.request('goods/history')
+    const res = await wepy.request('goods/history')
+    this.goodsList = res.filter(item => item.goods_id)
     this.$apply()
   }
 

@@ -130,6 +130,13 @@ export default class Cart extends wepy.page {
     this.fetchGoodsList()
   }
 
+  onShareAppMessage() {
+    return {
+      title: '活范儿嗨购——国内领先的跨境购物商城',
+      path: '/pages/index/index',
+    }
+  }
+
   async fetchGoodsList() {
     const res = await wepy.request('cart/list')
     this.goodsList = res.map(item => ({
