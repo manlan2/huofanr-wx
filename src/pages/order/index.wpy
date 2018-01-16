@@ -428,11 +428,8 @@ export default class Profile extends wepy.page {
 
     onConfirm() {
       switch (this.currentType) {
-        case 'pay':
-          this.postOrderStatus('TODO')
-          break
         case 'cancel':
-          this.postOrderStatus('member/order_cancel')
+          this.postOrderStatus('order/cancel')
           break
         case 'delete':
           this.postOrderStatus('order/delete')
@@ -446,7 +443,7 @@ export default class Profile extends wepy.page {
     onRefundConfirm() {
       if (!this.refund_reason) return this._toggleToast()
       wepy.request({
-        url: 'member/apply_refund',
+        url: 'order/apply_refund',
         method: 'POST',
         data: {
           order_id: this.currentOrderId,
