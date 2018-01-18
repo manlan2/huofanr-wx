@@ -205,7 +205,7 @@ export default class Search extends wepy.page {
     if (from.$name === 'Index') this.isFocus = true
     this.goods_parent_category_id = goods_parent_category_id
     this.goods_child_category_id = goods_child_category_id
-    if (goods_parent_category_id && goods_child_category_id) this.fetchData()
+    if (goods_parent_category_id || goods_child_category_id) this.fetchData()
   }
 
   fetchData() {

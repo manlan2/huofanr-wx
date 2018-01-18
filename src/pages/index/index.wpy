@@ -95,7 +95,7 @@ view.container
   swiper.swiper_container(indicator-dots interval="{{3000}}" circular)
     block(wx:for="{{bannerList}}" wx:key)
       swiper-item
-        navigator.search_box(open-type="navigate" url="/pages/goods/index?goods_id={{item.goods_id}}")
+        view.search_box(@tap="swiperTapHandle({{item}})")
           image.slide_image(src="{{item.ad_img}}")
 
   view.lable_list.color
@@ -196,28 +196,29 @@ export default class Index extends wepy.page {
   }
 
   async _fetchBanner() {
-    const res = await wepy.request('banner/list?type=app_banner_recommend')
-    this.bannerList = res.map(item => ({
-      ...item,
-      goods_id: this.getGoodsId(item.ad_url),
-    }))
+    this.bannerList = await wepy.request('banner/list?type=app_banner_recommend')
     this.$apply()
-  }
-
-  getGoodsId(url) {
-    const index = url.indexOf('goods_id')
-    let str = url.substr(index + 9)
-    let goods_id = ''
-    while (Number(str[0]) || str[0] === '0') {
-      goods_id += str[0]
-      str = str.substr(1)
-    }
-    return goods_id
   }
 
   methods = {
     endcount() {
-    }
+    },
+
+    swiperTapHandle(item) {
+      switch (item.click_type) {
+        case 'goods':
+          if (item.goods_id.toString()) this.$navigate('/pages/goods/index?goods_id=' + item.goods_id)
+          break
+        case 'parent_category':
+          if (item.parent_category_id.toString()) this.$navigate('/pages/index/search?goods_parent_category_id=' + item.parent_category_id)
+          break
+        case 'child_category':
+          if (item.child_category_id.toString()) this.$navigate('/pages/index/search?goods_child_category_id=' + item.child_category_id)
+          break
+        default:
+          break
+      }
+    },
   }
 }
 </script>
