@@ -141,7 +141,7 @@ export default class Cart extends wepy.page {
     const res = await wepy.request('cart/list')
     this.goodsList = res.map(item => ({
       ...item,
-      isSelect: false,
+      isSelect: this.isSelectAll,
     }))
     this.$apply()
   }
