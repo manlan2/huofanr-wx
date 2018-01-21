@@ -99,12 +99,14 @@ view.container
   view.btn_area
     button.mt40.zan-btn.zan-btn--primary(@tap="createOrder") 微信支付
   wxc-toast.toast(icon='no') {{toastMsg}}
+  wxc-dialog.wxc-dialog(title='提示', content='您还没有完成实名认证，是否前往认证？', confirm-text="确定" cancel-text='放弃', bindconfirm='onConfirm', bindcancel='onCancel')
 </template>
 
 <script>
 import wepy from 'wepy'
 import G from 'js/global'
 import WxPay from 'js/wxPay'
+import WxcDialogMixin from '../../mixins/dialog'
 
 export default class Pay extends wepy.page {
   config = {
@@ -113,8 +115,11 @@ export default class Pay extends wepy.page {
       'wxc-price': '../../packages/@minui/wxc-price/dist/index',
       'wxc-elip': '../../packages/@minui/wxc-elip/dist/index',
       'wxc-toast': '../../packages/@minui/wxc-toast/dist/index',
+      'wxc-dialog': '../../packages/@minui/wxc-dialog/dist/index',
     },
   }
+
+  mixins = [WxcDialogMixin]
 
   data = {
     toastMsg: '',
@@ -196,22 +201,6 @@ export default class Pay extends wepy.page {
     }
   }
 
-  fittingData(res) {
-    this.order_id = res.order_id // 新的订单 id
-    this.point = res.point
-    this.is_auth = res.is_auth
-    this.goods_list = res.goods_list
-    this.coupon_list = res.coupon_list
-    this.address_list = res.address_list
-    if (res.address_list.length) {
-      const address = res.address_list.find(item => item.is_default)
-      this.currentAddress_id = address ? address.member_address_id : res.address_list[0].member_address_id
-    } else {
-      this.currentAddress_id = ''
-    }
-    this.$apply()
-  }
-
   async computAmout() {
     const order_id = this.order_id
     if (!order_id) return
@@ -231,9 +220,11 @@ export default class Pay extends wepy.page {
   // 结算
   async postSettle(goods_cart_ids) {
     const res = await wepy.request('cart/settle?goods_cart_ids=' + goods_cart_ids)
-    // TODO 结算的时候会拿到是否认证的状态，如果该状态未认证，要提示用户认证。
-    // 确认订单前要完成提交认证
-    this.fittingData(res)
+    if (!res.is_auth) {
+      this.showDialog()
+    } else {
+      this.fittingData(res)
+    }
   }
 
   // 确认提交订单
@@ -241,6 +232,22 @@ export default class Pay extends wepy.page {
   async buyAgain(order_id) {
     const res = await wepy.request('order/buy_again?order_id=' + order_id)
     this.fittingData(res)
+  }
+
+  fittingData(res) {
+    this.order_id = res.order_id // 新的订单 id
+    this.point = res.point
+    this.is_auth = res.is_auth
+    this.goods_list = res.goods_list
+    this.coupon_list = res.coupon_list
+    this.address_list = res.address_list
+    if (res.address_list.length) {
+      const address = res.address_list.find(item => item.is_default)
+      this.currentAddress_id = address ? address.member_address_id : res.address_list[0].member_address_id
+    } else {
+      this.currentAddress_id = ''
+    }
+    this.$apply()
   }
 
   _toggleToast(toastMsg) {
@@ -285,6 +292,14 @@ export default class Pay extends wepy.page {
       })
       const wxPay = new WxPay()
       wxPay.requestWxPay(order_id)
+    },
+
+    onConfirm() {
+      this.$redirect('/pages/profile/auth')
+    },
+
+    onCancel() {
+      wepy.navigateBack()
     },
   }
 }
