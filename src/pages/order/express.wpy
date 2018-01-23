@@ -13,7 +13,7 @@
 
   .zan-steps__step--cur
     .zan-steps__title
-      color: #ff0077
+      color: #3bf1f7
 
   .zan-steps__title--desc
     display: block

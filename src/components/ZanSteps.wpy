@@ -61,7 +61,7 @@
 }
 
 .zan-steps--steps .zan-steps__step--done .zan-steps__line {
-  background-color: #ff0077;
+  background-color: #3bf1f7;
 }
 
 .zan-steps--steps .zan-steps__step--done .zan-steps__circle {
@@ -85,7 +85,7 @@
   /* background-image: url("https://b.yzcdn.cn/v2/image/wap/success_small@2x.png");
   background-size: 13px 13px; */
   border-radius: 50%;
-  background: #ff0077;
+  background: #3bf1f7;
 }
 
 .zan-steps--steps .zan-steps__step--cur .zan-steps__line {
@@ -158,7 +158,7 @@
 }
 
 .zan-steps--vsteps .zan-steps__step--done {
-  color: #ff0077;
+  color: #3bf1f7;
 }
 
 .zan-steps--vsteps .zan-steps__line {
@@ -200,7 +200,7 @@
 .zan-steps--vsteps .zan-steps__step--done .zan-steps__circle {
   width: 5px;
   height: 5px;
-  background-color: #ff0077;
+  background-color: #3bf1f7;
 }
 
 .zan-steps--vsteps .zan-steps__step--cur .zan-steps__circle {
@@ -210,7 +210,7 @@
   /* background-size: 13px 13px; */
   /* border-radius: 0; */
   border-radius: 50%;
-  background: #ff0077;
+  background: #3bf1f7;
 }
 
 .zan-steps--vsteps .zan-steps__icon--active {

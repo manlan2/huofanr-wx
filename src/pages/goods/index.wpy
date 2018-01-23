@@ -91,8 +91,8 @@
       border: 1px #ddd solid
 
     .active
-      color: #ff0077
-      border-color: #ff0077
+      color: #3bf1f7
+      border-color: #3bf1f7
 
     .disabled
       border: 1px #eee solid

@@ -4,7 +4,7 @@
   width: 100%
   height: 150px
   text-align: center
-  background: #ff0077
+  background: #3bf1f7
   color: #fff
   font-size: 24rpx
 
@@ -37,7 +37,7 @@
     text-align: right
 
 .orange
-  color: #ff0077
+  color: #3bf1f7
 
 .green
   color: #498137
@@ -64,7 +64,7 @@ import { formatTime } from 'js/utli'
 export default class Point extends wepy.page {
   config = {
     navigationBarTitleText: '我的积分',
-    navigationBarBackgroundColor: '#ff0077',
+    navigationBarBackgroundColor: '#3bf1f7',
     navigationBarTextStyle: 'white'
   }
   // 0获得积分，1消费积分

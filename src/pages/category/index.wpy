@@ -23,8 +23,8 @@
       text-align: center
 
     .active
-      border-left: 4rpx #ff0077 solid
-      color: #ff0077
+      border-left: 4rpx #3bf1f7 solid
+      color: #3bf1f7
 
 .box_right
   flex: 1

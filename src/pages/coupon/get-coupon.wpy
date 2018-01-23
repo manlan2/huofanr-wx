@@ -33,7 +33,7 @@
       margin-right: 20rpx
       width: 100rpx
       text-align: center
-      background: #ff0077
+      background: #3bf1f7
       color: #fff
 
     .text

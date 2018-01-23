@@ -19,8 +19,8 @@
     text-align: center
 
   >.active
-    color: #ff0077
-    border-bottom: 2px #ff0077 solid
+    color: #3bf1f7
+    border-bottom: 2px #3bf1f7 solid
 
 .goods_list
   padding: 20rpx 10rpx
@@ -61,7 +61,7 @@
   .progress
     position: relative
     width: 40%
-    border: 1rpx #ff0077 solid
+    border: 1rpx #3bf1f7 solid
 
     .limit_num
       position: absolute
@@ -73,17 +73,17 @@
   display: flex
   height: 64rpx
   line-height: 64rpx
-  border: 1px #ff0077 solid
+  border: 1px #3bf1f7 solid
   text-align: center
 
   >.left
     width: 70%
-    background: #ff0077
+    background: #3bf1f7
     color: #fff
 
   >.right
     width: 30%
-    color: #ff0077
+    color: #3bf1f7
     font-size: 22rpx
 
 .sellout
@@ -122,7 +122,7 @@ view.container
         view.ellipsis.fz24.c333 {{item.goods_name}}
         view.ellipsis.fz20.color.subtitle {{item.goods_desc}}
         view.progress(wx:if="{{item.status === 'selling'}}")
-          wxc-progress(percent="40" background-color="transparent" active-color="#ff0077" radius="0" stroke-width="8")
+          wxc-progress(percent="40" background-color="transparent" active-color="#3bf1f7" radius="0" stroke-width="8")
           view.limit_num.color 剩余 {{item.count}} 件
 
       view.footer(class="{{item.status}}")
