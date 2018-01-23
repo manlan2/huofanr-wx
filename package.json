@@ -19,6 +19,7 @@
     "@minui/wxc-elip": "^1.0.3",
     "@minui/wxc-icon": "^1.0.6",
     "@minui/wxc-label": "^1.0.3",
+    "@minui/wxc-mask": "^1.0.6",
     "@minui/wxc-price": "^1.0.6",
     "@minui/wxc-progress": "^1.0.3",
     "@minui/wxc-toast": "^1.0.6",

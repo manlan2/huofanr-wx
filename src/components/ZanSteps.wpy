@@ -67,7 +67,7 @@
 .zan-steps--steps .zan-steps__step--done .zan-steps__circle {
   width: 5px;
   height: 5px;
-  background-color: #ff5777;
+  background-color: #3bf1f7;
 }
 
 

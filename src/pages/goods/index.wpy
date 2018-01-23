@@ -127,7 +127,7 @@
       .wxc_icon
         position: absolute
         margin-left: -14px
-        color: #ff5777 !important
+        color: #3bf1f7 !important
 
     .desc
       margin-bottom: 12px
@@ -218,15 +218,15 @@ view.container
       view.header 服务说明
       view.content
         view.label
-          wxc-icon.wxc_icon(type="yes" size="20" color="#ff5777")
+          wxc-icon.wxc_icon(type="yes" size="20" color="#3bf1f7")
           text 假一赔十
         view.desc 活范儿全部商品均来自海外官方正品渠道，全链路证明可查，承诺100%正品。
         view.label
-          wxc-icon.wxc_icon(type="yes" size="20" color="#ff5777")
+          wxc-icon.wxc_icon(type="yes" size="20" color="#3bf1f7")
           text 免税
         view.desc 本商品综合税由活范儿代缴。
         view.label
-          wxc-icon.wxc_icon(type="yes" size="20" color="#ff5777")
+          wxc-icon.wxc_icon(type="yes" size="20" color="#3bf1f7")
           text 全球直邮
         view.desc 本商品为海外仓直接发货，通过国际EMS或WTD快递方式配送。 通过海外直邮发货的商品，只能和其他直邮商品凑单结算。
   view.footer

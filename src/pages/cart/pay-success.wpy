@@ -16,7 +16,7 @@
 <template lang="pug">
 view.container
   view.header
-    wxc-icon.close_icon.mr20(type="check" size="32" color="#f07")
+    wxc-icon.close_icon.mr20(type="check" size="32" color="#3bf1f7")
     text 支付成功
   view.price.color ￥{{price}}
   view.btn_list
