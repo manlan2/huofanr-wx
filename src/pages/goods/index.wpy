@@ -182,7 +182,7 @@ view.container
     wxc-label.mr20(type-color='#016b8a') 说明
     wxc-icon.wxc_icon(type="yes" size="24" color="#999")
     text 支持七天无理由退款
-  CellCategory.cell_box(@click.user='toggleCategoryDialog')
+  CellCategory.cell_box(wx:if="{{isStockout}}" @click.user='toggleCategoryDialog')
     text {{currentSkuDesc}}
     text(slot="rightText") 数量规格选择
   wxc-popup.J_Popup(animation-mode="bottom" align="bottom")
@@ -190,17 +190,22 @@ view.container
       view.header
         image.image(src='{{goods.head_img}}')
       view.pl20.pr20
-        view.sku_conainer(wx:if="{{goods.is_sku && sku && sku.length}}")
+        view.sku_conainer(wx:if="{{goods.is_sku && goods.sku && goods.sku.length}}")
           view.label {{goods.sku[0].sku_name}}
           view.category_list
-            view.item(wx:for="{{goods.sku}}" wx:key @tap="selectSku({{index}})" class="{{index === skuIndex ? 'active' : ''}}") {{item.sku_value}}
-          view.label(wx:if="{{skuIndex > -1}}") {{goods.sku[0].sub_sku[0].sku_name}}
-          view.category_list(wx:if="{{skuIndex > -1}}")
+            view.item(
+              wx:for="{{goods.sku}}"
+              wx:key
+              @tap="selectSku({{index}}, {{item.sku_id}}, {{item.sku_count}})"
+              class="{{index === skuIndex ? 'active' : (item.sku_count ? '' : 'disabled')}}"
+            ) {{item.sku_value}}
+          view.label(wx:if="{{currentSkuId}}") {{goods.sku[0].sub_sku[0].sku_name}}
+          view.category_list(wx:if="{{skuIndex > -1 && goods.sku[skuIndex].sub_sku && goods.sku[skuIndex].sub_sku.length}}}")
             view.item(
               wx:for="{{goods.sku[skuIndex].sub_sku}}"
               wx:key
               @tap="selectSubSku({{item.sku_id}}, {{item.sku_count}})"
-              class="{{item.sku_id === currentSkuId ? 'active' : (item.sku_count ? '' : 'disabled')}}"
+              class="{{item.sku_id === currentSubSkuId ? 'active' : (item.sku_count ? '' : 'disabled')}}"
             ) {{item.sku_value}}
         view.label 数量
         wxc-counter.dib.mr10(number='1', max='{{99}}', min='{{1}}', bind:changenumber='onChangeNumber')
@@ -269,11 +274,11 @@ export default class Goods extends wepy.page {
     },
     content: '',
     skuIndex: -1, // 当前选择的第几个 sku，如果为 -1，代表还没选择 sku
-    currentSkuId: '',
-    goods_count: 1,
+    currentSkuId: '',  // SKU ID
+    currentSubSkuId: '', // 子 SKU ID
+    goods_count: 1, // 选择的商品数量
     cartListLength: 0,
     toastMsg: '',
-    isStockout: false, // 是否缺货
   }
 
   computed = {
@@ -292,6 +297,35 @@ export default class Goods extends wepy.page {
 
     goodsImgs() {
       return this.goods.goods_imgs.split(',')
+    },
+
+    isStockout() { // 是否缺货
+      if (!this.goods.is_sku) {
+        return !!this.goods.count
+      }
+      // is_sku为0说明这个商品没有sku属性
+      return this.isStockout = !this.goods.sku.every(item => item.sku_count <= 0)
+    },
+
+    isSingleSku() { // SKU 是否只有一个属性，没有子属性？
+      if (this.goods.is_sku && this.goods.sku && this.goods.sku.length) {
+        return !this.goods.sku[0].sub_sku.length
+      }
+      return false
+    },
+
+    isSelectedSku() { // 是否选择了 SKU
+      if (this.goods.is_sku && this.goods.sku && this.goods.sku.length) {
+        return this.isSingleSku ? !!this.currentSkuId.toString() : !!this.currentSubSkuId.toString()
+      }
+      return true
+    },
+
+    goods_sku_id() { // POST API 时，提交的 sku_id
+      if (this.goods.is_sku) {
+        return this.isSingleSku ? this.currentSkuId : this.currentSubSkuId
+      }
+      return ''
     },
   }
 
@@ -319,15 +353,6 @@ export default class Goods extends wepy.page {
   async _fetchGoodsDetail(goods_id) {
     this.goods = await wepy.request('goods/info?goods_id=' + goods_id)
     this.content = this.goods.content
-    if (!this.goods.is_sku) {
-      this.isStockout = !!this.goods.count
-    } else if (!this.goods.sku || !this.goods.sku.length) {
-      this.isStockout = false
-    } else {
-      // is_sku为0说明这个商品没有sku属性
-      this.isStockout = !this.goods.sku.every(item => item.sku_count <= 0)
-    }
-
     this.$apply()
     // 调用通知接口通知组件更新数据
     // BUG 需要调用两次才能真正的 invoke
@@ -339,13 +364,6 @@ export default class Goods extends wepy.page {
     const res = await wepy.request('cart/list')
     this.cartListLength = res.length
     this.$apply()
-  }
-
-  verifySku() {
-    if (this.goods.is_sku && this.sku && this.sku.length) {
-      return this.skuIndex > -1 && this.currentSkuId && this.goods_count
-    }
-    return this.goods_count
   }
 
   methods = {
@@ -361,7 +379,6 @@ export default class Goods extends wepy.page {
     },
 
     toggleCategoryDialog() {
-      if (!this.goods.count) return
       const $popup = this.$wxpage.selectComponent('.J_Popup')
       $popup && $popup.toggle()
     },
@@ -377,7 +394,7 @@ export default class Goods extends wepy.page {
     },
 
     addToCart() {
-      if (this.verifySku()) {
+      if (this.isSelectedSku) {
         this.methods.toggleCategoryDialog.call(this)
         this.methods.postAddCart.call(this)
       } else {
@@ -386,14 +403,14 @@ export default class Goods extends wepy.page {
     },
 
     async buyNow() {
-      if (this.verifySku()) {
+      if (this.isSelectedSku) {
         const goods_cart_ids = await wepy.request({
           url: 'cart/do_buy',
           method: 'post',
           data: {
             goods_id: this.goods_id,
             count: this.goods_count,
-            goods_sku_id: this.currentSkuId,
+            goods_sku_id: this.goods_sku_id,
           },
         })
         this.$navigate('/pages/cart/pay', {
@@ -404,20 +421,21 @@ export default class Goods extends wepy.page {
       }
     },
 
-    selectSku(index) {
+    selectSku(index, sku_id, sku_count) {
+      if (!sku_count) return
       if (index === this.skuIndex) this.skuIndex = -1
       else this.skuIndex = index
-      this.currentSkuId = ''
+      this.currentSkuId = sku_id
     },
 
     selectSubSku(id, sku_count) {
-      if (sku_count <= 0) return
-      if (id === this.currentSkuId) this.currentSkuId = ''
-      else this.currentSkuId = id
+      if (!sku_count) return
+      if (id === this.currentSubSkuId) this.currentSubSkuId = ''
+      else this.currentSubSkuId = id
     },
 
     addCart() {
-      if (!this.currentSkuDesc) this.methods.toggleCategoryDialog.call(this)
+      if (!this.isSelectedSku) this.methods.toggleCategoryDialog.call(this)
       else this.methods.postAddCart.call(this)
     },
 
@@ -429,7 +447,7 @@ export default class Goods extends wepy.page {
         data: {
           goods_id: this.goods_id,
           count: this.goods_count,
-          goods_sku_id: this.goods.is_sku ? this.currentSkuId : null,
+          goods_sku_id: this.goods_sku_id,
         },
       }).then(_ => {
         this.cartListLength += this.goods_count
