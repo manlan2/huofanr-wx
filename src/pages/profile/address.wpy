@@ -57,9 +57,8 @@ export default class Address extends wepy.page {
     addressList: [],
   }
 
-  onLoad(data, {from}) {
-    const name = from.$name
-    if (name === 'Pay') this.isFromPay = true
+  onLoad({isFromPay}) {
+    if (isFromPay === 'yes') this.isFromPay = true
     this._fetchAddressList()
   }
 

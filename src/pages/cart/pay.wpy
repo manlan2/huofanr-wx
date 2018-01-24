@@ -72,7 +72,7 @@ view.container
         text 积分
         text.color.ml20 使用{{point}}积分抵扣 ￥{{point / 100}}
       switch(checked='' @change='switchChange' color='#3bf1f7')
-    navigator.cell_box(open-type='navigate', url='/pages/profile/address')
+    navigator.cell_box(open-type='navigate', url='/pages/profile/address?isFromPay=yes')
       view.flex1.ellipsis
         text 收货地址
         text.c999.ml20 {{currentAddressName}}
