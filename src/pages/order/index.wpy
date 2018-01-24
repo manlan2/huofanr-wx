@@ -346,6 +346,8 @@ export default class Profile extends wepy.page {
       },
     }).then(_ => {
       this.hideDialog()
+      this.orderList = []
+      this.$apply()
       this.fetchData()
     }).catch(_ => this.hideDialog())
   }
@@ -451,6 +453,8 @@ export default class Profile extends wepy.page {
         },
       }).then(_ => {
         this.hideRefundDialog()
+        this.orderList = []
+        this.$apply()
         this.fetchData()
       }).catch(_ => this.hideRefundDialog())
     },
