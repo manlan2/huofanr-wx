@@ -73,6 +73,15 @@
       height: 100%
       background: #3bf1f7
 
+.btn_area
+  margin-top: 20px
+  width: 100%
+  padding: 10px
+
+  .zan_btn
+    background: #fff
+    color: #666
+
 </style>
 <template lang="pug">
 view.container
@@ -97,6 +106,9 @@ view.container
         view.price
           view.box
             wxc-price(value='{{item.discount_money / 100}}')
+
+  view.btn_area
+    button.zan-btn.zan-btn--large(@tap="delCoupon") 不使用优惠券
   wxc-toast.toast(icon='yes') 领取成功
 </template>
 
@@ -129,6 +141,14 @@ export default class SelectConpun extends wepy.page {
       G.coupon = {
         isSelect: true,
         coupon_id,
+      }
+      wepy.navigateBack()
+    },
+
+    delCoupon() {
+      G.coupon = {
+        isSelect: true,
+        coupon_id: '',
       }
       wepy.navigateBack()
     },

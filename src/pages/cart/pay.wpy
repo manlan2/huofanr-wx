@@ -63,7 +63,7 @@ view.container
   view.bg_white.mt30
     view.cell_box(@tap="selectCoupon")
       view.flex1.ellipsis
-        text 优惠券：{{currentCouponName || '未选择'}}
+        text 优惠券：{{currentCouponName}}
       view
         text.c999 {{coupon_list.length}}张
         text.i.icon &#xe600;
@@ -162,7 +162,7 @@ export default class Pay extends wepy.page {
   computed = {
     currentCouponName() {
       const coupon = this.coupon_list.find(item => item.coupon_entity_id === this.currentCouponId)
-      return coupon ? coupon.coupon_name : ''
+      return coupon ? coupon.coupon_name : '未选择'
     },
 
     currentAddressName() {
