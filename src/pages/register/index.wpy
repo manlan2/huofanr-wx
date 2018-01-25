@@ -83,7 +83,8 @@ export default class Register extends wepy.page {
   }
 
   async postUserInfo() {
-    const res = await wepy.getUserInfo({withCredentials: false})
+    const userInfoRes = await wepy.getUserInfo({withCredentials: false})
+    const res = userInfoRes.userInfo
     const data = {
       head_img: res.avatarUrl,
       member_name: res.nickName,
@@ -119,7 +120,7 @@ export default class Register extends wepy.page {
           mobile: this.phone,
         },
       }).then(_ => {
-        return this._toggleToast('验证码已发送')
+        // return this._toggleToast('验证码已发送')
       })
     },
 
