@@ -66,10 +66,9 @@
   flex-wrap: wrap
 
   >.goods_card
-    margin-bottom: 10rpx
+    margin-bottom: 10px
     padding: 6rpx
     width: 50%
-    height: 252px
 
     .name
       padding: 0 10rpx
@@ -86,7 +85,11 @@
 
 </style>
 <template lang="pug">
-view.container
+InfiniteScroll(
+  @loadMore.user="loadMore"
+  :scrollDisabled.sync="scrollDisabled"
+  :isNothing.sync="isNothing"
+)
   Container(topBottom="10")
     navigator.search_box(open-type="navigate" url="/pages/index/search")
       text.i.search_icon &#xe63e;
@@ -136,6 +139,7 @@ view.container
 <script>
 import wepy from 'wepy'
 import Container from '@/Container'
+import InfiniteScroll from '@/InfiniteScroll'
 
 export default class Index extends wepy.page {
   config = {
@@ -149,10 +153,13 @@ export default class Index extends wepy.page {
 
   components = {
     Container,
+    InfiniteScroll,
   }
 
   data = {
-    keyword: '',
+    page_num: 1,
+    scrollDisabled: false,
+    isNothing: false,
     isFocus: false,
     bannerList: [],
     timerImage: '',
@@ -190,8 +197,14 @@ export default class Index extends wepy.page {
   }
 
   async _fetchGoodsList() {
-    const res = await wepy.request('goods/history')
-    this.goodsList = res.filter(item => item.goods_id)
+    const res = await wepy.request('goods/recommend?page_num=' + this.page_num)
+    this.goodsList = [...this.goodsList, ...res.list]
+    if (res.cur_page === res.total_pages) {
+      this.scrollDisabled = true
+      this.isNothing = true
+    } else {
+      this.scrollDisabled = false
+    }
     this.$apply()
   }
 
@@ -202,6 +215,13 @@ export default class Index extends wepy.page {
 
   methods = {
     endcount() {
+    },
+
+    loadMore() {
+      console.log(121)
+      this.page_num++
+      this.scrollDisabled = true
+      this._fetchGoodsList()
     },
 
     swiperTapHandle(item) {

@@ -71,7 +71,7 @@
   scroll-view(
     scroll-y
     enable-back-to-topx
-    style="height: 100vh"
+    style="height: {{height}}"
     lower-threshold="{{scrollDistance}}"
     bindscrolltolower="scrolltoupper"
   )
@@ -89,6 +89,10 @@ import { Throttle } from 'js/utli'
 
 export default class InfiniteScroll extends wepy.component {
   props = {
+    height: {
+      type: String,
+      default: '100vh',
+    },
     scrollDisabled: {
       // 若为真，则无限滚动不会被触发
       type: Boolean,
