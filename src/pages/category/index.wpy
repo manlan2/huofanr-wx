@@ -56,6 +56,13 @@
 @for $i from 0 through 15
   .translate#{$i}
     transform: translate(0, -$i * 100vh)
+
+.split_line
+  padding-top: 10px
+  border-top: 1px #eee solid
+  font-size: 12px
+  text-align: center
+
 </style>
 <template lang="pug">
 view.container
@@ -67,6 +74,12 @@ view.container
       navigator.goods_box(wx:for="{{item.subCategoes}}" wx:key open-type="navigate" url="/pages/index/search?goods_parent_category_id={{currentCatetoryId}}&goods_child_category_id={{item.category_id}}")
         image.image(src="{{item.category_logo}}")
         view.ellipsis {{item.category_name}}
+
+      view.split_line
+        | 热门品牌
+      navigator.goods_box(wx:for="{{item.brandList}}" wx:key open-type="navigate" url="/pages/index/search?brand_id={{item.brand_id}}")
+        image.image(src="{{item.ad_img}}")
+        view.ellipsis {{item.ad_title}}
 </template>
 
 <script>

@@ -151,8 +151,9 @@ export default class Search extends wepy.page {
       this.goodeList = []
       this.scrollDisabled = false
       this.isNothing = false
-      this.oods_parent_category_id = ''
+      this.goods_parent_category_id = ''
       this.goods_child_category_id = ''
+      this.brand_id = ''
       this.sort = 'default'
       this.sort_type = true
       this.fetchData()
@@ -197,15 +198,17 @@ export default class Search extends wepy.page {
     keyword: '',
     goods_parent_category_id: '',
     goods_child_category_id: '',
+    brand_id: '',
     sort: 'default', // 排序：default：综合-默认，sale：销量，price：价格
     sort_type: true, // 高->低：desc => true，低到高：asc => false
   }
 
-  onLoad({goods_parent_category_id = '', goods_child_category_id = ''}, {from}) {
+  onLoad({goods_parent_category_id = '', goods_child_category_id = '', brand_id = ''}, {from}) {
     if (from.$name === 'Index') this.isFocus = true
     this.goods_parent_category_id = goods_parent_category_id
     this.goods_child_category_id = goods_child_category_id
-    if (goods_parent_category_id || goods_child_category_id) this.fetchData()
+    this.brand_id = brand_id
+    if (goods_parent_category_id || goods_child_category_id || brand_id) this.fetchData()
   }
 
   fetchData() {
@@ -213,6 +216,7 @@ export default class Search extends wepy.page {
       keyword: this.keyword,
       goods_parent_category_id: this.goods_parent_category_id,
       goods_child_category_id: this.goods_child_category_id,
+      brand_id: this.brand_id,
       page_num: this.page_num,
       sort: this.sort,
       sort_type: this.sort_type ? 'desc' : 'asc',
