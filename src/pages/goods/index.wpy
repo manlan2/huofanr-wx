@@ -165,7 +165,7 @@ view.container
     block(wx:for="{{goodsImgs}}" wx:key)
       swiper-item(@tap="previewImage({{item}})")
         view.header_img_box
-          image.header_img(src='{{item}}' mode="aspectFit")
+          image.header_img(src='{{item}}?imageView2/2/w/440' mode="aspectFit")
   wxc-elip.goods_name(line='1') {{goods.goods_name}}
   wxc-elip.goods_desc(line='2') {{goods.goods_desc}}
   view.price_box
@@ -190,7 +190,7 @@ view.container
   wxc-popup.J_Popup(animation-mode="bottom" align="bottom")
     view.popup_content(@tap.stop)
       view.header
-        image.image(src='{{goods.head_img}}')
+        image.image(src='{{goods.head_img}}?imageView2/2/w/200')
       view.pl20.pr20
         view.sku_conainer(wx:if="{{goods.is_sku && goods.sku && goods.sku.length}}")
           view.label {{goods.sku[0].sku_name}}

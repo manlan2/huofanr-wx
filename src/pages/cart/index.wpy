@@ -75,7 +75,7 @@ view.container.pb40
     view.goods_card(wx:for="{{goodsList}}" wx:key)
       text.checkbox.i(class="{{item.isSelect ? 'i-checked' : 'i-circle'}}" @tap.stop="selectHandle({{item.goods_cart_id}})")
       navigator(open-type="navigate" url="/pages/goods/index?goods_id={{item.goods_id}}")
-        image.image(src="{{item.head_img}}")
+        image.image(src="{{item.head_img}}?imageView2/2/w/200")
       .info.flex1
         wxc-elip.flex1(line="2") {{item.goods_name}}
         .num_box

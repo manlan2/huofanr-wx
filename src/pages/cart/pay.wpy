@@ -54,7 +54,7 @@
 view.container
   view.goods_list
     navigator.goods_info_box(wx:for="{{goods_list}}" wx:key url="{{'/pages/goods/index?goods_id=' + item.goods_id}}" open-type="navigate")
-      image.goods_image(src='{{item.head_img}}')
+      image.goods_image(src='{{item.head_img}}?imageView2/2/w/200')
       view.info
         wxc-elip.fz24(line='2') {{item.goods_name}}
         view.c999.fz22

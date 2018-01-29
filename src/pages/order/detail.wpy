@@ -58,7 +58,7 @@
 view.container
   view.goods_list
     view.goods_info_box(wx:for="{{order.goodsInfo}}" wx:key)
-      image.goods_image(src='{{item.head_img}}')
+      image.goods_image(src='{{item.head_img}}?imageView2/2/w/200')
       view.info
         wxc-elip.fz24(line='2') {{item.goods_name}}
         view.c999.fz22(wx:if="item.goods_sku") 规格：{{item.goods_sku}}

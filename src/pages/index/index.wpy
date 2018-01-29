@@ -130,7 +130,7 @@ InfiniteScroll(
   view.title.tc.pt20.fz28.bg_white 猜你喜欢
   view.goods_list
     navigator.goods_card(wx:for="{{goodsList}}" wx:key url="{{'/pages/goods/index?goods_id=' + item.goods_id}}" open-type="navigate")
-      image.image(src="{{item.head_img}}" mode="aspectFit")
+      image.image(src="{{item.head_img}}?imageView2/2/w/330" mode="aspectFit")
       view.name.fz24.ellipsis.mt10 {{item.goods_name}}
       view.fz20.lh40.ellipsis.c999.goods_desc {{item.goods_desc}}
       wxc-price.fz24.color.db(value="{{item.price / 100}}" decimal="small")
